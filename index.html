@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAR IN HEAVEN - Prototipo Móvil (Proyecto Cielo)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Toolbar / Desktop Control Panel -->
+  <header class="desktop-header">
+    <div class="header-brand">
+      <span class="brand-icon">⚔️</span>
+      <div>
+        <h1>WAR IN HEAVEN</h1>
+        <p class="subtitle">Prototipo Navegable Móvil • Diseño Figma + Excalidraw</p>
+      </div>
+    </div>
+    
+    <div class="header-controls">
+      <button id="btn-toggle-landscape" class="btn-tool" title="Cambiar Orientación (Vertical/Horizontal)">
+        <span class="icon">🔄</span> <span class="lbl">Girar Celular</span>
+      </button>
+      <button id="btn-show-flowmap" class="btn-tool" title="Ver Mapa de Flujo de Pantallas">
+        <span class="icon">🗺️</span> <span class="lbl">Mapa de Flujo</span>
+      </button>
+      <button id="btn-sound-toggle" class="btn-tool" title="Activar/Desactivar Audio">
+        <span class="icon" id="sound-icon">🔊</span> <span class="lbl">Sonido: ON</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="workspace">
+    
+    <!-- Phone Device Simulator -->
+    <div class="phone-wrapper" id="phone-wrapper">
+      
+      <!-- Phone Outer Chassis -->
+      <div class="phone-case" id="phone-case">
+        
+        <!-- Physical Buttons on phone side -->
+        <div class="phone-vol-up" title="Volumen +"></div>
+        <div class="phone-vol-down" title="Volumen -"></div>
+        <div class="phone-power" id="phone-power-btn" title="Botón Encendido"></div>
+
+        <!-- Phone Bezel & Screen -->
+        <div class="phone-screen" id="phone-screen">
+          
+          <!-- Dynamic Island / Top Notch -->
+          <div class="phone-notch">
+            <div class="camera-lens"></div>
+            <div class="speaker-grill"></div>
+          </div>
+
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <div class="status-time" id="status-time">20:46</div>
+            <div class="status-icons">
+              <span class="status-signal">📶</span>
+              <span class="status-wifi">📶</span>
+              <span class="status-battery">🔋 98%</span>
+            </div>
+          </div>
+
+          <!-- App Navigation Content Area -->
+          <div class="app-viewport" id="app-viewport">
+
+            <!-- ==========================================
+                 PANTALLA 0: WAR IN HEAVEN (SPLASH)
+                 ========================================== -->
+            <section class="screen active" id="screen-splash">
+              <div class="splash-hero">
+                <div class="nature-badge">🌿 Reserva Natural Serrana</div>
+                <h2 class="app-title">WAR IN HEAVEN</h2>
+                <p class="app-subtitle">PROYECTO CIELO • ECO-COMBAT</p>
+              </div>
+
+              <div class="menu-actions">
+                <button class="btn-figma btn-primary" onclick="navigateTo('inicio')">
+                  <span class="btn-icon">▶</span> INICIO
+                </button>
+                <button class="btn-figma btn-secondary" onclick="navigateTo('ajustes')">
+                  <span class="btn-icon">⚙</span> AJUSTES
+                </button>
+                <button class="btn-figma btn-outline" onclick="triggerExitApp()">
+                  <span class="btn-icon">↳</span> SALIR
+                </button>
+              </div>
+
+              <div class="splash-footer">
+                <p>Tu aventura comienza en la naturaleza</p>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 1: AJUSTES
+                 ========================================== -->
+            <section class="screen" id="screen-ajustes">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('splash')" title="Regresar a Pantalla Principal">←</button>
+                <h3>Ajustes</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="settings-card">
+                  <label class="setting-label">
+                    <span>🎵 Música Ambiental</span>
+                    <span id="val-music">80%</span>
+                  </label>
+                  <input type="range" id="slider-music" min="0" max="100" value="80" oninput="updateVolume('music', this.value)">
+
+                  <label class="setting-label mt-4">
+                    <span>🔊 Efectos de Sonido</span>
+                    <span id="val-sfx">100%</span>
+                  </label>
+                  <input type="range" id="slider-sfx" min="0" max="100" value="100" oninput="updateVolume('sfx', this.value)">
+
+                  <div class="setting-row mt-4">
+                    <span>🌐 Idioma</span>
+                    <div class="lang-selector">
+                      <button class="lang-arrow" onclick="cycleLang(-1)">&lt;</button>
+                      <span id="current-lang" class="lang-name">español</span>
+                      <button class="lang-arrow" onclick="cycleLang(1)">&gt;</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="art-preview-box mt-4">
+                  <img src="assets/excalidraw_full.png" alt="Excalidraw Ajustes" class="art-img-preview">
+                  <div class="art-caption">Ilustración estilo Excalidraw conservada</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 2: INICIO (DASHBOARD)
+                 ========================================== -->
+            <section class="screen" id="screen-inicio">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('splash')" title="Regresar a WAR IN HEAVEN">←</button>
+                <h3>Inicio</h3>
+                <span class="header-home-badge" onclick="navigateTo('splash')">🏠 WAR IN HEAVEN</span>
+              </div>
+
+              <div class="screen-content scrollable">
+                <!-- Direct Back to Splash Button -->
+                <button class="btn-back-home" onclick="navigateTo('splash')">
+                  ⬅ Regresar a Pantalla Principal (WAR IN HEAVEN)
+                </button>
+
+                <!-- QR Box Simulation -->
+                <div class="qr-card mt-3" onclick="openQRScanner()">
+                  <div class="qr-frame">
+                    <div class="qr-corners"></div>
+                    <div class="qr-graphic">
+                      <div class="qr-square sq1"></div>
+                      <div class="qr-square sq2"></div>
+                      <div class="qr-square sq3"></div>
+                    </div>
+                    <div class="qr-scanner-line"></div>
+                  </div>
+                  <div class="qr-label">
+                    <strong>QR</strong>
+                    <span>Escanear criaturas de la naturaleza</span>
+                  </div>
+                </div>
+
+                <!-- Main Menu Buttons -->
+                <div class="dashboard-menu mt-3">
+                  <button class="btn-figma btn-menu" onclick="navigateTo('coleccion')">
+                    <span class="btn-icon">🎴</span> COLECCIÓN
+                  </button>
+
+                  <button class="btn-figma btn-menu" onclick="navigateTo('informacion')">
+                    <span class="btn-icon">ℹ️</span> INFORMACIÓN
+                  </button>
+
+                  <button class="btn-figma btn-menu btn-accent" onclick="navigateTo('pelea')">
+                    <span class="btn-icon">⚔️</span> PELEA
+                  </button>
+                </div>
+
+                <div class="footer-note">
+                  <p>Conecta con la naturaleza y conserva las especies.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 3: COLECCION
+                 ========================================== -->
+            <section class="screen" id="screen-coleccion">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <h3>Colección</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="section-tag" id="collection-count-tag">TUS CRIATURAS • 4/6 DESCUBIERTAS</div>
+
+                <div class="collection-grid" id="collection-grid-container">
+                  <!-- Cards rendered dynamically -->
+                </div>
+
+                <div class="excalidraw-asset-container mt-3">
+                  <img src="assets/excalidraw_coleccion.png" alt="Coleccion Excalidraw" class="asset-img">
+                  <p class="asset-caption">Manteniendo tarjetas e íconos originales Excalidraw</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 4: INFORMACION (MENU)
+                 ========================================== -->
+            <section class="screen" id="screen-informacion">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <h3>Información</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="info-categories">
+                  <button class="info-cat-btn" onclick="navigateTo('info_incendios')">
+                    <div class="cat-icon">🔥</div>
+                    <div class="cat-text">
+                      <strong>prevención contra incendios</strong>
+                      <span>Medidas oficiales y bomberos</span>
+                    </div>
+                    <span class="cat-arrow">›</span>
+                  </button>
+
+                  <button class="info-cat-btn" onclick="navigateTo('info_red_trofica')">
+                    <div class="cat-icon">🌿</div>
+                    <div class="cat-text">
+                      <strong>red trófica local</strong>
+                      <span>Productores, consumidores y descomponedores</span>
+                    </div>
+                    <span class="cat-arrow">›</span>
+                  </button>
+
+                  <button class="info-cat-btn" onclick="navigateTo('info_flora_fauna')">
+                    <div class="cat-icon">🦊</div>
+                    <div class="cat-text">
+                      <strong>información de la flora y fauna</strong>
+                      <span>Especies de tu colección e información autóctona</span>
+                    </div>
+                    <span class="cat-arrow">›</span>
+                  </button>
+
+                  <button class="info-cat-btn" onclick="navigateTo('info_como_pelea')">
+                    <div class="cat-icon">⚔️</div>
+                    <div class="cat-text">
+                      <strong>como se pelea</strong>
+                      <span>Reglas de combate por turnos</span>
+                    </div>
+                    <span class="cat-arrow">›</span>
+                  </button>
+                </div>
+
+                <div class="excalidraw-asset-container mt-4">
+                  <img src="assets/excalidraw_full.png" alt="Menu Excalidraw" class="asset-img">
+                  <p class="asset-caption">Categorías conectadas según prototipo Figma / Excalidraw</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 4A: PREVENCION CONTRA INCENDIOS
+                 ========================================== -->
+            <section class="screen" id="screen-info_incendios">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('informacion')">←</button>
+                <h3>Prevención contra incendios</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="info-hero-banner">
+                  <img src="assets/excalidraw_incendios.png" alt="Incendios Excalidraw" class="info-banner-img">
+                </div>
+
+                <div class="article-body">
+                  <h4>Prevención de Incendios Forestales</h4>
+                  <p>En zonas de montaña y de vegetación, es indispensable seguir las pautas oficiales del Gobierno de Córdoba:</p>
+                  
+                  <ul class="bullet-list">
+                    <li><strong>No encender fuego:</strong> Cualquier fogata o ceniza puede encender un incendio devastador.</li>
+                    <li><strong>Atención con el cigarrillo:</strong> Mantén la colilla apagada y usa una llave de defensa o cenicero portátil.</li>
+                    <li><strong>Limpieza de terrenos:</strong> Limpiar hojas secas y malezas secas alrededor de tu casa.</li>
+                    <li><strong>Precaución en el campo:</strong> No arrojes colillas ni cigarrillos en el pastizal seco.</li>
+                  </ul>
+
+                  <div class="emergency-box mt-3">
+                    <h5>📞 Teléfonos de Emergencia (Argentina / Córdoba)</h5>
+                    <div class="emergency-phones">
+                      <a href="tel:100" class="phone-btn">🚒 Bomberos: <strong>100</strong></a>
+                      <a href="tel:101" class="phone-btn">🚨 Policía: <strong>101</strong></a>
+                      <a href="tel:080088838346" class="phone-btn full">🔥 Incendios Córdoba: <strong>0800-888-FUEGO (38346)</strong></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 4B: RED TROFICA LOCAL
+                 ========================================== -->
+            <section class="screen" id="screen-info_red_trofica">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('informacion')">←</button>
+                <h3>Red trófica local</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="info-hero-banner">
+                  <img src="assets/excalidraw_red_trofica.png" alt="Red Trófica Excalidraw" class="info-banner-img">
+                </div>
+
+                <div class="article-body">
+                  <h4>¿Qué es una red trófica local?</h4>
+                  <p>Una red trófica local es el conjunto de todas las cadenas de alimentación interconectadas que existen entre las especies dentro de un hábitat o ecosistema específico.</p>
+
+                  <div class="trophic-pyramid mt-3">
+                    <div class="pyramid-level lvl-top">
+                      <span class="lvl-title">🐺 Consumidores Terciarios/Secundarios</span>
+                      <p>Carnívoros: Yaguareté, Aguilucho Serrano, Zorro Gris.</p>
+                    </div>
+                    <div class="pyramid-level lvl-mid">
+                      <span class="lvl-title">🐗 Consumidores Primarios</span>
+                      <p>Herbívoros: Pecarí de collar, Picaflor, Insectos foliófagos.</p>
+                    </div>
+                    <div class="pyramid-level lvl-base">
+                      <span class="lvl-title">🌳 Productores Autóctonos</span>
+                      <p>Organismos autótrofos: Horco Quebracho, Molle, Algas y Vegetación serrana.</p>
+                    </div>
+                    <div class="pyramid-level lvl-decomposers">
+                      <span class="lvl-title">🍄 Descomponedores</span>
+                      <p>Hongos y bacterias que reciclan nutrientes al degradar la materia orgánica.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 4C: FLORA Y FAUNA (DINAMICA CON COLECCION)
+                 ========================================== -->
+            <section class="screen" id="screen-info_flora_fauna">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('informacion')">←</button>
+                <h3>Flora y fauna</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="info-hero-banner">
+                  <img src="assets/excalidraw_flora_fauna.png" alt="Flora y Fauna Excalidraw" class="info-banner-img">
+                </div>
+
+                <div class="article-body">
+                  <h4>Flora Autóctona Destacada</h4>
+                  <div class="species-card">
+                    <h5>🌳 Horco Quebracho</h5>
+                    <p>Especie insignia de la reserva serrana, con ejemplares históricos de más de 100 y 400 años que no forman bosques en otro lugar del planeta.</p>
+                  </div>
+                  <div class="species-card">
+                    <h5>🌿 Molle Serrano</h5>
+                    <p>Árbol nativo característico del estrato arbóreo del bosque serrano cordobés.</p>
+                  </div>
+
+                  <h4 class="mt-4">Fauna Autóctona (Descubierta en tu Colección)</h4>
+                  <p class="select-hint-text">Fichas actualizadas de las criaturas que has descubierto:</p>
+                  
+                  <div id="flora-fauna-dynamic-container">
+                    <!-- Populated dynamically from unlocked collection creatures! -->
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 4D: COMO SE PELEA
+                 ========================================== -->
+            <section class="screen" id="screen-info_como_pelear">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('informacion')" title="Volver a Información">←</button>
+                <h3>Como se pelea</h3>
+                <span class="header-home-badge" onclick="navigateTo('informacion')">ℹ️ Información</span>
+              </div>
+
+              <div class="screen-content scrollable">
+                <!-- Direct Back to Información Button at top -->
+                <button class="btn-back-home mb-3" onclick="navigateTo('informacion')">
+                  ⬅ Volver a Información
+                </button>
+
+                <div class="battle-guide-box">
+                  <div class="guide-header-text">
+                    para combatir con éxito debes dominar las mecánicas básicas de batalla y la gestión de tu equipo
+                  </div>
+
+                  <div class="guide-steps mt-3">
+                    <div class="step-item">
+                      <span class="step-num">1</span>
+                      <div class="step-content">
+                        <strong>Turnos por velocidad</strong>
+                        <p>Quien tenga mayor velocidad en sus estadísticas ataca primero en cada turno.</p>
+                      </div>
+                    </div>
+
+                    <div class="step-item">
+                      <span class="step-num">2</span>
+                      <div class="step-content">
+                        <strong>Selección de Acciones</strong>
+                        <p>Al tomar tu turno, eliges: Atacar, Usar Habilidad especial, o ingresar a la Mochila.</p>
+                      </div>
+                    </div>
+
+                    <div class="step-item">
+                      <span class="step-num">3</span>
+                      <div class="step-content">
+                        <strong>Uso de Mochila</strong>
+                        <p>Puedes usar Pociones Ecológicas para restaurar salud o activar Auras de Regeneración.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons Row: Volver a Información & Ir a Pelear -->
+                  <div class="guide-actions-row mt-4">
+                    <button class="btn-figma btn-secondary" onclick="navigateTo('informacion')">
+                      ⬅ VOLVER A INFORMACIÓN
+                    </button>
+                    <button class="btn-figma btn-accent" onclick="navigateTo('pelea')">
+                      ⚔️ IR A PELEAR AHORA
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 5: PELEA (SELECCION MODO)
+                 ========================================== -->
+            <section class="screen" id="screen-pelea">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <h3>Pelea</h3>
+              </div>
+
+              <div class="screen-content scrollable justify-center">
+                <div class="section-tag center">ELIGE TU MODO DE BATALLA</div>
+
+                <div class="mode-select-stack mt-4">
+                  <button class="btn-mode-card" onclick="selectModeAndChooseCreature('bot')">
+                    <div class="mode-icon-box">🤖</div>
+                    <div class="mode-text">
+                      <strong>pelea contra bot</strong>
+                      <span>Enfréntate a la IA de la Reserva</span>
+                    </div>
+                    <span class="mode-arrow">→</span>
+                  </button>
+
+                  <button class="btn-mode-card mt-3" onclick="navigateTo('pelea_local')">
+                    <div class="mode-icon-box">👥</div>
+                    <div class="mode-text">
+                      <strong>pelea contra amigo local</strong>
+                      <span>Multijugador local en el mismo teléfono</span>
+                    </div>
+                    <span class="mode-arrow">→</span>
+                  </button>
+                </div>
+
+                <div class="footer-note mt-5">
+                  <p>Tres criaturas, una nueva aventura.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 5A: PELEA LOCAL (SELECCION JUGADOR)
+                 ========================================== -->
+            <section class="screen" id="screen-pelea_local">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('pelea')">←</button>
+                <h3>Pelea local</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="section-tag">JUGADORES LOCALES</div>
+
+                <div class="players-list mt-3">
+                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona1')">
+                    <span class="player-avatar">👤</span>
+                    <span class="player-name">persona 1</span>
+                    <span class="player-status">Elegir Criatura ›</span>
+                  </button>
+
+                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona2')">
+                    <span class="player-avatar">👤</span>
+                    <span class="player-name">persona 2</span>
+                    <span class="player-status">Elegir Criatura ›</span>
+                  </button>
+
+                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona3')">
+                    <span class="player-avatar">👤</span>
+                    <span class="player-name">persona 3</span>
+                    <span class="player-status">Elegir Criatura ›</span>
+                  </button>
+
+                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona4')">
+                    <span class="player-avatar">👤</span>
+                    <span class="player-name">persona 4</span>
+                    <span class="player-status">Elegir Criatura ›</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 5B: SELECCION DE CRIATURA DE COMBATE
+                 ========================================== -->
+            <section class="screen" id="screen-seleccionar_criatura">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('pelea')">←</button>
+                <h3>Elige tu Criatura</h3>
+              </div>
+
+              <div class="screen-content scrollable">
+                <div class="section-tag">CRIATURAS EN TU COLECCIÓN</div>
+                <p class="select-hint-text">Selecciona cuál de tus criaturas descubiertas quieres enviar al combate:</p>
+
+                <div class="creature-select-grid mt-3" id="creature-selection-container">
+                  <!-- Dynamically populated from AppState.unlockedCreatures -->
+                </div>
+              </div>
+            </section>
+
+            <!-- ==========================================
+                 PANTALLA 6: ARENA DE BATALLA INTERACTIVA (MODO HORIZONTAL OPTIMIZADO)
+                 ========================================== -->
+            <section class="screen" id="screen-battle_arena">
+              <div class="battle-header-bar">
+                <button class="btn-back-battle" onclick="confirmExitBattle()">← Salir de Batalla</button>
+                <div class="turn-badge" id="turn-indicator">TURNO 1: Picaflor Cometa</div>
+                <div class="orient-status-tag">📱 Modo Horizontal</div>
+              </div>
+
+              <!-- Battle Stage Graphic Area -->
+              <div class="battle-stage">
+                <img src="assets/excalidraw_battle.png" alt="Escenario Batalla Excalidraw" class="battle-bg-art">
+
+                <!-- Opponent Status Top Right -->
+                <div class="hp-box opponent-hp">
+                  <div class="hp-info">
+                    <span class="fighter-name" id="enemy-name">Yaguareté (BOT)</span>
+                    <span class="fighter-lvl" id="enemy-lvl">Niv. 14</span>
+                  </div>
+                  <div class="hp-bar-outer">
+                    <div class="hp-bar-inner" id="enemy-hp-bar" style="width: 100%;"></div>
+                  </div>
+                  <div class="hp-numeric" id="enemy-hp-num">150 / 150 HP</div>
+                </div>
+
+                <!-- Opponent Sprite -->
+                <div class="fighter-sprite opponent-sprite" id="enemy-sprite">
+                  🐆
+                </div>
+
+                <!-- Player Sprite -->
+                <div class="fighter-sprite player-sprite" id="player-sprite">
+                  🌸
+                </div>
+
+                <!-- Player Status Bottom Left -->
+                <div class="hp-box player-hp">
+                  <div class="hp-info">
+                    <span class="fighter-name" id="player-name">Picaflor Cometa</span>
+                    <span class="fighter-lvl" id="player-lvl">Niv. 12</span>
+                  </div>
+                  <div class="hp-bar-outer">
+                    <div class="hp-bar-inner" id="player-hp-bar" style="width: 100%;"></div>
+                  </div>
+                  <div class="hp-numeric" id="player-hp-num">120 / 120 HP</div>
+                </div>
+              </div>
+
+              <!-- Battle Message Log Banner -->
+              <div class="battle-log-banner" id="battle-log">
+                ¡A critical hit! ¡Criatura lista para luchar!
+              </div>
+
+              <!-- Battle Action Controls Grid -->
+              <div class="battle-controls" id="battle-controls-main">
+                <button class="btn-battle btn-atk" onclick="showSubMenu('attacks')">
+                  ⚔️ Atacar
+                </button>
+                <button class="btn-battle btn-skill" onclick="useSkill('refugio')">
+                  ✨ Habilidad
+                </button>
+                <button class="btn-battle btn-item" onclick="useItem('pocion')">
+                  🎒 Mochila (Poción)
+                </button>
+                <button class="btn-battle btn-run" onclick="confirmExitBattle()">
+                  🏃 Rendirse
+                </button>
+              </div>
+
+              <!-- Submenu Attack Actions -->
+              <div class="battle-controls hidden" id="battle-controls-attacks">
+                <!-- Dynamically populated attack buttons -->
+              </div>
+            </section>
+
+          </div> <!-- /app-viewport -->
+
+          <!-- Home Indicator Bar at Phone Bottom -->
+          <div class="home-indicator" onclick="navigateTo('inicio')" title="Ir a Inicio"></div>
+
+        </div> <!-- /phone-screen -->
+
+      </div> <!-- /phone-case -->
+
+    </div> <!-- /phone-wrapper -->
+
+    <!-- Sidebar Info Panel (Desktop mode) -->
+    <aside class="desktop-sidebar">
+      <div class="sidebar-card">
+        <h3>📍 Guía de Prototipo</h3>
+        <p>Este prototipo recrea la propuesta <strong>WAR IN HEAVEN (Proyecto Cielo)</strong> utilizando el diseño visual de Alta Fidelidad de Figma y conservando los esquemas e ilustraciones de Excalidraw.</p>
+        
+        <div class="flow-steps-list">
+          <div class="flow-step-item active-step" data-target="splash" onclick="navigateTo('splash')">
+            <span class="step-icon">1</span> <strong>Pantalla Principal:</strong> WAR IN HEAVEN, Ajustes, Salir.
+          </div>
+          <div class="flow-step-item" data-target="inicio" onclick="navigateTo('inicio')">
+            <span class="step-icon">2</span> <strong>Inicio (Dashboard):</strong> Botón Volver a Principal, QR, Colección, Info, Pelea.
+          </div>
+          <div class="flow-step-item" data-target="coleccion" onclick="navigateTo('coleccion')">
+            <span class="step-icon">3</span> <strong>Colección:</strong> Fichas de criaturas autóctonas.
+          </div>
+          <div class="flow-step-item" data-target="informacion" onclick="navigateTo('informacion')">
+            <span class="step-icon">4</span> <strong>Información:</strong> Incendios, Red Trófica, Flora/Fauna, Tutorial.
+          </div>
+          <div class="flow-step-item" data-target="pelea" onclick="navigateTo('pelea')">
+            <span class="step-icon">5</span> <strong>Pelea & Selección:</strong> Elegir Criatura de Colección.
+          </div>
+          <div class="flow-step-item" data-target="battle_arena" onclick="navigateTo('battle_arena')">
+            <span class="step-icon">6</span> <strong>Arena de Batalla (Horizontal):</strong> Combate interactivo por turnos.
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card mt-3">
+        <h3>🎨 Assets Excalidraw / Figma</h3>
+        <div class="asset-thumbs">
+          <div class="thumb-item" onclick="openAssetModal('figma_full.png')">
+            <img src="assets/figma_full.png" alt="Figma High Fi">
+            <span>Diseño Figma</span>
+          </div>
+          <div class="thumb-item" onclick="openAssetModal('excalidraw_full.png')">
+            <img src="assets/excalidraw_full.png" alt="Excalidraw Diagram">
+            <span>Excalidraw Original</span>
+          </div>
+          <div class="thumb-item" onclick="openAssetModal('wireframe_full.png')">
+            <img src="assets/wireframe_full.png" alt="Wireframe Diagram">
+            <span>Wireframe Figma</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL: ESCANER QR -->
+  <div class="modal-overlay hidden" id="modal-qr">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4>Escáner QR Interactivo</h4>
+        <button class="modal-close" onclick="closeModal('modal-qr')">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="qr-camera-sim">
+          <div class="camera-grid"></div>
+          <div class="scan-target-box"></div>
+          <div class="laser-beam"></div>
+        </div>
+        <p class="mt-3">Apunta la cámara al código QR de la reserva natural...</p>
+        <button class="btn-figma btn-accent mt-3" onclick="simulateQRDiscovery()">
+          📷 ¡Simular Escaneo de QR!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALLE DE CRIATURA -->
+  <div class="modal-overlay hidden" id="modal-creature">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 id="creature-modal-title">Detalle de Criatura</h4>
+        <button class="modal-close" onclick="closeModal('modal-creature')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="creature-detail-header">
+          <div class="creature-detail-avatar" id="creature-modal-icon">🌸</div>
+          <div>
+            <h3 id="creature-modal-name">Picaflor Cometa</h3>
+            <span class="badge" id="creature-modal-badge">Polinizador Serrano</span>
+          </div>
+        </div>
+        <div class="creature-stats mt-3">
+          <div class="stat-row"><span>Vida (HP):</span> <strong id="c-hp">120 HP</strong></div>
+          <div class="stat-row"><span>Velocidad:</span> <strong id="c-spd">95 SPD</strong></div>
+          <div class="stat-row"><span>Ataque:</span> <strong id="c-atk">45 ATK</strong></div>
+          <div class="stat-row"><span>Hábitat:</span> <strong id="c-habitat">Sierras de Córdoba</strong></div>
+        </div>
+        <p class="creature-desc mt-3" id="creature-modal-desc">
+          Ave mítica de agilidad sorprendente que habita en las quebradas y bosques autóctonos.
+        </p>
+        <button class="btn-figma btn-primary full-width mt-3" onclick="closeModal('modal-creature')">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MAPA DE FLUJO COMPLETO -->
+  <div class="modal-overlay hidden" id="modal-flowmap">
+    <div class="modal-box modal-large">
+      <div class="modal-header">
+        <h4>Mapa Completo de Navegación de Pantallas</h4>
+        <button class="modal-close" onclick="closeModal('modal-flowmap')">✕</button>
+      </div>
+      <div class="modal-body scrollable">
+        <img src="assets/figma_full.png" alt="Mapa de flujo Figma" class="flowmap-img">
+        <hr class="my-3">
+        <h5>Ilustración de Conexión Excalidraw</h5>
+        <img src="assets/excalidraw_full.png" alt="Mapa Excalidraw" class="flowmap-img">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VISOR DE ASSETS -->
+  <div class="modal-overlay hidden" id="modal-asset">
+    <div class="modal-box modal-large">
+      <div class="modal-header">
+        <h4 id="asset-modal-title">Visor de Asset</h4>
+        <button class="modal-close" onclick="closeModal('modal-asset')">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="" id="asset-modal-img" alt="Asset" style="max-width: 100%; border-radius: 8px;">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
