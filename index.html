@@ -124,6 +124,15 @@
                       <button class="lang-arrow" onclick="cycleLang(1)">&gt;</button>
                     </div>
                   </div>
+
+                  <div class="translate-status-box mt-3">
+                    <div class="translate-badge">
+                      <span class="g-icon">🌐</span> Google Translate Activo
+                    </div>
+                    <p class="translate-hint" id="translate-hint-text">
+                      Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.
+                    </p>
+                  </div>
                 </div>
 
                 <div class="art-preview-box mt-4">
@@ -140,17 +149,11 @@
               <div class="screen-header">
                 <button class="btn-back" onclick="navigateTo('splash')" title="Regresar a WAR IN HEAVEN">←</button>
                 <h3>Inicio</h3>
-                <span class="header-home-badge" onclick="navigateTo('splash')">🏠 WAR IN HEAVEN</span>
               </div>
 
               <div class="screen-content scrollable">
-                <!-- Direct Back to Splash Button -->
-                <button class="btn-back-home" onclick="navigateTo('splash')">
-                  ⬅ Regresar a Pantalla Principal (WAR IN HEAVEN)
-                </button>
-
                 <!-- QR Box Simulation -->
-                <div class="qr-card mt-3" onclick="openQRScanner()">
+                <div class="qr-card mt-2" onclick="openQRScanner()">
                   <div class="qr-frame">
                     <div class="qr-corners"></div>
                     <div class="qr-graphic">
@@ -258,11 +261,11 @@
                     <span class="cat-arrow">›</span>
                   </button>
 
-                  <button class="info-cat-btn" onclick="navigateTo('info_como_pelea')">
+                  <button class="info-cat-btn" onclick="navigateTo('info_como_pelear')">
                     <div class="cat-icon">⚔️</div>
                     <div class="cat-text">
                       <strong>como se pelea</strong>
-                      <span>Reglas de combate por turnos</span>
+                      <span>Reglas de combate por turnos y guía de equipo</span>
                     </div>
                     <span class="cat-arrow">›</span>
                   </button>
@@ -394,7 +397,6 @@
               <div class="screen-header">
                 <button class="btn-back" onclick="navigateTo('informacion')" title="Volver a Información">←</button>
                 <h3>Como se pelea</h3>
-                <span class="header-home-badge" onclick="navigateTo('informacion')">ℹ️ Información</span>
               </div>
 
               <div class="screen-content scrollable">
@@ -403,33 +405,61 @@
                   ⬅ Volver a Información
                 </button>
 
+                <div class="info-hero-banner">
+                  <img src="assets/excalidraw_battle.png" alt="Escenario Batalla Excalidraw" class="info-banner-img">
+                </div>
+
                 <div class="battle-guide-box">
                   <div class="guide-header-text">
-                    para combatir con éxito debes dominar las mecánicas básicas de batalla y la gestión de tu equipo
+                    ⚔️ GUÍA OFICIAL DE BATALLA • WAR IN HEAVEN (ECO-COMBAT)
                   </div>
+                  <p style="font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.4;">
+                    Para combatir con éxito en la Reserva Natural Serrana debes dominar las mecánicas tácticas de batalla por turnos, la selección de tu equipo de 3 criaturas y los niveles del bot rival:
+                  </p>
 
                   <div class="guide-steps mt-3">
                     <div class="step-item">
                       <span class="step-num">1</span>
                       <div class="step-content">
-                        <strong>Turnos por velocidad</strong>
-                        <p>Quien tenga mayor velocidad en sus estadísticas ataca primero en cada turno.</p>
+                        <strong>Elección de Equipo (3 Criaturas)</strong>
+                        <p>Eliges 3 animales autóctonos de tu colección para entrar a luchar. Tienes el botón <em>'Auto-elegir 3'</em> para armar tu equipo al instante.</p>
                       </div>
                     </div>
 
                     <div class="step-item">
                       <span class="step-num">2</span>
                       <div class="step-content">
-                        <strong>Selección de Acciones</strong>
-                        <p>Al tomar tu turno, eliges: Atacar, Usar Habilidad especial, o ingresar a la Mochila.</p>
+                        <strong>Tres Niveles de Dificultad (Bot)</strong>
+                        <p>• 🟢 <strong>Fácil:</strong> 1 rival con daño moderado (Niv. 10).<br>
+                           • 🟡 <strong>Normal:</strong> 2 rivales tácticos coordinados (Niv. 12-13).<br>
+                           • 🔴 <strong>Difícil:</strong> 3 depredadores alfa con alto daño y gran resistencia (Niv. 14-17).</p>
                       </div>
                     </div>
 
                     <div class="step-item">
                       <span class="step-num">3</span>
                       <div class="step-content">
-                        <strong>Uso de Mochila</strong>
-                        <p>Puedes usar Pociones Ecológicas para restaurar salud o activar Auras de Regeneración.</p>
+                        <strong>Iniciativa por Velocidad (SPD)</strong>
+                        <p>La velocidad de cada criatura define quién golpea primero en cada ronda de combate. ¡Las aves polinizadoras como el Picaflor Cometa suelen tener la máxima iniciativa!</p>
+                      </div>
+                    </div>
+
+                    <div class="step-item">
+                      <span class="step-num">4</span>
+                      <div class="step-content">
+                        <strong>Opciones en Tu Turno</strong>
+                        <p>• ⚔️ <strong>Atacar:</strong> Movimientos elementales con daño directo (-HP al rival).<br>
+                           • ✨ <strong>Habilidad:</strong> Activa <em>Refugio Natural</em> para regenerar salud (+30 HP).<br>
+                           • 🎒 <strong>Mochila:</strong> Usa <em>Poción Ecológica</em> para restaurar +45 HP.<br>
+                           • 🔄 <strong>Cambiar:</strong> Releva a tu criatura activa por cualquiera de las 3 de tu equipo sin perder el combate.</p>
+                      </div>
+                    </div>
+
+                    <div class="step-item">
+                      <span class="step-num">5</span>
+                      <div class="step-content">
+                        <strong>Relevo Automático, Victoria y Derrota</strong>
+                        <p>Si la criatura activa cae a 0 HP, entra automáticamente el siguiente compañero vivo del equipo. ¡Ganas la batalla al derrotar a todas las criaturas del bot rival! Si tus 3 criaturas caen, la batalla termina en derrota.</p>
                       </div>
                     </div>
                   </div>
@@ -846,6 +876,23 @@
       </div>
     </div>
   </div>
+
+  <!-- GOOGLE TRANSLATE INTEGRATION -->
+  <div id="google_translate_element" style="display:none;"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      try {
+        new google.translate.TranslateElement({
+          pageLanguage: 'es',
+          includedLanguages: 'es,en,pt',
+          autoDisplay: false
+        }, 'google_translate_element');
+      } catch(e) {
+        console.log('Google Translate Init notice:', e);
+      }
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script src="script.js"></script>
 </body>

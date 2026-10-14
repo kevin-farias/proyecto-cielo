@@ -829,6 +829,59 @@ input[type="range"] {
   font-size: 14px;
 }
 
+/* GOOGLE TRANSLATE STYLING & STATUS BOX */
+.translate-status-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(118, 200, 147, 0.35);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.translate-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary-accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.translate-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+/* Hide Google Translate top banner bar to protect mobile simulation view */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+.goog-tooltip {
+  display: none !important;
+}
+
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .art-preview-box {
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--card-border);

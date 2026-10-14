@@ -249,6 +249,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-show-flowmap').addEventListener('click', () => openModal('modal-flowmap'));
   document.getElementById('btn-sound-toggle').addEventListener('click', toggleGlobalSound);
 
+  // Restore saved language if exists
+  try {
+    const savedLang = localStorage.getItem('game_language');
+    if (savedLang && languages.includes(savedLang)) {
+      setLanguage(savedLang);
+    }
+  } catch(e) {}
+
   // Allow WebAudio unlocking on first click anywhere
   document.body.addEventListener('click', () => {
     if (SFX.ctx && SFX.ctx.state === 'suspended') {
@@ -358,6 +366,11 @@ function renderFloraFaunaInfo() {
 function navigateTo(screenId) {
   SFX.playClick();
 
+  // Alias for "como se pelea"
+  if (screenId === 'info_como_pelea') {
+    screenId = 'info_como_pelear';
+  }
+
   // Refresh dynamic screens when navigated to
   if (screenId === 'info_flora_fauna') {
     renderFloraFaunaInfo();
@@ -440,13 +453,395 @@ function updateVolume(type, val) {
   }
 }
 
+// ==========================================
+// GOOGLE TRANSLATE & MULTI-LANGUAGE SYSTEM
+// ==========================================
 const languages = ['español', 'english', 'português'];
+const langCodes = {
+  'español': 'es',
+  'english': 'en',
+  'português': 'pt'
+};
+
+const TRANSLATIONS = {
+  español: {
+    natureBadge: '🌿 Reserva Natural Serrana',
+    appSubtitle: 'PROYECTO CIELO • ECO-COMBAT',
+    enterHome: '▶ ENTRAR A INICIO',
+    splashFooter: 'Tu aventura comienza en la naturaleza',
+    settingsTitle: 'Ajustes',
+    ambientMusic: '🎵 Música Ambiental',
+    soundEffects: '🔊 Efectos de Sonido',
+    language: '🌐 Idioma',
+    googleActive: 'Google Translate Activo',
+    googleHint: 'Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.',
+    homeTitle: 'Inicio',
+    scanQrTitle: 'Escanear criaturas de la naturaleza',
+    btnCollection: 'COLECCIÓN',
+    btnInfo: 'INFORMACIÓN',
+    btnBattle: 'PELEA',
+    btnSettings: 'AJUSTES',
+    btnExit: 'SALIR',
+    footerNature: 'Conecta con la naturaleza y conserva las especies.',
+    infoTitle: 'Información',
+    infoFire: 'prevención contra incendios',
+    infoFireSub: 'Medidas oficiales y bomberos',
+    infoFoodWeb: 'red trófica local',
+    infoFoodWebSub: 'Productores, consumidores y descomponedores',
+    infoFloraFauna: 'información de la flora y fauna',
+    infoFloraFaunaSub: 'Especies de tu colección e información autóctona',
+    infoHowToFight: 'como se pelea',
+    infoHowToFightSub: 'Reglas de combate por turnos y guía de equipo',
+    howToFightTitle: 'Como se pelea',
+    backToInfo: '⬅ Volver a Información',
+    goToBattleNow: '⚔️ IR A PELEAR AHORA',
+    battleTitle: 'Pelea',
+    diffBotTag: 'PELEA CONTRA BOT • 3 NIVELES DE DIFICULTAD',
+    easyTitle: 'Nivel Inicial (1 Criatura)',
+    easyDesc: 'Rival de nivel 10 con estadísticas estándar. Ideal para aprender el combate por turnos.',
+    mediumTitle: 'Nivel Intermedio (2 Criaturas)',
+    mediumDesc: 'Dúo de fauna silvestre de nivel 13. Requiere coordinar turnos y habilidades.',
+    hardTitle: 'Nivel Experto (3 Criaturas)',
+    hardDesc: 'Trío de depredadores alfa de nivel 16 con alto daño y gran resistencia de vida.',
+    chooseTeam3: 'Elegir Equipo de 3 ›',
+    localMultiplayer: 'MULTIJUGADOR LOCAL',
+    localFriendTitle: 'pelea contra amigo local',
+    localFriendDesc: 'Duelo entre 2 entrenadores en el mismo teléfono',
+    selectTeamTitle: 'Elige 3 Criaturas',
+    teamReqTag: 'FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)',
+    autoPick3: '⚡ Auto-elegir 3',
+    availableCreaturesTag: 'TUS CRIATURAS DISPONIBLES',
+    selectHint: 'Toca una criatura para sumarla o quitarla de tu equipo:',
+    btnAttack: '⚔️ Atacar',
+    btnSkill: '✨ Habilidad',
+    btnItem: '🎒 Mochila',
+    btnSwitch: '🔄 Cambiar (3)',
+    btnSurrender: '← Salir de Batalla'
+  },
+  english: {
+    natureBadge: '🌿 Mountain Nature Reserve',
+    appSubtitle: 'PROJECT CIELO • ECO-COMBAT',
+    enterHome: '▶ ENTER HOME',
+    splashFooter: 'Your adventure begins in nature',
+    settingsTitle: 'Settings',
+    ambientMusic: '🎵 Ambient Music',
+    soundEffects: '🔊 Sound Effects',
+    language: '🌐 Language',
+    googleActive: 'Google Translate Active',
+    googleHint: 'Connected to Google Translate API. The game adapts in real time to Spanish, English or Portuguese.',
+    homeTitle: 'Home',
+    scanQrTitle: 'Scan wild nature creatures',
+    btnCollection: 'COLLECTION',
+    btnInfo: 'INFORMATION',
+    btnBattle: 'BATTLE',
+    btnSettings: 'SETTINGS',
+    btnExit: 'EXIT',
+    footerNature: 'Connect with nature and preserve local species.',
+    infoTitle: 'Information',
+    infoFire: 'forest fire prevention',
+    infoFireSub: 'Official regulations and firefighters',
+    infoFoodWeb: 'local trophic network',
+    infoFoodWebSub: 'Producers, consumers, and decomposers',
+    infoFloraFauna: 'flora & fauna information',
+    infoFloraFaunaSub: 'Species in your collection and native facts',
+    infoHowToFight: 'how to battle',
+    infoHowToFightSub: 'Turn-based combat rules and team guide',
+    howToFightTitle: 'How to battle',
+    backToInfo: '⬅ Back to Information',
+    goToBattleNow: '⚔️ GO TO BATTLE NOW',
+    battleTitle: 'Battle',
+    diffBotTag: 'BOT BATTLE • 3 DIFFICULTY LEVELS',
+    easyTitle: 'Beginner Level (1 Creature)',
+    easyDesc: 'Level 10 rival with standard stats. Great for learning turn-based combat.',
+    mediumTitle: 'Intermediate Level (2 Creatures)',
+    mediumDesc: 'Wildlife duo at level 13. Requires tactical coordination and skills.',
+    hardTitle: 'Expert Level (3 Creatures)',
+    hardDesc: 'Trio of alpha predators at level 16 with heavy damage and high HP.',
+    chooseTeam3: 'Choose Team of 3 ›',
+    localMultiplayer: 'LOCAL MULTIPLAYER',
+    localFriendTitle: 'battle against local friend',
+    localFriendDesc: 'Duel between 2 trainers on the same phone',
+    selectTeamTitle: 'Choose 3 Creatures',
+    teamReqTag: 'FORM YOUR BATTLE TEAM (3 REQUIRED)',
+    autoPick3: '⚡ Auto-pick 3',
+    availableCreaturesTag: 'YOUR AVAILABLE CREATURES',
+    selectHint: 'Tap a creature to add or remove it from your team:',
+    btnAttack: '⚔️ Attack',
+    btnSkill: '✨ Skill',
+    btnItem: '🎒 Backpack',
+    btnSwitch: '🔄 Switch (3)',
+    btnSurrender: '← Exit Battle'
+  },
+  português: {
+    natureBadge: '🌿 Reserva Natural Serrana',
+    appSubtitle: 'PROJETO CÉU • ECO-COMBATE',
+    enterHome: '▶ ENTRAR NO INÍCIO',
+    splashFooter: 'Sua aventura começa na natureza',
+    settingsTitle: 'Ajustes',
+    ambientMusic: '🎵 Música Ambiente',
+    soundEffects: '🔊 Efeitos Sonoros',
+    language: '🌐 Idioma',
+    googleActive: 'Google Tradutor Ativo',
+    googleHint: 'Conectado à API do Google Tradutor. O jogo se adapta em tempo real para espanhol, inglês ou português.',
+    homeTitle: 'Início',
+    scanQrTitle: 'Escanear criaturas da natureza',
+    btnCollection: 'COLEÇÃO',
+    btnInfo: 'INFORMAÇÃO',
+    btnBattle: 'BATALHA',
+    btnSettings: 'AJUSTES',
+    btnExit: 'SAIR',
+    footerNature: 'Conecte-se com a natureza e preserve as espécies.',
+    infoTitle: 'Informação',
+    infoFire: 'prevenção contra incêndios',
+    infoFireSub: 'Diretrizes oficiais e bombeiros',
+    infoFoodWeb: 'rede trófica local',
+    infoFoodWebSub: 'Produtores, consumidores e decompositores',
+    infoFloraFauna: 'informações da flora e fauna',
+    infoFloraFaunaSub: 'Espécies da sua coleção e informações nativas',
+    infoHowToFight: 'como lutar',
+    infoHowToFightSub: 'Regras de combate por turnos e guia de equipe',
+    howToFightTitle: 'Como lutar',
+    backToInfo: '⬅ Voltar à Informação',
+    goToBattleNow: '⚔️ IR PARA A BATALHA',
+    battleTitle: 'Batalha',
+    diffBotTag: 'BATALHA CONTRA BOT • 3 NÍVEIS DE DIFICULDADE',
+    easyTitle: 'Nível Inicial (1 Criatura)',
+    easyDesc: 'Rival nível 10 com atributos padrão. Ideal para aprender o combate por turnos.',
+    mediumTitle: 'Nível Intermediário (2 Criaturas)',
+    mediumDesc: 'Dupla de fauna silvestre nível 13. Requer coordenação tática e habilidades.',
+    hardTitle: 'Nível Especialista (3 Criaturas)',
+    hardDesc: 'Trio de predadores alfa nível 16 com alto dano e grande resistência.',
+    chooseTeam3: 'Escolher Equipe de 3 ›',
+    localMultiplayer: 'MULTIJOGADOR LOCAL',
+    localFriendTitle: 'batalha contra amigo local',
+    localFriendDesc: 'Duelo entre 2 treinadores no mesmo celular',
+    selectTeamTitle: 'Escolha 3 Criaturas',
+    teamReqTag: 'FORME SUA EQUIPE DE BATALHA (3 OBRIGATÓRIAS)',
+    autoPick3: '⚡ Auto-escolher 3',
+    availableCreaturesTag: 'SUAS CRIATURAS DISPONÍVEIS',
+    selectHint: 'Toque em uma criatura para adicioná-la ou removê-la da equipe:',
+    btnAttack: '⚔️ Atacar',
+    btnSkill: '✨ Habilidade',
+    btnItem: '🎒 Mochila',
+    btnSwitch: '🔄 Trocar (3)',
+    btnSurrender: '← Sair da Batalha'
+  }
+};
+
 function cycleLang(dir) {
   let idx = languages.indexOf(AppState.language);
   idx = (idx + dir + languages.length) % languages.length;
-  AppState.language = languages[idx];
-  document.getElementById('current-lang').textContent = AppState.language;
+  const newLang = languages[idx];
+  setLanguage(newLang);
+}
+
+function setLanguage(lang) {
+  AppState.language = lang;
   SFX.playClick();
+
+  // Update language label in Settings
+  const currentLangEl = document.getElementById('current-lang');
+  if (currentLangEl) currentLangEl.textContent = lang;
+
+  const code = langCodes[lang] || 'es';
+
+  // 1. Synchronize Google Translate Widget & Cookies
+  triggerGoogleTranslate(code);
+
+  // 2. Direct instant DOM UI translation
+  applyTranslationsToDOM(lang);
+
+  // 3. Refresh dynamic views
+  renderCollectionGrid();
+  renderFloraFaunaInfo();
+  if (AppState.currentScreen === 'seleccionar_criatura') {
+    renderTeamSelectionView();
+  }
+
+  try {
+    localStorage.setItem('game_language', lang);
+  } catch(e) {}
+}
+
+function triggerGoogleTranslate(langCode) {
+  try {
+    const host = window.location.hostname;
+    // Set cookies recognized by Google Translate script
+    if (langCode === 'es') {
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `googtrans=/es/es; path=/;`;
+    } else {
+      document.cookie = `googtrans=/es/${langCode}; path=/;`;
+      document.cookie = `googtrans=/auto/${langCode}; path=/;`;
+      if (host) {
+        document.cookie = `googtrans=/es/${langCode}; domain=${host}; path=/;`;
+        document.cookie = `googtrans=/auto/${langCode}; domain=${host}; path=/;`;
+      }
+    }
+
+    // Trigger select change in Google Translate element if mounted
+    const combo = document.querySelector('.goog-te-combo');
+    if (combo) {
+      combo.value = langCode;
+      combo.dispatchEvent(new Event('change'));
+    }
+  } catch (e) {
+    console.log('Google Translate trigger error:', e);
+  }
+}
+
+function applyTranslationsToDOM(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.español;
+
+  // 1. Splash Screen
+  const splashBadge = document.querySelector('#screen-splash .nature-badge');
+  if (splashBadge) splashBadge.textContent = t.natureBadge;
+
+  const splashSub = document.querySelector('#screen-splash .app-subtitle');
+  if (splashSub) splashSub.textContent = t.appSubtitle;
+
+  const splashBtn = document.querySelector('#screen-splash .btn-primary');
+  if (splashBtn) splashBtn.innerHTML = `<span class="btn-icon">▶</span> ${t.enterHome}`;
+
+  const splashFooter = document.querySelector('#screen-splash .splash-footer p');
+  if (splashFooter) splashFooter.textContent = t.splashFooter;
+
+  // 2. Settings Screen
+  const settingsTitle = document.querySelector('#screen-ajustes .screen-header h3');
+  if (settingsTitle) settingsTitle.textContent = t.settingsTitle;
+
+  const labels = document.querySelectorAll('#screen-ajustes .setting-label span:first-child');
+  if (labels[0]) labels[0].textContent = t.ambientMusic;
+  if (labels[1]) labels[1].textContent = t.soundEffects;
+
+  const langRowSpan = document.querySelector('#screen-ajustes .setting-row span:first-child');
+  if (langRowSpan) langRowSpan.textContent = t.language;
+
+  const transBadge = document.querySelector('#screen-ajustes .translate-badge');
+  if (transBadge) transBadge.innerHTML = `<span class="g-icon">🌐</span> ${t.googleActive}`;
+
+  const transHint = document.getElementById('translate-hint-text');
+  if (transHint) transHint.textContent = t.googleHint;
+
+  // 3. Inicio Screen
+  const inicioTitle = document.querySelector('#screen-inicio .screen-header h3');
+  if (inicioTitle) inicioTitle.textContent = t.homeTitle;
+
+  const qrSub = document.querySelector('#screen-inicio .qr-label span');
+  if (qrSub) qrSub.textContent = t.scanQrTitle;
+
+  const menuBtns = document.querySelectorAll('#screen-inicio .dashboard-menu .btn-figma');
+  if (menuBtns[0]) menuBtns[0].innerHTML = `<span class="btn-icon">🎴</span> ${t.btnCollection}`;
+  if (menuBtns[1]) menuBtns[1].innerHTML = `<span class="btn-icon">ℹ️</span> ${t.btnInfo}`;
+  if (menuBtns[2]) menuBtns[2].innerHTML = `<span class="btn-icon">⚔️</span> ${t.btnBattle}`;
+
+  const secBtns = document.querySelectorAll('#screen-inicio .dashboard-secondary-grid .btn-figma');
+  if (secBtns[0]) secBtns[0].innerHTML = `<span class="btn-icon">⚙</span> ${t.btnSettings}`;
+  if (secBtns[1]) secBtns[1].innerHTML = `<span class="btn-icon">↳</span> ${t.btnExit}`;
+
+  const footerNature = document.querySelector('#screen-inicio .footer-note p');
+  if (footerNature) footerNature.textContent = t.footerNature;
+
+  // 4. Información Screen
+  const infoTitle = document.querySelector('#screen-informacion .screen-header h3');
+  if (infoTitle) infoTitle.textContent = t.infoTitle;
+
+  const catBtns = document.querySelectorAll('#screen-informacion .info-cat-btn');
+  if (catBtns[0]) {
+    catBtns[0].querySelector('strong').textContent = t.infoFire;
+    catBtns[0].querySelector('span').textContent = t.infoFireSub;
+  }
+  if (catBtns[1]) {
+    catBtns[1].querySelector('strong').textContent = t.infoFoodWeb;
+    catBtns[1].querySelector('span').textContent = t.infoFoodWebSub;
+  }
+  if (catBtns[2]) {
+    catBtns[2].querySelector('strong').textContent = t.infoFloraFauna;
+    catBtns[2].querySelector('span').textContent = t.infoFloraFaunaSub;
+  }
+  if (catBtns[3]) {
+    catBtns[3].querySelector('strong').textContent = t.infoHowToFight;
+    catBtns[3].querySelector('span').textContent = t.infoHowToFightSub;
+  }
+
+  // 5. Como se pelea Screen
+  const comoPelearTitle = document.querySelector('#screen-info_como_pelear .screen-header h3');
+  if (comoPelearTitle) comoPelearTitle.textContent = t.howToFightTitle;
+
+  const btnBackInfoTop = document.querySelector('#screen-info_como_pelear .btn-back-home');
+  if (btnBackInfoTop) btnBackInfoTop.textContent = t.backToInfo;
+
+  const guideHeaderTitle = document.querySelector('#screen-info_como_pelear .guide-header-text');
+  if (guideHeaderTitle) guideHeaderTitle.textContent = `⚔️ ${t.howToFightTitle.toUpperCase()} • WAR IN HEAVEN`;
+
+  const guideBtns = document.querySelectorAll('#screen-info_como_pelear .guide-actions-row .btn-figma');
+  if (guideBtns[0]) guideBtns[0].textContent = t.backToInfo;
+  if (guideBtns[1]) guideBtns[1].textContent = t.goToBattleNow;
+
+  // 6. Pelea Screen
+  const peleaTitle = document.querySelector('#screen-pelea .screen-header h3');
+  if (peleaTitle) peleaTitle.textContent = t.battleTitle;
+
+  const diffTag = document.querySelector('#screen-pelea .section-tag.center');
+  if (diffTag) diffTag.textContent = t.diffBotTag;
+
+  const diffCards = document.querySelectorAll('#screen-pelea .diff-card');
+  if (diffCards[0]) {
+    diffCards[0].querySelector('.diff-body strong').textContent = t.easyTitle;
+    diffCards[0].querySelector('.diff-body p').textContent = t.easyDesc;
+    diffCards[0].querySelector('.diff-action').textContent = t.chooseTeam3;
+  }
+  if (diffCards[1]) {
+    diffCards[1].querySelector('.diff-body strong').textContent = t.mediumTitle;
+    diffCards[1].querySelector('.diff-body p').textContent = t.mediumDesc;
+    diffCards[1].querySelector('.diff-action').textContent = t.chooseTeam3;
+  }
+  if (diffCards[2]) {
+    diffCards[2].querySelector('.diff-body strong').textContent = t.hardTitle;
+    diffCards[2].querySelector('.diff-body p').textContent = t.hardDesc;
+    diffCards[2].querySelector('.diff-action').textContent = t.chooseTeam3;
+  }
+
+  const localTag = document.querySelectorAll('#screen-pelea .section-tag.center')[1];
+  if (localTag) localTag.textContent = t.localMultiplayer;
+
+  const localCard = document.querySelector('#screen-pelea .btn-mode-card');
+  if (localCard) {
+    localCard.querySelector('.mode-text strong').textContent = t.localFriendTitle;
+    localCard.querySelector('.mode-text span').textContent = t.localFriendDesc;
+  }
+
+  // 7. Seleccionar Criatura Screen
+  const selTitle = document.querySelector('#screen-seleccionar_criatura .screen-header h3');
+  if (selTitle) selTitle.textContent = t.selectTeamTitle;
+
+  const selTag = document.querySelector('#screen-seleccionar_criatura .section-tag');
+  if (selTag) selTag.textContent = t.teamReqTag;
+
+  const quickBtn = document.querySelector('.btn-quick-fill');
+  if (quickBtn) quickBtn.textContent = t.autoPick3;
+
+  const availTag = document.querySelectorAll('#screen-seleccionar_criatura .section-tag')[1];
+  if (availTag) availTag.textContent = t.availableCreaturesTag;
+
+  const selHint = document.querySelector('#screen-seleccionar_criatura .select-hint-text');
+  if (selHint) selHint.textContent = t.selectHint;
+
+  // 8. Battle Arena Action Buttons
+  const btnAtk = document.querySelector('.btn-atk');
+  if (btnAtk) btnAtk.textContent = t.btnAttack;
+
+  const btnSkill = document.querySelector('.btn-skill');
+  if (btnSkill) btnSkill.textContent = t.btnSkill;
+
+  const btnItem = document.querySelector('.btn-item');
+  if (btnItem) btnItem.textContent = t.btnItem;
+
+  const btnSwitch = document.querySelector('.btn-switch');
+  if (btnSwitch) btnSwitch.textContent = t.btnSwitch;
+
+  const btnBackBattle = document.querySelector('.btn-back-battle');
+  if (btnBackBattle) btnBackBattle.textContent = t.btnSurrender;
 }
 
 function triggerExitApp() {
