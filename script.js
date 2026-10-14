@@ -129,16 +129,16 @@ const AppState = {
   battle: {
     mode: 'bot',
     pendingMode: 'bot',
+    botDifficulty: 'facil', // 'facil' | 'normal' | 'dificil'
+    selectedTeam: [],       // Array of 3 creature keys chosen for combat
+    playerTeam: [],         // Array of 3 creature objects
+    activePlayerIndex: 0,   // Current fighting creature in playerTeam
+    enemyTeam: [],          // Array of enemy creature objects
+    activeEnemyIndex: 0,    // Current fighting creature in enemyTeam
     turn: 1,
     isPlayerTurn: true,
-    player: null,
-    enemy: {
-      name: 'Yaguareté (BOT)',
-      hp: 150,
-      maxHp: 150,
-      icon: '🐆',
-      lvl: 14
-    }
+    player: null,           // Reference to active player creature
+    enemy: null             // Reference to active enemy creature
   }
 };
 
@@ -504,22 +504,44 @@ function showCreatureDetail(id) {
 }
 
 // ==========================================
-// CREATURE SELECTION BEFORE BATTLE LOGIC
+// 3 NIVELES DE DIFICULTAD Y ELECCIÓN DE 3 CRIATURAS
 // ==========================================
-function selectModeAndChooseCreature(mode) {
+
+function startBotBattleWithDifficulty(diff) {
   SFX.playClick();
-  AppState.battle.pendingMode = mode;
-  
-  // Render available unlocked creatures in selection screen
+  AppState.battle.pendingMode = 'bot';
+  AppState.battle.botDifficulty = diff;
+  openTeamSelection();
+}
+
+function selectLocalPlayerMode(playerMode) {
+  SFX.playClick();
+  AppState.battle.pendingMode = playerMode;
+  AppState.battle.botDifficulty = 'normal';
+  openTeamSelection();
+}
+
+function openTeamSelection() {
+  // Pre-select first 3 unlocked if empty, or start empty for explicit user selection
+  if (!AppState.battle.selectedTeam || AppState.battle.selectedTeam.length === 0) {
+    AppState.battle.selectedTeam = [];
+  }
+  renderTeamSelectionView();
+  navigateTo('seleccionar_criatura');
+}
+
+function renderTeamSelectionView() {
   const container = document.getElementById('creature-selection-container');
   if (!container) return;
 
   container.innerHTML = '';
   AppState.unlockedCreatures.forEach(key => {
     const data = CREATURE_DATABASE[key];
+    const isSelected = AppState.battle.selectedTeam.includes(key);
     const card = document.createElement('div');
-    card.className = 'select-card';
-    card.onclick = () => confirmCreatureAndLaunchBattle(key);
+    card.className = `select-card ${isSelected ? 'selected-in-team' : ''}`;
+    card.id = `select-card-${key}`;
+    card.onclick = () => toggleCreatureInTeam(key);
 
     card.innerHTML = `
       <div class="select-card-avatar">${data.icon}</div>
@@ -527,69 +549,343 @@ function selectModeAndChooseCreature(mode) {
         <h4>${data.name}</h4>
         <div class="select-card-stats">Nivel ${data.lvl} • ${data.badge} • HP: ${data.hp} | ATK: ${data.atk}</div>
       </div>
-      <button class="btn-select-creature">⚔️ USAR</button>
+      <button class="btn-select-creature ${isSelected ? 'selected' : ''}">
+        ${isSelected ? '✓ EN EQUIPO' : '+ ELEGIR'}
+      </button>
     `;
     container.appendChild(card);
   });
 
-  navigateTo('seleccionar_criatura');
+  updateTeamSelectionUI();
 }
 
-function confirmCreatureAndLaunchBattle(selectedKey) {
+function toggleCreatureInTeam(key) {
   SFX.playClick();
-  const playerData = CREATURE_DATABASE[selectedKey];
-  
-  // Set Player Creature
-  AppState.battle.mode = AppState.battle.pendingMode;
-  AppState.battle.turn = 1;
-  AppState.battle.isPlayerTurn = true;
-  AppState.battle.player = {
-    key: selectedKey,
-    name: playerData.name,
-    icon: playerData.icon,
-    lvl: playerData.lvl,
-    hp: playerData.hp,
-    maxHp: playerData.maxHp,
-    moves: playerData.moves
-  };
-
-  // Set Opponent Creature (Different from player)
-  let enemyKey = 'yaguarete';
-  if (selectedKey === 'yaguarete') enemyKey = 'pecari';
-  const enemyData = CREATURE_DATABASE[enemyKey];
-
-  AppState.battle.enemy = {
-    key: enemyKey,
-    name: AppState.battle.mode === 'bot' ? `${enemyData.name} (BOT)` : `${enemyData.name} (${AppState.battle.mode})`,
-    icon: enemyData.icon,
-    lvl: enemyData.lvl,
-    hp: enemyData.hp,
-    maxHp: enemyData.maxHp
-  };
-
-  // Populate dynamic attack buttons in battle sub-menu
-  const attackControls = document.getElementById('battle-controls-attacks');
-  if (attackControls) {
-    attackControls.innerHTML = '';
-    playerData.moves.forEach(m => {
-      const btn = document.createElement('button');
-      btn.className = 'btn-battle btn-sub';
-      btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text);
-      btn.innerHTML = `⚡ ${m.name} (${m.dmg} DMG)`;
-      attackControls.appendChild(btn);
-    });
-
-    const backBtn = document.createElement('button');
-    backBtn.className = 'btn-battle btn-back-sub';
-    backBtn.onclick = hideSubMenu;
-    backBtn.innerHTML = `↩ Volver`;
-    attackControls.appendChild(backBtn);
+  const idx = AppState.battle.selectedTeam.indexOf(key);
+  if (idx > -1) {
+    AppState.battle.selectedTeam.splice(idx, 1);
+  } else {
+    if (AppState.battle.selectedTeam.length >= 3) {
+      alert('Tu equipo ya tiene 3 criaturas. Toca un slot o una criatura seleccionada para deseleccionarla.');
+      return;
+    }
+    AppState.battle.selectedTeam.push(key);
   }
 
+  updateTeamSelectionUI();
+
+  // Update card visuals
+  AppState.unlockedCreatures.forEach(k => {
+    const card = document.getElementById(`select-card-${k}`);
+    if (card) {
+      const inTeam = AppState.battle.selectedTeam.includes(k);
+      card.classList.toggle('selected-in-team', inTeam);
+      const btn = card.querySelector('.btn-select-creature');
+      if (btn) {
+        btn.classList.toggle('selected', inTeam);
+        btn.textContent = inTeam ? '✓ EN EQUIPO' : '+ ELEGIR';
+      }
+    }
+  });
+}
+
+function removeCreatureFromTeam(slotIndex) {
+  if (AppState.battle.selectedTeam[slotIndex]) {
+    SFX.playClick();
+    AppState.battle.selectedTeam.splice(slotIndex, 1);
+    updateTeamSelectionUI();
+    renderTeamSelectionView();
+  }
+}
+
+function quickFillTeam() {
+  SFX.playClick();
+  // Automatically select the first 3 unlocked creatures
+  AppState.battle.selectedTeam = AppState.unlockedCreatures.slice(0, 3);
+  renderTeamSelectionView();
+}
+
+function updateTeamSelectionUI() {
+  const team = AppState.battle.selectedTeam;
+  const count = team.length;
+
+  // Update 3 Team Slots
+  for (let i = 0; i < 3; i++) {
+    const slotEl = document.getElementById(`slot-${i}`);
+    const contentEl = document.getElementById(`slot-content-${i}`);
+    if (!slotEl || !contentEl) continue;
+
+    if (i < count) {
+      const key = team[i];
+      const data = CREATURE_DATABASE[key];
+      slotEl.classList.add('filled');
+      contentEl.innerHTML = `
+        <span class="slot-avatar">${data.icon}</span>
+        <span class="slot-name">${data.name}</span>
+        <span class="slot-remove-badge">✕ Quitar</span>
+      `;
+    } else {
+      slotEl.classList.remove('filled');
+      contentEl.innerHTML = `<span class="slot-placeholder">+ Slot ${i + 1}</span>`;
+    }
+  }
+
+  // Update counter
+  const counterEl = document.getElementById('team-selection-counter');
+  if (counterEl) {
+    counterEl.textContent = `${count} / 3 seleccionadas`;
+  }
+
+  // Update confirm button
+  const confirmBtn = document.getElementById('btn-confirm-team');
+  if (confirmBtn) {
+    if (count === 3) {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = `⚔️ ¡A LA BATALLA CON TU EQUIPO! (3/3)`;
+    } else {
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = `⚔️ SELECCIONA 3 CRIATURAS (${count}/3)`;
+    }
+  }
+}
+
+// ==========================================
+// BATTLE ENGINE: 3v3 / 3-CREATURE TEAM SYSTEM
+// ==========================================
+
+function confirmTeamAndLaunchBattle() {
+  if (AppState.battle.selectedTeam.length !== 3) {
+    alert('Debes elegir 3 criaturas para formar tu equipo de combate.');
+    return;
+  }
+  SFX.playClick();
+
+  AppState.battle.mode = AppState.battle.pendingMode;
+  const diff = AppState.battle.botDifficulty || 'facil';
+
+  // Build Player Team (3 chosen creatures)
+  AppState.battle.playerTeam = AppState.battle.selectedTeam.map(key => {
+    const data = CREATURE_DATABASE[key];
+    return {
+      key: key,
+      name: data.name,
+      icon: data.icon,
+      lvl: data.lvl,
+      hp: data.hp,
+      maxHp: data.maxHp,
+      spd: data.spd,
+      atk: data.atk,
+      moves: JSON.parse(JSON.stringify(data.moves)),
+      isFainted: false
+    };
+  });
+
+  // Build Enemy Team based on chosen Bot Difficulty (or local player)
+  if (diff === 'facil') {
+    AppState.battle.enemyTeam = [
+      {
+        key: 'pecari',
+        name: 'Pecarí de Collar (BOT)',
+        icon: '🐗',
+        lvl: 10,
+        hp: 110,
+        maxHp: 110,
+        atk: 25,
+        isFainted: false,
+        attacks: [
+          { name: 'Embestida Suave', damage: 16 },
+          { name: 'Pisotón Leve', damage: 20 },
+          { name: 'Frote Serrano', damage: 14 }
+        ]
+      }
+    ];
+  } else if (diff === 'normal') {
+    AppState.battle.enemyTeam = [
+      {
+        key: 'zorro',
+        name: 'Zorro Gris (BOT)',
+        icon: '🦊',
+        lvl: 12,
+        hp: 130,
+        maxHp: 130,
+        atk: 35,
+        isFainted: false,
+        attacks: [
+          { name: 'Mordisco Ágil', damage: 24 },
+          { name: 'Zarpazo Silvestre', damage: 28 },
+          { name: 'Astucia de Monte', damage: 22 }
+        ]
+      },
+      {
+        key: 'picaflor',
+        name: 'Picaflor Cometa (BOT)',
+        icon: '🌸',
+        lvl: 13,
+        hp: 125,
+        maxHp: 125,
+        atk: 40,
+        isFainted: false,
+        attacks: [
+          { name: 'Picotazo Veloz', damage: 26 },
+          { name: 'Viento Serrano', damage: 32 },
+          { name: 'Ráfaga Floral', damage: 30 }
+        ]
+      }
+    ];
+  } else { // 'dificil'
+    AppState.battle.enemyTeam = [
+      {
+        key: 'buho',
+        name: 'Búho Serrano Alfa (BOT)',
+        icon: '🦉',
+        lvl: 14,
+        hp: 140,
+        maxHp: 140,
+        atk: 45,
+        isFainted: false,
+        attacks: [
+          { name: 'Ataque Silencioso', damage: 32 },
+          { name: 'Garra Nocturna', damage: 38 },
+          { name: 'Mirada Hipnótica', damage: 35 }
+        ]
+      },
+      {
+        key: 'quebracho',
+        name: 'Horco Quebracho Centenario (BOT)',
+        icon: '🌳',
+        lvl: 15,
+        hp: 175,
+        maxHp: 175,
+        atk: 40,
+        isFainted: false,
+        attacks: [
+          { name: 'Raíz Aplastante', damage: 35 },
+          { name: 'Látigo de Espinas', damage: 40 },
+          { name: 'Fuerza Ancestral', damage: 44 }
+        ]
+      },
+      {
+        key: 'yaguarete',
+        name: 'Yaguareté Rey Alfa (BOT)',
+        icon: '🐆',
+        lvl: 17,
+        hp: 190,
+        maxHp: 190,
+        atk: 55,
+        isFainted: false,
+        attacks: [
+          { name: 'Zarpazo Mortal', damage: 42 },
+          { name: 'Mordisco Devastador', damage: 48 },
+          { name: 'Furia de Apex Predator', damage: 52 }
+        ]
+      }
+    ];
+  }
+
+  // Set initial active fighters
+  AppState.battle.activePlayerIndex = 0;
+  AppState.battle.activeEnemyIndex = 0;
+  AppState.battle.player = AppState.battle.playerTeam[0];
+  AppState.battle.enemy = AppState.battle.enemyTeam[0];
+  AppState.battle.turn = 1;
+  AppState.battle.isPlayerTurn = true;
+
+  // Set difficulty badge
+  const diffBadge = document.getElementById('battle-diff-badge');
+  if (diffBadge) {
+    if (diff === 'facil') diffBadge.innerHTML = '🟢 Fácil (1 Rival)';
+    else if (diff === 'normal') diffBadge.innerHTML = '🟡 Normal (2 Rivales)';
+    else diffBadge.innerHTML = '🔴 Difícil (3 Rivales Alfa)';
+  }
+
+  const enemyRosterTitle = document.getElementById('enemy-roster-title');
+  if (enemyRosterTitle) {
+    enemyRosterTitle.textContent = `Rival (${AppState.battle.enemyTeam.length}):`;
+  }
+
+  populateAttackControls();
+  populateSwitchControls();
   updateBattleUI();
-  document.getElementById('battle-log').textContent = `¡A critical hit! ¡${playerData.name} entra al combate contra ${AppState.battle.enemy.name}!`;
-  
+  updateBattleTeamsRosterUI();
+
+  document.getElementById('battle-log').textContent = `¡Combate iniciado! Tu equipo de 3 criaturas vs BOT (${diff.toUpperCase()}). ¡Turno de ${AppState.battle.player.name}!`;
+
   navigateTo('battle_arena');
+}
+
+function populateAttackControls() {
+  const p = AppState.battle.player;
+  const attackControls = document.getElementById('battle-controls-attacks');
+  if (!attackControls || !p) return;
+
+  attackControls.innerHTML = '';
+  p.moves.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-battle btn-sub';
+    btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text);
+    btn.innerHTML = `⚡ ${m.name} (${m.dmg} DMG)`;
+    attackControls.appendChild(btn);
+  });
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn-battle btn-back-sub';
+  backBtn.onclick = hideSubMenu;
+  backBtn.innerHTML = `↩ Volver`;
+  attackControls.appendChild(backBtn);
+}
+
+function populateSwitchControls() {
+  const switchControls = document.getElementById('battle-controls-switch');
+  if (!switchControls) return;
+
+  switchControls.innerHTML = '';
+  AppState.battle.playerTeam.forEach((creature, idx) => {
+    const isCurrent = idx === AppState.battle.activePlayerIndex;
+    const isFainted = creature.hp <= 0;
+
+    const btn = document.createElement('button');
+    btn.className = `btn-battle btn-sub ${isCurrent ? 'active' : ''}`;
+    btn.disabled = isCurrent || isFainted;
+
+    let statusText = `${creature.hp}/${creature.maxHp} HP`;
+    if (isCurrent) statusText = 'EN COMBATE';
+    if (isFainted) statusText = '💀 DEBILITADO';
+
+    btn.innerHTML = `${creature.icon} ${creature.name} (${statusText})`;
+    if (!isCurrent && !isFainted) {
+      btn.onclick = () => switchActivePlayerCreature(idx);
+    }
+    switchControls.appendChild(btn);
+  });
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn-battle btn-back-sub';
+  backBtn.onclick = hideSubMenu;
+  backBtn.innerHTML = `↩ Volver`;
+  switchControls.appendChild(backBtn);
+}
+
+function switchActivePlayerCreature(newIndex) {
+  if (newIndex === AppState.battle.activePlayerIndex) return;
+  const target = AppState.battle.playerTeam[newIndex];
+  if (!target || target.hp <= 0) return;
+
+  SFX.playClick();
+  hideSubMenu();
+
+  AppState.battle.activePlayerIndex = newIndex;
+  AppState.battle.player = target;
+
+  populateAttackControls();
+  populateSwitchControls();
+  updateBattleUI();
+  updateBattleTeamsRosterUI();
+
+  document.getElementById('battle-log').textContent = `🔄 ¡Cambiaste a ${target.name}! Entra al combate listo para luchar.`;
+
+  // Turn passes to enemy
+  AppState.battle.isPlayerTurn = false;
+  setTimeout(executeEnemyTurn, 1400);
 }
 
 function updateBattleUI() {
@@ -618,17 +914,60 @@ function updateBattleUI() {
   document.getElementById('turn-indicator').textContent = `TURNO ${AppState.battle.turn}: ${AppState.battle.isPlayerTurn ? p.name : e.name}`;
 }
 
+function updateBattleTeamsRosterUI() {
+  // Player Roster
+  const playerSlots = document.getElementById('player-roster-slots');
+  if (playerSlots && AppState.battle.playerTeam) {
+    playerSlots.innerHTML = '';
+    AppState.battle.playerTeam.forEach((c, idx) => {
+      const isCurrent = idx === AppState.battle.activePlayerIndex;
+      const isFainted = c.hp <= 0;
+      const pill = document.createElement('div');
+      pill.className = `roster-slot-pill ${isCurrent ? 'active' : ''} ${isFainted ? 'fainted' : ''}`;
+      pill.title = `${c.name}: ${c.hp}/${c.maxHp} HP ${isCurrent ? '(Actual)' : ''}`;
+      pill.innerHTML = `<span>${c.icon}</span><span class="mini-hp">${c.hp}</span>`;
+      if (!isCurrent && !isFainted && AppState.battle.isPlayerTurn) {
+        pill.onclick = () => switchActivePlayerCreature(idx);
+      }
+      playerSlots.appendChild(pill);
+    });
+  }
+
+  // Enemy Roster
+  const enemySlots = document.getElementById('enemy-roster-slots');
+  if (enemySlots && AppState.battle.enemyTeam) {
+    enemySlots.innerHTML = '';
+    AppState.battle.enemyTeam.forEach((c, idx) => {
+      const isCurrent = idx === AppState.battle.activeEnemyIndex;
+      const isFainted = c.hp <= 0;
+      const pill = document.createElement('div');
+      pill.className = `roster-slot-pill ${isCurrent ? 'active' : ''} ${isFainted ? 'fainted' : ''}`;
+      pill.title = `${c.name}: ${c.hp}/${c.maxHp} HP`;
+      pill.innerHTML = `<span>${c.icon}</span><span class="mini-hp">${c.hp}</span>`;
+      enemySlots.appendChild(pill);
+    });
+  }
+}
+
 function showSubMenu(menuId) {
   SFX.playClick();
+  document.getElementById('battle-controls-main').classList.add('hidden');
+  document.getElementById('battle-controls-attacks').classList.add('hidden');
+  document.getElementById('battle-controls-switch').classList.add('hidden');
+
   if (menuId === 'attacks') {
-    document.getElementById('battle-controls-main').classList.add('hidden');
+    populateAttackControls();
     document.getElementById('battle-controls-attacks').classList.remove('hidden');
+  } else if (menuId === 'switch') {
+    populateSwitchControls();
+    document.getElementById('battle-controls-switch').classList.remove('hidden');
   }
 }
 
 function hideSubMenu() {
   SFX.playClick();
   document.getElementById('battle-controls-attacks').classList.add('hidden');
+  document.getElementById('battle-controls-switch').classList.add('hidden');
   document.getElementById('battle-controls-main').classList.remove('hidden');
 }
 
@@ -647,21 +986,46 @@ function executePlayerAttack(moveName, damage, msgText) {
 
   e.hp = Math.max(0, e.hp - damage);
   updateBattleUI();
+  updateBattleTeamsRosterUI();
 
   document.getElementById('battle-log').textContent = `¡${p.name} usó ${moveName}! ${msgText} (-${damage} HP)`;
 
+  // Check if current enemy fainted
   if (e.hp <= 0) {
-    setTimeout(() => {
-      alert(`🏆 ¡VICTORIA DE BATALLA!\n\nHas derrotado a ${e.name}.\n¡${p.name} ha ganado +250 EXP y protegido la reserva!`);
-      navigateTo('pelea');
-    }, 500);
-    return;
+    e.isFainted = true;
+    updateBattleTeamsRosterUI();
+
+    // Look for next non-fainted enemy in team
+    const nextEnemyIdx = AppState.battle.enemyTeam.findIndex(item => item.hp > 0);
+
+    if (nextEnemyIdx !== -1) {
+      setTimeout(() => {
+        SFX.playClick();
+        AppState.battle.activeEnemyIndex = nextEnemyIdx;
+        AppState.battle.enemy = AppState.battle.enemyTeam[nextEnemyIdx];
+        updateBattleUI();
+        updateBattleTeamsRosterUI();
+        document.getElementById('battle-log').textContent = `¡${e.name} fue derrotado! El rival envía a ${AppState.battle.enemy.name} al combate.`;
+        
+        // Pass turn to player or allow enemy response
+        AppState.battle.isPlayerTurn = false;
+        setTimeout(executeEnemyTurn, 1500);
+      }, 1000);
+      return;
+    } else {
+      // All enemies defeated -> Complete Victory!
+      setTimeout(() => {
+        const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
+        alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Tu equipo ha ganado +350 EXP y protegido la Reserva Natural Serrana!`);
+        navigateTo('pelea');
+      }, 600);
+      return;
+    }
   }
 
   // Enemy Turn Timeout
   AppState.battle.isPlayerTurn = false;
   updateBattleUI();
-
   setTimeout(executeEnemyTurn, 1500);
 }
 
@@ -672,9 +1036,10 @@ function executeEnemyTurn() {
   const p = AppState.battle.player;
   const e = AppState.battle.enemy;
 
-  const attacks = [
+  // Attacks pool from enemy object or fallback
+  const attacks = e.attacks || [
     { name: 'Zarpazo Feroz', damage: 25 },
-    { name: 'Mordisco Selvático', damage: 35 },
+    { name: 'Mordisco Selvático', damage: 32 },
     { name: 'Rugido Serrano', damage: 20 }
   ];
 
@@ -686,16 +1051,43 @@ function executeEnemyTurn() {
   setTimeout(() => pSprite.style.transform = 'scale(1) rotate(0deg)', 250);
 
   p.hp = Math.max(0, p.hp - atk.damage);
+  updateBattleUI();
+  updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}! (-${atk.damage} HP a tu equipo)`;
+  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}! (-${atk.damage} HP a ${p.name})`;
   
+  // Check if active player creature fainted
   if (p.hp <= 0) {
-    updateBattleUI();
-    setTimeout(() => {
-      alert(`💔 Derrota en combate. ${p.name} se ha debilitado.\nInténtalo de nuevo entrenando en la reserva.`);
-      navigateTo('pelea');
-    }, 500);
-    return;
+    p.isFainted = true;
+    updateBattleTeamsRosterUI();
+
+    // Check if player has other alive creatures in 3-team
+    const nextPlayerIdx = AppState.battle.playerTeam.findIndex(item => item.hp > 0);
+
+    if (nextPlayerIdx !== -1) {
+      setTimeout(() => {
+        SFX.playClick();
+        AppState.battle.activePlayerIndex = nextPlayerIdx;
+        AppState.battle.player = AppState.battle.playerTeam[nextPlayerIdx];
+        populateAttackControls();
+        populateSwitchControls();
+        updateBattleUI();
+        updateBattleTeamsRosterUI();
+        document.getElementById('battle-log').textContent = `¡${p.name} se ha debilitado! ¡Entra ${AppState.battle.player.name} a defender el equipo!`;
+        AppState.battle.turn += 1;
+        AppState.battle.isPlayerTurn = true;
+        updateBattleUI();
+      }, 1000);
+      return;
+    } else {
+      // All 3 player creatures fainted -> Defeat
+      setTimeout(() => {
+        const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
+        alert(`💔 Derrota en combate.\nTus 3 criaturas se han debilitado ante el bot en nivel ${diffText}.\n¡Entrena en la reserva y vuelve a intentarlo!`);
+        navigateTo('pelea');
+      }, 600);
+      return;
+    }
   }
 
   AppState.battle.turn += 1;
@@ -711,6 +1103,7 @@ function useSkill(skillType) {
   const healAmount = 30;
   p.hp = Math.min(p.maxHp, p.hp + healAmount);
   updateBattleUI();
+  updateBattleTeamsRosterUI();
 
   document.getElementById('battle-log').textContent = `¡${p.name} usó Habilidad Refugio Natural! Regeneraste +${healAmount} HP.`;
 
@@ -726,6 +1119,7 @@ function useItem(itemType) {
   const healAmount = 45;
   p.hp = Math.min(p.maxHp, p.hp + healAmount);
   updateBattleUI();
+  updateBattleTeamsRosterUI();
 
   document.getElementById('battle-log').textContent = `¡Usaste Poción Ecológica de la Mochila en ${p.name}! Restauraste +${healAmount} HP.`;
 
@@ -758,3 +1152,4 @@ function openAssetModal(imgFileName) {
   document.getElementById('asset-modal-img').src = `assets/${imgFileName}`;
   openModal('modal-asset');
 }
+

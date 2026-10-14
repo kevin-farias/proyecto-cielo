@@ -84,13 +84,7 @@
 
               <div class="menu-actions">
                 <button class="btn-figma btn-primary" onclick="navigateTo('inicio')">
-                  <span class="btn-icon">▶</span> INICIO
-                </button>
-                <button class="btn-figma btn-secondary" onclick="navigateTo('ajustes')">
-                  <span class="btn-icon">⚙</span> AJUSTES
-                </button>
-                <button class="btn-figma btn-outline" onclick="triggerExitApp()">
-                  <span class="btn-icon">↳</span> SALIR
+                  <span class="btn-icon">▶</span> ENTRAR A INICIO
                 </button>
               </div>
 
@@ -104,7 +98,7 @@
                  ========================================== -->
             <section class="screen" id="screen-ajustes">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('splash')" title="Regresar a Pantalla Principal">←</button>
+                <button class="btn-back" onclick="navigateTo('inicio')" title="Regresar a Inicio">←</button>
                 <h3>Ajustes</h3>
               </div>
 
@@ -184,6 +178,16 @@
 
                   <button class="btn-figma btn-menu btn-accent" onclick="navigateTo('pelea')">
                     <span class="btn-icon">⚔️</span> PELEA
+                  </button>
+                </div>
+
+                <!-- Botones trasladados desde la pantalla principal a inicio -->
+                <div class="dashboard-secondary-grid mt-3">
+                  <button class="btn-figma btn-secondary" onclick="navigateTo('ajustes')">
+                    <span class="btn-icon">⚙</span> AJUSTES
+                  </button>
+                  <button class="btn-figma btn-outline" onclick="triggerExitApp()">
+                    <span class="btn-icon">↳</span> SALIR
                   </button>
                 </div>
 
@@ -444,7 +448,7 @@
             </section>
 
             <!-- ==========================================
-                 PANTALLA 5: PELEA (SELECCION MODO)
+                 PANTALLA 5: PELEA (SELECCION MODO Y DIFICULTAD)
                  ========================================== -->
             <section class="screen" id="screen-pelea">
               <div class="screen-header">
@@ -452,31 +456,61 @@
                 <h3>Pelea</h3>
               </div>
 
-              <div class="screen-content scrollable justify-center">
-                <div class="section-tag center">ELIGE TU MODO DE BATALLA</div>
+              <div class="screen-content scrollable">
+                <div class="section-tag center">PELEA CONTRA BOT • 3 NIVELES DE DIFICULTAD</div>
 
-                <div class="mode-select-stack mt-4">
-                  <button class="btn-mode-card" onclick="selectModeAndChooseCreature('bot')">
-                    <div class="mode-icon-box">🤖</div>
-                    <div class="mode-text">
-                      <strong>pelea contra bot</strong>
-                      <span>Enfréntate a la IA de la Reserva</span>
+                <div class="difficulty-picker mt-3">
+                  <button class="diff-card diff-easy" onclick="startBotBattleWithDifficulty('facil')">
+                    <div class="diff-header">
+                      <span class="diff-badge green">🟢 FÁCIL</span>
+                      <span class="diff-enemy-count">1 Rival</span>
                     </div>
-                    <span class="mode-arrow">→</span>
+                    <div class="diff-body">
+                      <strong>Nivel Inicial (1 Criatura)</strong>
+                      <p>Rival de nivel 10 con estadísticas estándar. Ideal para aprender el combate por turnos.</p>
+                    </div>
+                    <span class="diff-action">Elegir Equipo de 3 ›</span>
                   </button>
 
-                  <button class="btn-mode-card mt-3" onclick="navigateTo('pelea_local')">
+                  <button class="diff-card diff-medium" onclick="startBotBattleWithDifficulty('normal')">
+                    <div class="diff-header">
+                      <span class="diff-badge yellow">🟡 NORMAL</span>
+                      <span class="diff-enemy-count">2 Rivales</span>
+                    </div>
+                    <div class="diff-body">
+                      <strong>Nivel Intermedio (2 Criaturas)</strong>
+                      <p>Dúo de fauna silvestre de nivel 13. Requiere coordinar turnos y habilidades.</p>
+                    </div>
+                    <span class="diff-action">Elegir Equipo de 3 ›</span>
+                  </button>
+
+                  <button class="diff-card diff-hard" onclick="startBotBattleWithDifficulty('dificil')">
+                    <div class="diff-header">
+                      <span class="diff-badge red">🔴 DIFÍCIL</span>
+                      <span class="diff-enemy-count">3 Rivales Alfa</span>
+                    </div>
+                    <div class="diff-body">
+                      <strong>Nivel Experto (3 Criaturas)</strong>
+                      <p>Trío de depredadores alfa de nivel 16 con alto daño y gran resistencia de vida.</p>
+                    </div>
+                    <span class="diff-action">Elegir Equipo de 3 ›</span>
+                  </button>
+                </div>
+
+                <div class="section-tag center mt-4">MULTIJUGADOR LOCAL</div>
+                <div class="mode-select-stack mt-2">
+                  <button class="btn-mode-card" onclick="navigateTo('pelea_local')">
                     <div class="mode-icon-box">👥</div>
                     <div class="mode-text">
                       <strong>pelea contra amigo local</strong>
-                      <span>Multijugador local en el mismo teléfono</span>
+                      <span>Duelo entre 2 entrenadores en el mismo teléfono</span>
                     </div>
                     <span class="mode-arrow">→</span>
                   </button>
                 </div>
 
-                <div class="footer-note mt-5">
-                  <p>Tres criaturas, una nueva aventura.</p>
+                <div class="footer-note mt-3">
+                  <p>Tres criaturas forman tu equipo de batalla.</p>
                 </div>
               </div>
             </section>
@@ -494,47 +528,84 @@
                 <div class="section-tag">JUGADORES LOCALES</div>
 
                 <div class="players-list mt-3">
-                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona1')">
+                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona1')">
                     <span class="player-avatar">👤</span>
                     <span class="player-name">persona 1</span>
-                    <span class="player-status">Elegir Criatura ›</span>
+                    <span class="player-status">Elegir 3 Criaturas ›</span>
                   </button>
 
-                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona2')">
+                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona2')">
                     <span class="player-avatar">👤</span>
                     <span class="player-name">persona 2</span>
-                    <span class="player-status">Elegir Criatura ›</span>
+                    <span class="player-status">Elegir 3 Criaturas ›</span>
                   </button>
 
-                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona3')">
+                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona3')">
                     <span class="player-avatar">👤</span>
                     <span class="player-name">persona 3</span>
-                    <span class="player-status">Elegir Criatura ›</span>
+                    <span class="player-status">Elegir 3 Criaturas ›</span>
                   </button>
 
-                  <button class="player-item-btn" onclick="selectModeAndChooseCreature('persona4')">
+                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona4')">
                     <span class="player-avatar">👤</span>
                     <span class="player-name">persona 4</span>
-                    <span class="player-status">Elegir Criatura ›</span>
+                    <span class="player-status">Elegir 3 Criaturas ›</span>
                   </button>
                 </div>
               </div>
             </section>
 
             <!-- ==========================================
-                 PANTALLA 5B: SELECCION DE CRIATURA DE COMBATE
+                 PANTALLA 5B: SELECCION DE EQUIPO (3 CRIATURAS)
                  ========================================== -->
             <section class="screen" id="screen-seleccionar_criatura">
               <div class="screen-header">
                 <button class="btn-back" onclick="navigateTo('pelea')">←</button>
-                <h3>Elige tu Criatura</h3>
+                <h3>Elige 3 Criaturas</h3>
               </div>
 
               <div class="screen-content scrollable">
-                <div class="section-tag">CRIATURAS EN TU COLECCIÓN</div>
-                <p class="select-hint-text">Selecciona cuál de tus criaturas descubiertas quieres enviar al combate:</p>
+                <div class="section-tag">FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)</div>
 
-                <div class="creature-select-grid mt-3" id="creature-selection-container">
+                <!-- Team Slots Bar -->
+                <div class="team-slots-bar mt-2">
+                  <div class="team-slot" id="slot-0" onclick="removeCreatureFromTeam(0)">
+                    <div class="slot-num">1</div>
+                    <div class="slot-content" id="slot-content-0">
+                      <span class="slot-placeholder">+ Slot 1</span>
+                    </div>
+                  </div>
+                  <div class="team-slot" id="slot-1" onclick="removeCreatureFromTeam(1)">
+                    <div class="slot-num">2</div>
+                    <div class="slot-content" id="slot-content-1">
+                      <span class="slot-placeholder">+ Slot 2</span>
+                    </div>
+                  </div>
+                  <div class="team-slot" id="slot-2" onclick="removeCreatureFromTeam(2)">
+                    <div class="slot-num">3</div>
+                    <div class="slot-content" id="slot-content-2">
+                      <span class="slot-placeholder">+ Slot 3</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Status indicator and quick auto-fill -->
+                <div class="team-status-row mt-2">
+                  <span class="team-count-text" id="team-selection-counter">0 / 3 seleccionadas</span>
+                  <button class="btn-quick-fill" onclick="quickFillTeam()">⚡ Auto-elegir 3</button>
+                </div>
+
+                <!-- Floating/Fixed confirm button -->
+                <div class="team-confirm-wrapper mt-2">
+                  <button id="btn-confirm-team" class="btn-figma btn-accent full-width" onclick="confirmTeamAndLaunchBattle()" disabled>
+                    ⚔️ SELECCIONA 3 CRIATURAS (0/3)
+                  </button>
+                </div>
+
+                <div class="section-tag mt-3">TUS CRIATURAS DISPONIBLES</div>
+                <p class="select-hint-text">Toca una criatura para sumarla o quitarla de tu equipo:</p>
+
+                <div class="creature-select-grid mt-2" id="creature-selection-container">
                   <!-- Dynamically populated from AppState.unlockedCreatures -->
                 </div>
               </div>
@@ -547,7 +618,23 @@
               <div class="battle-header-bar">
                 <button class="btn-back-battle" onclick="confirmExitBattle()">← Salir de Batalla</button>
                 <div class="turn-badge" id="turn-indicator">TURNO 1: Picaflor Cometa</div>
-                <div class="orient-status-tag">📱 Modo Horizontal</div>
+                <div class="battle-diff-tag" id="battle-diff-badge">🟢 Fácil</div>
+              </div>
+
+              <!-- Team Overview Bar: Visual status of the 3 player animals and enemy animals -->
+              <div class="battle-teams-bar">
+                <div class="team-roster-group player-roster">
+                  <span class="roster-label">Tu Equipo (3):</span>
+                  <div class="roster-slots" id="player-roster-slots">
+                    <!-- 3 slots rendered dynamically -->
+                  </div>
+                </div>
+                <div class="team-roster-group enemy-roster">
+                  <span class="roster-label" id="enemy-roster-title">Rival:</span>
+                  <div class="roster-slots" id="enemy-roster-slots">
+                    <!-- Enemy slots rendered dynamically -->
+                  </div>
+                </div>
               </div>
 
               <!-- Battle Stage Graphic Area -->
@@ -603,16 +690,21 @@
                   ✨ Habilidad
                 </button>
                 <button class="btn-battle btn-item" onclick="useItem('pocion')">
-                  🎒 Mochila (Poción)
+                  🎒 Mochila
                 </button>
-                <button class="btn-battle btn-run" onclick="confirmExitBattle()">
-                  🏃 Rendirse
+                <button class="btn-battle btn-switch" onclick="showSubMenu('switch')">
+                  🔄 Cambiar (3)
                 </button>
               </div>
 
               <!-- Submenu Attack Actions -->
               <div class="battle-controls hidden" id="battle-controls-attacks">
                 <!-- Dynamically populated attack buttons -->
+              </div>
+
+              <!-- Submenu Switch Creature Actions -->
+              <div class="battle-controls hidden" id="battle-controls-switch">
+                <!-- Dynamically populated creature switch buttons from team -->
               </div>
             </section>
 
