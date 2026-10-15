@@ -118,6 +118,7 @@ const CREATURE_DATABASE = {
 const AppState = {
   currentScreen: 'splash',
   soundEnabled: true,
+  musicEnabled: true,
   musicVolume: 0.8,
   sfxVolume: 1.0,
   language: 'español',
@@ -243,6 +244,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render Initial Views
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  initializeProfile();
+  const storedVolume = localStorage.getItem('music_volume');
+  const savedVolume = storedVolume === null ? NaN : Number(storedVolume);
+  if (Number.isFinite(savedVolume)) setMusicVolume(savedVolume);
 
   // Setup Toolbar Events
   document.getElementById('btn-toggle-landscape').addEventListener('click', toggleLandscapeMode);
@@ -389,6 +394,9 @@ function navigateTo(screenId) {
     AppState.currentScreen = screenId;
   }
 
+  setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home');
+  if (screenId === 'mapa') initializeReserveMap();
+
   // AUTOMATIC HORIZONTAL ORIENTATION FOR BATTLE SCREEN!
   if (screenId === 'battle_arena') {
     setLandscapeMode(true);
@@ -405,6 +413,99 @@ function navigateTo(screenId) {
       item.classList.add('active-step');
     }
   });
+}
+
+function initializeProfile() {
+  const input = document.getElementById('profile-name');
+  if (!input) return;
+  const name = localStorage.getItem('explorer_profile_name') || 'Explorador';
+  input.value = name;
+  renderProfileGreeting(name);
+}
+
+function renderProfileGreeting(name) {
+  const greeting = document.getElementById('profile-greeting');
+  if (greeting) greeting.textContent = `¡Hola, ${name}! Tu aventura te espera.`;
+}
+
+function saveProfileName() {
+  const input = document.getElementById('profile-name');
+  const name = input?.value.trim().slice(0, 24) || 'Explorador';
+  if (input) input.value = name;
+  localStorage.setItem('explorer_profile_name', name);
+  renderProfileGreeting(name);
+}
+
+function setMusicVolume(value) {
+  const volume = Math.max(0, Math.min(100, Number(value))) / 100;
+  AppState.musicVolume = volume;
+  ['home-music', 'battle-music'].forEach(id => {
+    const audio = document.getElementById(id);
+    if (audio) audio.volume = volume;
+  });
+  const slider = document.getElementById('home-music-volume');
+  const label = document.getElementById('home-music-volume-label');
+  if (slider) slider.value = String(Math.round(volume * 100));
+  if (label) label.textContent = `${Math.round(volume * 100)}%`;
+  const settingsSlider = document.getElementById('slider-music');
+  const settingsLabel = document.getElementById('val-music');
+  if (settingsSlider) settingsSlider.value = String(Math.round(volume * 100));
+  if (settingsLabel) settingsLabel.textContent = `${Math.round(volume * 100)}%`;
+  localStorage.setItem('music_volume', String(Math.round(volume * 100)));
+}
+
+function setActiveMusic(scene) {
+  const home = document.getElementById('home-music');
+  const battle = document.getElementById('battle-music');
+  if (!home || !battle) return;
+  const current = scene === 'battle' ? battle : home;
+  const other = scene === 'battle' ? home : battle;
+  other.pause();
+  if (!AppState.soundEnabled || !AppState.musicEnabled) return;
+  current.volume = AppState.musicVolume;
+  current.play().then(() => {
+    const toggle = document.getElementById('music-toggle');
+    if (toggle) toggle.textContent = '⏸ Pausar';
+  }).catch(() => {});
+}
+
+function toggleMusicPlayback() {
+  const home = document.getElementById('home-music');
+  const battle = document.getElementById('battle-music');
+  if (!home || !battle) return;
+  const current = AppState.currentScreen === 'battle_arena' ? battle : home;
+  if (current.paused) {
+    AppState.musicEnabled = true;
+    setActiveMusic(AppState.currentScreen === 'battle_arena' ? 'battle' : 'home');
+  } else {
+    home.pause();
+    battle.pause();
+    AppState.musicEnabled = false;
+    const toggle = document.getElementById('music-toggle');
+    if (toggle) toggle.textContent = '▶ Reproducir';
+  }
+}
+
+let reserveMap;
+function initializeReserveMap() {
+  const container = document.getElementById('reserve-map');
+  if (!container || !window.maplibregl) return;
+  if (!reserveMap) {
+    const villaCielo = [-64.5208, -30.8607];
+    reserveMap = new maplibregl.Map({
+      container,
+      style: 'https://tiles.openfreemap.org/styles/liberty',
+      center: villaCielo,
+      zoom: 14,
+      attributionControl: true
+    });
+    reserveMap.addControl(new maplibregl.NavigationControl(), 'top-right');
+    new maplibregl.Marker({ color: '#2d8a53' })
+      .setLngLat(villaCielo)
+      .setPopup(new maplibregl.Popup().setText('Reserva Natural Municipal Villa Cielo · Capilla del Monte'))
+      .addTo(reserveMap);
+  }
+  requestAnimationFrame(() => reserveMap.resize());
 }
 
 // PHONE ORIENTATION CONTROLLER
@@ -439,14 +540,16 @@ function toggleGlobalSound() {
   } else {
     if (btnIcon) btnIcon.textContent = 'MUTE';
     if (btn) btn.querySelector('.lbl').textContent = 'Sonido: OFF';
+    document.getElementById('home-music')?.pause();
+    document.getElementById('battle-music')?.pause();
   }
+  if (AppState.soundEnabled) setActiveMusic(AppState.currentScreen === 'battle_arena' ? 'battle' : 'home');
 }
 
 // SETTINGS CONTROLS
 function updateVolume(type, val) {
   if (type === 'music') {
-    AppState.musicVolume = val / 100;
-    document.getElementById('val-music').textContent = `${val}%`;
+    setMusicVolume(val);
   } else if (type === 'sfx') {
     AppState.sfxVolume = val / 100;
     document.getElementById('val-sfx').textContent = `${val}%`;
@@ -1376,8 +1479,12 @@ function executePlayerAttack(moveName, damage, msgText) {
 
   // Animate sprite hit
   const eSprite = document.getElementById('enemy-sprite');
-  eSprite.style.transform = 'scale(1.3) rotate(15deg)';
-  setTimeout(() => eSprite.style.transform = 'scale(1) rotate(0deg)', 250);
+  eSprite.classList.remove('attack-hit');
+  void eSprite.offsetWidth;
+  eSprite.classList.add('attack-hit');
+  setTimeout(() => eSprite.classList.remove('attack-hit'), 650);
+  document.getElementById('player-sprite').classList.add('attack-lunge');
+  setTimeout(() => document.getElementById('player-sprite').classList.remove('attack-lunge'), 420);
 
   e.hp = Math.max(0, e.hp - damage);
   updateBattleUI();
@@ -1442,8 +1549,14 @@ function executeEnemyTurn() {
 
   // Animate player sprite hit
   const pSprite = document.getElementById('player-sprite');
-  pSprite.style.transform = 'scale(1.3) rotate(-15deg)';
-  setTimeout(() => pSprite.style.transform = 'scale(1) rotate(0deg)', 250);
+  pSprite.classList.remove('attack-hit');
+  void pSprite.offsetWidth;
+  pSprite.classList.add('attack-hit');
+  document.getElementById('enemy-sprite').classList.add('enemy-lunge');
+  setTimeout(() => {
+    pSprite.classList.remove('attack-hit');
+    document.getElementById('enemy-sprite').classList.remove('enemy-lunge');
+  }, 650);
 
   p.hp = Math.max(0, p.hp - atk.damage);
   updateBattleUI();

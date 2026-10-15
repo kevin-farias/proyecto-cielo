@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.css">
+  <script defer src="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.js"></script>
 </head>
 <body>
 
@@ -152,6 +154,25 @@
               </div>
 
               <div class="screen-content scrollable">
+                <div class="profile-card">
+                  <div class="profile-avatar" aria-hidden="true">🌿</div>
+                  <div class="profile-fields">
+                    <label for="profile-name">Tu perfil de explorador</label>
+                    <div class="profile-edit-row">
+                      <input id="profile-name" maxlength="24" autocomplete="nickname" placeholder="¿Cómo te llamas?">
+                      <button class="btn-figma btn-secondary" type="button" onclick="saveProfileName()">Guardar</button>
+                    </div>
+                    <span id="profile-greeting">Tu aventura comienza aquí</span>
+                  </div>
+                </div>
+                <div class="home-music-card">
+                  <div><strong>🎵 Música de inicio</strong><span>LOFI • Proyecto Cielo</span></div>
+                  <button class="btn-figma btn-secondary" type="button" onclick="toggleMusicPlayback()" id="music-toggle">▶ Reproducir</button>
+                  <label for="home-music-volume">Volumen <span id="home-music-volume-label">35%</span></label>
+                  <input type="range" id="home-music-volume" min="0" max="100" value="35" oninput="setMusicVolume(this.value)">
+                </div>
+                <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
+                <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
                 <!-- QR Box Simulation -->
                 <div class="qr-card mt-2" onclick="openQRScanner()">
                   <div class="qr-frame">
@@ -178,6 +199,9 @@
                   <button class="btn-figma btn-menu" onclick="navigateTo('informacion')">
                     <span class="btn-icon">ℹ️</span> INFORMACIÓN
                   </button>
+                  <button class="btn-figma btn-menu" onclick="navigateTo('mapa')">
+                    <span class="btn-icon">📍</span> MAPA DE LA RESERVA
+                  </button>
 
                   <button class="btn-figma btn-menu btn-accent" onclick="navigateTo('pelea')">
                     <span class="btn-icon">⚔️</span> PELEA
@@ -197,6 +221,18 @@
                 <div class="footer-note">
                   <p>Conecta con la naturaleza y conserva las especies.</p>
                 </div>
+              </div>
+            </section>
+
+            <section class="screen" id="screen-mapa">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <h3>Reserva Villa Cielo</h3>
+              </div>
+              <div class="screen-content scrollable">
+                <p class="map-caption">Reserva Natural Municipal Villa Cielo · Capilla del Monte, Córdoba</p>
+                <div id="reserve-map" role="application" aria-label="Mapa de la Reserva Villa Cielo"></div>
+                <p class="map-attribution">Mapa © OpenStreetMap · Estilo de OpenFreeMap</p>
               </div>
             </section>
 
