@@ -1319,9 +1319,15 @@ function openQRScanner(specificTarget = null) {
     input.value = specificTarget
       ? Object.entries(QR_CREATURE_CODES).find(([, id]) => id === specificTarget)?.[0] || ''
       : '';
+    previewQRCode(input.value);
   }
   if (status) status.textContent = '';
   openModal('modal-qr');
+}
+
+function previewQRCode(value) {
+  const preview = document.getElementById('manual-qr-preview');
+  if (preview) preview.textContent = `Código ingresado: ${value || '—'}`;
 }
 
 function simulateQRDiscovery() {

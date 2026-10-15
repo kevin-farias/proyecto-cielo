@@ -884,9 +884,10 @@
         <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemQRFromInput();">
           <label for="manual-qr-code">Código de especie</label>
           <div class="manual-qr-row">
-            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="735461" aria-describedby="qr-code-help">
+            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="735461" aria-describedby="manual-qr-preview qr-code-help" oninput="previewQRCode(this.value)">
             <button class="btn-figma btn-secondary" type="submit">Usar código</button>
           </div>
+          <output id="manual-qr-preview" class="manual-qr-preview" aria-live="polite">Código ingresado: —</output>
           <details class="qr-code-help" id="qr-code-help">
             <summary>Ver códigos para probar</summary>
             <ul>
