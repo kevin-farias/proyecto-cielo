@@ -627,6 +627,15 @@ function toggleMusicPlayback() {
 }
 
 let reserveMap;
+const RESERVE_ANIMAL_SIGHTINGS = [
+  { id: 'picaflor', coordinates: [-64.5184, -30.8595], zone: 'Jardín de flores nativas' },
+  { id: 'yaguarete', coordinates: [-64.5248, -30.8620], zone: 'Corredor de bosque serrano' },
+  { id: 'pecari', coordinates: [-64.5199, -30.8636], zone: 'Matorral y sendero bajo' },
+  { id: 'quebracho', coordinates: [-64.5228, -30.8584], zone: 'Bosque de quebrachos' },
+  { id: 'buho', coordinates: [-64.5255, -30.8589], zone: 'Quebrada de sombra' },
+  { id: 'zorro', coordinates: [-64.5175, -30.8615], zone: 'Borde del monte' }
+];
+const reserveAnimalMarkers = new Map();
 function initializeReserveMap() {
   const container = document.getElementById('reserve-map');
   if (!container || !window.maplibregl) return;
@@ -644,8 +653,78 @@ function initializeReserveMap() {
       .setLngLat(villaCielo)
       .setPopup(new maplibregl.Popup().setText('Reserva Natural Municipal Villa Cielo · Capilla del Monte'))
       .addTo(reserveMap);
+    renderReserveAnimalMarkers();
   }
   requestAnimationFrame(() => reserveMap.resize());
+}
+
+function renderReserveAnimalMarkers() {
+  const list = document.getElementById('map-animal-list');
+  if (!reserveMap || !list || !window.maplibregl) return;
+  reserveAnimalMarkers.forEach(marker => marker.remove());
+  reserveAnimalMarkers.clear();
+  list.replaceChildren();
+  RESERVE_ANIMAL_SIGHTINGS.forEach(sighting => {
+    const animal = CREATURE_DATABASE[sighting.id];
+    if (!animal) return;
+    const discovered = AppState.unlockedCreatures.includes(sighting.id);
+    const popupContent = document.createElement('div');
+    popupContent.className = 'animal-popup';
+    const title = document.createElement('strong');
+    title.textContent = `${animal.icon} ${animal.name}`;
+    const zone = document.createElement('p');
+    zone.textContent = `Zona orientativa: ${sighting.zone}`;
+    const habitat = document.createElement('p');
+    habitat.textContent = animal.habitat;
+    const status = document.createElement('span');
+    status.textContent = discovered ? 'En tu colección' : 'Aún por descubrir';
+    const qrButton = document.createElement('button');
+    qrButton.type = 'button';
+    qrButton.className = 'animal-qr-button';
+    qrButton.textContent = discovered ? 'Ver código de especie' : 'Ingresar código QR';
+    qrButton.addEventListener('click', () => openQRScanner(sighting.id));
+    popupContent.append(title, zone, habitat, status, qrButton);
+
+    const markerElement = document.createElement('button');
+    markerElement.type = 'button';
+    markerElement.className = `animal-map-marker${discovered ? ' discovered' : ''}`;
+    markerElement.textContent = animal.icon;
+    markerElement.setAttribute('aria-label', `Ver ubicación orientativa de ${animal.name}`);
+    markerElement.title = animal.name;
+    const popup = new maplibregl.Popup({ offset: 24 }).setDOMContent(popupContent);
+    const marker = new maplibregl.Marker({ element: markerElement, anchor: 'bottom' })
+      .setLngLat(sighting.coordinates)
+      .setPopup(popup)
+      .addTo(reserveMap);
+    reserveAnimalMarkers.set(sighting.id, marker);
+
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'map-animal-item';
+    const icon = document.createElement('span');
+    icon.className = 'map-animal-icon';
+    icon.textContent = animal.icon;
+    const details = document.createElement('span');
+    details.className = 'map-animal-details';
+    const name = document.createElement('strong');
+    name.textContent = animal.name;
+    const subtitle = document.createElement('small');
+    subtitle.textContent = `${sighting.zone} · ${discovered ? 'Descubierto' : 'Por descubrir'}`;
+    details.append(name, subtitle);
+    const arrow = document.createElement('span');
+    arrow.textContent = '›';
+    item.append(icon, details, arrow);
+    item.addEventListener('click', () => focusReserveAnimal(sighting.id));
+    list.append(item);
+  });
+}
+
+function focusReserveAnimal(animalId) {
+  const sighting = RESERVE_ANIMAL_SIGHTINGS.find(item => item.id === animalId);
+  const marker = reserveAnimalMarkers.get(animalId);
+  if (!sighting || !reserveMap || !marker) return;
+  reserveMap.flyTo({ center: sighting.coordinates, zoom: 16, duration: 700 });
+  if (!marker.getPopup().isOpen()) marker.togglePopup();
 }
 
 // PHONE ORIENTATION CONTROLLER
@@ -1094,31 +1173,79 @@ function triggerExitApp() {
 }
 
 // QR SCANNER SIMULATOR
+let pendingQRTarget = null;
+const QR_CREATURE_CODES = {
+  'CIELO-PICAFLOR': 'picaflor',
+  'CIELO-YAGUARETE': 'yaguarete',
+  'CIELO-PECARI': 'pecari',
+  'CIELO-QUEBRACHO': 'quebracho',
+  'CIELO-BUHO': 'buho',
+  'CIELO-ZORRO': 'zorro'
+};
+
 function openQRScanner(specificTarget = null) {
   SFX.playClick();
+  pendingQRTarget = specificTarget;
+  const input = document.getElementById('manual-qr-code');
+  const status = document.getElementById('qr-code-status');
+  if (input) {
+    input.value = specificTarget
+      ? Object.entries(QR_CREATURE_CODES).find(([, id]) => id === specificTarget)?.[0] || ''
+      : '';
+  }
+  if (status) status.textContent = '';
   openModal('modal-qr');
 }
 
 function simulateQRDiscovery() {
   SFX.playQRScan();
-  closeModal('modal-qr');
+  let targetId = pendingQRTarget;
+  if (!targetId) {
+    const lockedIds = Object.keys(CREATURE_DATABASE).filter(id => !AppState.unlockedCreatures.includes(id));
+    if (lockedIds.length === 0) {
+      setQRStatus('¡Ya descubriste todas las especies! Prueba los códigos para volver a verlas.');
+      return;
+    }
+    targetId = lockedIds[Math.floor(Math.random() * lockedIds.length)];
+  }
+  completeQRDiscovery(targetId);
+}
 
-  // Unlock creature
-  const lockedIds = ['buho', 'zorro'];
-  const targetId = lockedIds[Math.floor(Math.random() * lockedIds.length)];
+function redeemQRFromInput() {
+  const code = document.getElementById('manual-qr-code')?.value.trim().toUpperCase();
+  const targetId = QR_CREATURE_CODES[code];
+  if (!targetId) {
+    setQRStatus('Código no reconocido. Revisa el formato CIELO-ESPECIE.');
+    return;
+  }
+  SFX.playQRScan();
+  completeQRDiscovery(targetId);
+}
+
+function setQRStatus(message) {
+  const status = document.getElementById('qr-code-status');
+  if (status) status.textContent = message;
+}
+
+function completeQRDiscovery(targetId) {
   const info = CREATURE_DATABASE[targetId];
-
-  if (!AppState.unlockedCreatures.includes(targetId)) {
-    AppState.unlockedCreatures.push(targetId);
+  if (!info) {
+    setQRStatus('No encontramos esa especie.');
+    return;
   }
-  if (!AppState.recentlyUnlocked.includes(targetId)) {
-    AppState.recentlyUnlocked.push(targetId);
-  }
+  closeModal('modal-qr');
+  pendingQRTarget = null;
+  const isNew = !AppState.unlockedCreatures.includes(targetId);
+  if (isNew) AppState.unlockedCreatures.push(targetId);
+  if (isNew && !AppState.recentlyUnlocked.includes(targetId)) AppState.recentlyUnlocked.push(targetId);
 
-  alert(`🎉 ¡NUEVA CRIATURA CAPTURADA VÍA QR!\n\nHas descubierto a: ${info.name} ${info.icon}\n\n¡Su información completa se ha añadido tanto a tu COLECCIÓN como a INFORMACIÓN DE LA FLORA Y FAUNA!`);
+  alert(isNew
+    ? `🎉 ¡NUEVA CRIATURA DESCUBIERTA!\n\nEncontraste a: ${info.name} ${info.icon}\n\nSe añadió a tu colección y a la información de flora y fauna.`
+    : `${info.icon} ${info.name} ya está en tu colección.`);
 
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  if (reserveMap) renderReserveAnimalMarkers();
   navigateTo('coleccion');
 }
 
