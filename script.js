@@ -534,7 +534,7 @@ function navigateTo(screenId) {
     AppState.currentScreen = screenId;
   }
 
-  setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home');
+  setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home', screenId === 'battle_arena');
   if (screenId === 'mapa') initializeReserveMap();
 
   // AUTOMATIC HORIZONTAL ORIENTATION FOR BATTLE SCREEN!
@@ -594,13 +594,17 @@ function setMusicVolume(value) {
   localStorage.setItem('music_volume', String(Math.round(volume * 100)));
 }
 
-function setActiveMusic(scene) {
+function setActiveMusic(scene, restart = false) {
   const home = document.getElementById('home-music');
   const battle = document.getElementById('battle-music');
   if (!home || !battle) return;
   const current = scene === 'battle' ? battle : home;
   const other = scene === 'battle' ? home : battle;
   other.pause();
+  if (restart) {
+    current.pause();
+    current.currentTime = 0;
+  }
   if (!AppState.soundEnabled || !AppState.musicEnabled) return;
   current.volume = AppState.musicVolume;
   current.play().then(() => {
@@ -1873,6 +1877,7 @@ function executePlayerAttack(moveName, damage, msgText) {
     move.uses -= 1;
     SFX.playAttack();
     hideSubMenu();
+    playBattleAnimation(AppState.battle.localTurn === 1 ? 'player-sprite' : 'enemy-sprite');
     target.hp = Math.max(0, target.hp - damage);
     if (target.hp <= 0) {
       target.isFainted = true;
@@ -1914,14 +1919,7 @@ function executePlayerAttack(moveName, damage, msgText) {
   if (!currentMove || currentMove.uses <= 0) return;
   currentMove.uses -= 1;
 
-  // Animate sprite hit
-  const eSprite = document.getElementById('enemy-sprite');
-  eSprite.classList.remove('attack-hit');
-  void eSprite.offsetWidth;
-  eSprite.classList.add('attack-hit');
-  setTimeout(() => eSprite.classList.remove('attack-hit'), 650);
-  document.getElementById('player-sprite').classList.add('attack-lunge');
-  setTimeout(() => document.getElementById('player-sprite').classList.remove('attack-lunge'), 420);
+  playBattleAnimation('player-sprite');
 
   e.hp = Math.max(0, e.hp - damage);
   updateBattleUI();
@@ -1984,16 +1982,7 @@ function executeEnemyTurn() {
 
   const atk = attacks[Math.floor(Math.random() * attacks.length)];
 
-  // Animate player sprite hit
-  const pSprite = document.getElementById('player-sprite');
-  pSprite.classList.remove('attack-hit');
-  void pSprite.offsetWidth;
-  pSprite.classList.add('attack-hit');
-  document.getElementById('enemy-sprite').classList.add('enemy-lunge');
-  setTimeout(() => {
-    pSprite.classList.remove('attack-hit');
-    document.getElementById('enemy-sprite').classList.remove('enemy-lunge');
-  }, 650);
+  playBattleAnimation('enemy-sprite');
 
   p.hp = Math.max(0, p.hp - atk.damage);
   updateBattleUI();
@@ -2038,6 +2027,30 @@ function executeEnemyTurn() {
   AppState.battle.turn += 1;
   AppState.battle.isPlayerTurn = true;
   updateBattleUI();
+}
+
+function playBattleAnimation(attackerId) {
+  const attacker = document.getElementById(attackerId);
+  const defenderId = attackerId === 'player-sprite' ? 'enemy-sprite' : 'player-sprite';
+  const defender = document.getElementById(defenderId);
+  const stage = document.querySelector('.battle-stage');
+  if (!attacker || !defender || !stage) return;
+
+  const lungeClass = attackerId === 'player-sprite' ? 'attack-lunge' : 'enemy-lunge';
+  attacker.classList.remove(lungeClass);
+  defender.classList.remove('attack-hit');
+  stage.classList.remove('battle-impact');
+  void stage.offsetWidth;
+  attacker.classList.add(lungeClass);
+  window.setTimeout(() => {
+    defender.classList.add('attack-hit');
+    stage.classList.add('battle-impact');
+  }, 180);
+  window.setTimeout(() => {
+    attacker.classList.remove(lungeClass);
+    defender.classList.remove('attack-hit');
+    stage.classList.remove('battle-impact');
+  }, 900);
 }
 
 function useSkill(skillType) {
