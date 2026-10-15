@@ -772,7 +772,7 @@ function initializeReserveMap() {
       container,
       style: 'https://tiles.openfreemap.org/styles/liberty',
       center: villaCielo,
-      zoom: 14,
+      zoom: 15,
       attributionControl: true
     });
     reserveMap.addControl(new maplibregl.NavigationControl(), 'top-right');
