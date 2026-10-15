@@ -186,6 +186,21 @@
                 </div>
                 <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
                 <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
+                <audio id="secret-encounter-music" src="assets/musica_encuentro_secreto.mp3" preload="metadata"></audio>
+                <section class="park-presence-card" aria-labelledby="park-presence-title">
+                  <div class="park-presence-copy">
+                    <strong id="park-presence-title">📍 Entrada a la reserva</strong>
+                    <span id="park-entry-status" aria-live="polite">Escanea el código para registrar tu entrada.</span>
+                  </div>
+                  <div class="park-presence-actions">
+                    <button class="btn-figma btn-accent" type="button" onclick="openParkEntryScanner()">▦ Escanear entrada</button>
+                    <button class="btn-figma btn-secondary" id="park-players-button" type="button" onclick="openParkPlayers()" disabled>👥 Jugadores en la reserva</button>
+                  </div>
+                </section>
+                <section id="park-players-inline" class="park-players-inline" hidden aria-live="polite">
+                  <strong>👥 Jugadores presentes en la reserva</strong>
+                  <div id="park-players-inline-list" class="park-players-list"></div>
+                </section>
                 <!-- QR Box Simulation -->
                 <div class="qr-card mt-2" onclick="openQRScanner()">
                   <div class="qr-frame">
@@ -213,7 +228,7 @@
                     <span class="btn-icon">ℹ️</span> INFORMACIÓN
                   </button>
                   <button class="btn-figma btn-menu" onclick="navigateTo('mapa')">
-                    <span class="btn-icon">📍</span> MAPA DE LA RESERVA
+                    <span class="btn-icon">📍</span> MAPA INTEGRADO
                   </button>
 
                   <button class="btn-figma btn-menu btn-accent" onclick="navigateTo('pelea')">
@@ -244,8 +259,11 @@
               </div>
               <div class="screen-content scrollable">
                 <p class="map-caption">Reserva Natural Municipal Villa Cielo · Capilla del Monte, Córdoba</p>
-                <p class="map-location-note">Zonas de avistaje orientativas · Los marcadores representan hábitats y no rastreo GPS en vivo.</p>
+                <p class="map-location-note">Animales: hábitats orientativos. Jugadores: bots simulados y tu perfil al registrar la entrada; no es rastreo GPS real.</p>
                 <div id="reserve-map" role="application" aria-label="Mapa de la Reserva Villa Cielo"></div>
+                <h4 class="map-list-heading" id="map-players-heading" hidden>👥 Jugadores alrededor</h4>
+                <div class="map-player-list" id="map-player-list" aria-label="Jugadores simulados en la reserva" hidden></div>
+                <h4 class="map-list-heading">🐾 Animales y avistajes</h4>
                 <div class="map-animal-list" id="map-animal-list" aria-label="Especies y puntos de avistaje"></div>
                 <p class="map-attribution">Mapa © OpenStreetMap · Estilo de OpenFreeMap</p>
               </div>
@@ -578,6 +596,15 @@
                   </button>
                 </div>
 
+                <section id="secret-encounter-card" class="secret-encounter-card" hidden>
+                  <span class="secret-encounter-mark" aria-hidden="true">✦</span>
+                  <div>
+                    <strong>Hay algo extraño entre las sierras…</strong>
+                    <p>Tras tus dos victorias, encontraste huellas que no aparecen en el mapa.</p>
+                  </div>
+                  <button class="btn-figma btn-secondary" type="button" onclick="beginSecretEncounter()">Investigar el eco</button>
+                </section>
+
                 <div class="section-tag center mt-4">MULTIJUGADOR LOCAL</div>
                 <div class="mode-select-stack mt-2">
                   <button class="btn-mode-card" onclick="navigateTo('pelea_local')">
@@ -888,24 +915,89 @@
         <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemQRFromInput();">
           <label for="manual-qr-code">Código de especie</label>
           <div class="manual-qr-row">
-            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="735461" aria-describedby="manual-qr-preview qr-code-help" oninput="previewQRCode(this.value)">
+            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="Escribe 6 números" aria-describedby="manual-qr-preview qr-code-help" oninput="previewQRCode(this.value)">
             <button class="btn-figma btn-secondary" type="submit">Usar código</button>
           </div>
           <output id="manual-qr-preview" class="manual-qr-preview" aria-live="polite">Código ingresado: —</output>
           <details class="qr-code-help" id="qr-code-help">
-            <summary>Ver códigos para probar</summary>
+            <summary>Ver y cambiar los códigos de especies</summary>
             <ul>
-              <li>Picaflor: <code>100001</code></li>
-              <li>Yaguareté: <code>100002</code></li>
-              <li>Pecarí: <code>100003</code></li>
-              <li>Quebracho: <code>100004</code></li>
-              <li>Búho: <code>100005</code></li>
-              <li>Zorro: <code>100006</code></li>
+              <li><label for="species-code-picaflor">Picaflor</label><input id="species-code-picaflor" class="species-code-input" inputmode="numeric" maxlength="6" value="100001"></li>
+              <li><label for="species-code-yaguarete">Yaguareté</label><input id="species-code-yaguarete" class="species-code-input" inputmode="numeric" maxlength="6" value="100002"></li>
+              <li><label for="species-code-pecari">Pecarí</label><input id="species-code-pecari" class="species-code-input" inputmode="numeric" maxlength="6" value="100003"></li>
+              <li><label for="species-code-quebracho">Quebracho</label><input id="species-code-quebracho" class="species-code-input" inputmode="numeric" maxlength="6" value="100004"></li>
+              <li><label for="species-code-buho">Búho</label><input id="species-code-buho" class="species-code-input" inputmode="numeric" maxlength="6" value="100005"></li>
+              <li><label for="species-code-zorro">Zorro</label><input id="species-code-zorro" class="species-code-input" inputmode="numeric" maxlength="6" value="100006"></li>
             </ul>
+            <button class="btn-figma btn-secondary" type="button" onclick="saveSpeciesCodes()">Guardar códigos de especies</button>
+            <p id="species-code-settings-status" class="qr-code-status" aria-live="polite"></p>
           </details>
           <p id="qr-code-status" class="qr-code-status" aria-live="polite"></p>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRO DE ENTRADA A LA RESERVA -->
+  <div class="modal-overlay hidden" id="modal-park-entry">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4>Registrar entrada al parque</h4>
+        <button class="modal-close" onclick="closeModal('modal-park-entry')" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="qr-camera-sim park-entry-camera" aria-hidden="true">
+          <div class="camera-grid"></div><div class="scan-target-box"></div><div class="laser-beam"></div>
+        </div>
+        <p class="mt-3">Escribe un código de seis números para registrar la entrada. Puedes cambiarlo cuando quieras; el campo siempre se abre vacío.</p>
+        <button class="btn-figma btn-accent mt-3" type="button" onclick="simulateParkEntryScan()">📷 Simular escaneo de entrada</button>
+        <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemParkEntryCode();">
+          <label for="park-entry-code">Tu código de acceso</label>
+          <div class="manual-qr-row">
+            <input id="park-entry-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="Escribe 6 números" aria-describedby="park-entry-preview park-entry-help" oninput="previewParkEntryCode(this.value)">
+            <button class="btn-figma btn-secondary" type="submit">Guardar código y entrar</button>
+          </div>
+          <output id="park-entry-preview" class="manual-qr-preview" aria-live="polite">Código ingresado: —</output>
+          <p class="qr-code-help" id="park-entry-help">El código que escribas quedará guardado. Para cambiarlo, escribe otro código de seis números.</p>
+          <p id="park-entry-feedback" class="qr-code-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: JUGADORES PRESENTES -->
+  <div class="modal-overlay hidden" id="modal-park-players">
+    <div class="modal-box park-players-modal">
+      <div class="modal-header">
+        <div><h4>Jugadores en la reserva</h4><span id="park-player-count" class="park-player-count"></span></div>
+        <button class="modal-close" onclick="closeModal('modal-park-players')" aria-label="Cerrar">✕</button>
+      </div>
+      <p class="park-player-note">Perfiles de prueba disponibles para visitar.</p>
+      <div id="park-players-list" class="park-players-list"></div>
+      <button class="btn-figma btn-secondary full-width mt-3" type="button" onclick="leavePark()">Salir de la reserva</button>
+    </div>
+  </div>
+
+  <!-- MODAL: PERFIL DE JUGADOR -->
+  <div class="modal-overlay hidden" id="modal-park-player-profile">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 id="park-player-profile-title">Perfil de jugador</h4>
+        <button class="modal-close" onclick="closeModal('modal-park-player-profile')" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="park-player-profile-content" class="park-player-profile-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: INTRODUCCIÓN DEL ENCUENTRO SECRETO -->
+  <div class="modal-overlay hidden" id="modal-secret-battle-intro">
+    <div class="modal-box secret-intro-modal">
+      <div class="secret-intro-sigil" aria-hidden="true">✧</div>
+      <p class="secret-intro-eyebrow">UNA PRESENCIA DESCONOCIDA</p>
+      <h3>Cynthia, guardiana de Villa Cielo</h3>
+      <p id="secret-intro-dialogue" class="secret-intro-dialogue"></p>
+      <div class="secret-intro-rivals" aria-label="Tres rivales poderosos">🌳 <span>vs</span> 🐆 <span>vs</span> 🐦</div>
+      <button class="btn-figma btn-accent full-width" type="button" onclick="finishSecretBattleIntro()">¡Estoy listo!</button>
     </div>
   </div>
 

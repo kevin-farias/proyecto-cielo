@@ -5,6 +5,7 @@ const os = require('os');
 
 const PORT = 3000;
 const PUBLIC_DIR = __dirname;
+const PROGRESS_FILE = path.join(__dirname, '.project-data', 'progress.json');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -41,6 +42,34 @@ function cleanRooms() {
 }
 async function handleApi(req, res, url) {
   cleanRooms();
+  if (url.pathname === '/api/progress' && req.method === 'GET') {
+    try {
+      const progress = JSON.parse(await fs.promises.readFile(PROGRESS_FILE, 'utf8'));
+      return sendJson(res, 200, progress);
+    } catch (error) {
+      if (error.code === 'ENOENT') return sendJson(res, 200, {});
+      throw error;
+    }
+  }
+  if (url.pathname === '/api/progress' && req.method === 'PUT') {
+    const body = await readJson(req);
+    const progress = {
+      unlockedCreatures: Array.isArray(body.unlockedCreatures) ? body.unlockedCreatures.filter(id => typeof id === 'string') : [],
+      creatureCopies: body.creatureCopies && typeof body.creatureCopies === 'object' ? body.creatureCopies : {},
+      profileXP: Number.isFinite(Number(body.profileXP)) ? Math.max(0, Number(body.profileXP)) : 0,
+      secretBattleWins: Number.isFinite(Number(body.secretBattleWins)) ? Math.max(0, Math.floor(Number(body.secretBattleWins))) : 0,
+      secretRewardClaimed: Boolean(body.secretRewardClaimed),
+      profileName: String(body.profileName || 'Explorador').slice(0, 24),
+      speciesCodes: body.speciesCodes && typeof body.speciesCodes === 'object' ? body.speciesCodes : {},
+      parkCheckedIn: Boolean(body.parkCheckedIn),
+      parkEntryCode: /^\d{6}$/.test(String(body.parkEntryCode || '')) ? String(body.parkEntryCode) : ''
+    };
+    await fs.promises.mkdir(path.dirname(PROGRESS_FILE), { recursive: true });
+    const tempFile = `${PROGRESS_FILE}.tmp`;
+    await fs.promises.writeFile(tempFile, JSON.stringify(progress, null, 2), 'utf8');
+    await fs.promises.rename(tempFile, PROGRESS_FILE);
+    return sendJson(res, 200, { saved: true });
+  }
   if (req.method === 'POST' && url.pathname === '/api/rooms') {
     const body = await readJson(req);
     const code = Math.random().toString(36).slice(2, 7).toUpperCase();
