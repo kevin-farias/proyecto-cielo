@@ -14,6 +14,7 @@ const CREATURE_DATABASE = {
     spd: 95,
     atk: 45,
     lvl: 12,
+    favoriteFood: { id: 'nectar', name: 'Néctar de flores', icon: '🌺' },
     habitat: 'Quebradas y Bosque Serrano',
     desc: 'Ave mítica de agilidad sorprendente que habita en las sierras cordobesas. Posee una cola iridiscente bífida y su polinización es indispensable para la flora autóctona.',
     moves: [
@@ -32,6 +33,7 @@ const CREATURE_DATABASE = {
     spd: 75,
     atk: 70,
     lvl: 15,
+    favoriteFood: { id: 'meat', name: 'Carne fresca', icon: '🥩' },
     habitat: 'Bosques Nativos de Córdoba',
     desc: 'El felino más grande de América. Es el apex predator de la red trófica local, vital para mantener el equilibrio poblacional de los herbívoros.',
     moves: [
@@ -50,6 +52,7 @@ const CREATURE_DATABASE = {
     spd: 60,
     atk: 50,
     lvl: 10,
+    favoriteFood: { id: 'carob', name: 'Frutos de algarrobo', icon: '🌰' },
     habitat: 'Monte y Matorrales',
     desc: 'Mamífero nativo gregario que vive en manadas. Se alimenta de frutos secos, raicillas y colabora dispersando semillas por el terreno.',
     moves: [
@@ -68,6 +71,7 @@ const CREATURE_DATABASE = {
     spd: 20,
     atk: 30,
     lvl: 20,
+    favoriteFood: { id: 'compost', name: 'Humus serrano', icon: '🍂' },
     habitat: 'Bosque Serranos de Córdoba',
     desc: 'Especie vegetal insignia de la reserva natural con ejemplares milenarios de 100 a 400 años de edad que no forman bosques en ningún otro lugar.',
     moves: [
@@ -86,6 +90,7 @@ const CREATURE_DATABASE = {
     spd: 85,
     atk: 55,
     lvl: 13,
+    favoriteFood: { id: 'mouse', name: 'Ratón de campo', icon: '🐁' },
     habitat: 'Algarrobales Nocturnos',
     desc: 'Depredador nocturno clave para el control biológico de roedores en las sierras. Gran visión térmica y vuelo silencioso.',
     moves: [
@@ -104,6 +109,7 @@ const CREATURE_DATABASE = {
     spd: 90,
     atk: 50,
     lvl: 11,
+    favoriteFood: { id: 'berries', name: 'Bayas silvestres', icon: '🫐' },
     habitat: 'Matorrales de Punilla',
     desc: 'Cánido nativo astuto y veloz adaptado a las lomas serranas. Desempeña un rol primordial en el ecosistema local.',
     moves: [
@@ -126,6 +132,8 @@ const AppState = {
   unlockedCreatures: ['picaflor', 'yaguarete', 'pecari', 'quebracho'],
   recentlyUnlocked: [], // Tracks newly captured creatures in this session!
   profileXP: 0,
+  creatureCopies: { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 },
+  inventory: { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3 },
   
   // Battle state
   battle: {
@@ -589,6 +597,11 @@ function restoreExplorerProgress() {
     if (Array.isArray(savedCollection)) {
       AppState.unlockedCreatures = [...new Set(savedCollection.filter(id => CREATURE_DATABASE[id]))];
     }
+    const savedCopies = JSON.parse(localStorage.getItem('explorer_creature_copies') || 'null');
+    AppState.unlockedCreatures.forEach(id => {
+      const copies = Number(savedCopies?.[id]);
+      AppState.creatureCopies[id] = Number.isInteger(copies) && copies > 0 ? copies : 1;
+    });
     const savedXP = Number(localStorage.getItem('explorer_profile_xp'));
     if (Number.isFinite(savedXP) && savedXP >= 0) AppState.profileXP = savedXP;
   } catch (error) {
@@ -628,7 +641,8 @@ function renderExplorerProgress() {
         if (!creature) return;
         const chip = document.createElement('span');
         chip.className = 'profile-animal-chip';
-        chip.textContent = `${creature.icon} ${creature.name}`;
+        const copies = AppState.creatureCopies[id] || 1;
+        chip.textContent = `${creature.icon} ${creature.name}${copies > 1 ? ` ×${copies}` : ''}`;
         animalList.append(chip);
       });
     }
@@ -653,7 +667,7 @@ async function shareExplorerProfile() {
   const animals = AppState.unlockedCreatures
     .map(id => CREATURE_DATABASE[id])
     .filter(Boolean)
-    .map(creature => `${creature.icon} ${creature.name}`);
+    .map(creature => `${creature.icon} ${creature.name}${AppState.creatureCopies[creature.id] > 1 ? ` ×${AppState.creatureCopies[creature.id]}` : ''}`);
   const profileText = [
     `🌿 Perfil de explorador · Proyecto Cielo`,
     `Nombre: ${name}`,
@@ -1369,10 +1383,14 @@ function completeQRDiscovery(targetId) {
   closeModal('modal-qr');
   pendingQRTarget = null;
   const isNew = !AppState.unlockedCreatures.includes(targetId);
-  if (isNew) AppState.unlockedCreatures.push(targetId);
+  if (isNew) {
+    AppState.unlockedCreatures.push(targetId);
+    AppState.creatureCopies[targetId] = Math.max(1, AppState.creatureCopies[targetId] || 0);
+  }
   if (isNew && !AppState.recentlyUnlocked.includes(targetId)) AppState.recentlyUnlocked.push(targetId);
   if (isNew) {
     try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+    try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
     awardProfileXP(100);
   }
 
@@ -1628,6 +1646,7 @@ function confirmTeamAndLaunchBattle() {
   SFX.playClick();
 
   AppState.battle.mode = AppState.battle.networkMatch ? 'network' : AppState.battle.pendingMode;
+  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3 };
   const diff = AppState.battle.botDifficulty || 'facil';
 
   // Build Player Team (3 chosen creatures)
@@ -1866,6 +1885,58 @@ function populateSwitchControls() {
   switchControls.appendChild(backBtn);
 }
 
+function populateBackpackControls() {
+  const controls = document.getElementById('battle-controls-items');
+  if (!controls) return;
+  controls.replaceChildren();
+  const hint = document.createElement('p');
+  hint.className = 'bag-hint';
+  if (isLocalDuel()) {
+    hint.textContent = 'La captura con comida está desactivada en los duelos contra amigos.';
+    controls.append(hint, createBagBackButton());
+    return;
+  }
+
+  const enemy = AppState.battle.enemy;
+  const species = CREATURE_DATABASE[enemy?.key];
+  if (!enemy || !species) {
+    hint.textContent = 'No hay una criatura disponible para capturar.';
+    controls.append(hint, createBagBackButton());
+    return;
+  }
+  hint.textContent = `Elige un cebo para ${species.name}. Su favorito es ${species.favoriteFood.icon} ${species.favoriteFood.name}. Menos HP aumenta la probabilidad.`;
+  controls.appendChild(hint);
+
+  Object.values(CREATURE_DATABASE).forEach(creature => {
+    const food = creature.favoriteFood;
+    const quantity = AppState.inventory[food.id] || 0;
+    const chance = Math.round(getCaptureChance(enemy, food.id) * 100);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn-battle btn-sub bag-item-button';
+    button.disabled = quantity <= 0;
+    button.innerHTML = `<span>${food.icon} ${food.name}</span><small>${quantity} · captura ${chance}%${food.id === species.favoriteFood.id ? ' · favorito' : ''}</small>`;
+    button.addEventListener('click', () => useItem(food.id));
+    controls.appendChild(button);
+  });
+  controls.appendChild(createBagBackButton());
+}
+
+function createBagBackButton() {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'btn-battle btn-back-sub';
+  button.textContent = '↩ Volver';
+  button.addEventListener('click', hideSubMenu);
+  return button;
+}
+
+function getCaptureChance(enemy, foodId) {
+  const healthRatio = Math.max(0, Math.min(1, enemy.hp / enemy.maxHp));
+  const favoriteBonus = CREATURE_DATABASE[enemy.key]?.favoriteFood.id === foodId ? 0.18 : -0.08;
+  return Math.max(0.03, Math.min(0.92, 0.08 + (1 - healthRatio) * 0.72 + favoriteBonus));
+}
+
 function switchActivePlayerCreature(newIndex) {
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   const localPlayerTwo = isLocalDuel() && AppState.battle.localTurn === 2;
@@ -1979,6 +2050,7 @@ function showSubMenu(menuId) {
   document.getElementById('battle-controls-main').classList.add('hidden');
   document.getElementById('battle-controls-attacks').classList.add('hidden');
   document.getElementById('battle-controls-switch').classList.add('hidden');
+  document.getElementById('battle-controls-items').classList.add('hidden');
 
   if (menuId === 'attacks') {
     populateAttackControls();
@@ -1986,6 +2058,9 @@ function showSubMenu(menuId) {
   } else if (menuId === 'switch') {
     populateSwitchControls();
     document.getElementById('battle-controls-switch').classList.remove('hidden');
+  } else if (menuId === 'items') {
+    populateBackpackControls();
+    document.getElementById('battle-controls-items').classList.remove('hidden');
   }
 }
 
@@ -1993,6 +2068,7 @@ function hideSubMenu() {
   SFX.playClick();
   document.getElementById('battle-controls-attacks').classList.add('hidden');
   document.getElementById('battle-controls-switch').classList.add('hidden');
+  document.getElementById('battle-controls-items').classList.add('hidden');
   document.getElementById('battle-controls-main').classList.remove('hidden');
 }
 
@@ -2220,30 +2296,55 @@ function useSkill(skillType) {
 function useItem(itemType) {
   if (!AppState.battle.isPlayerTurn) return;
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
-  SFX.playHeal();
-
-  const p = AppState.battle.player;
-  const healAmount = 45;
-  p.hp = Math.min(p.maxHp, p.hp + healAmount);
-  updateBattleUI();
-  updateBattleTeamsRosterUI();
-
-  document.getElementById('battle-log').textContent = `¡Usaste Poción Ecológica de la Mochila en ${p.name}! Restauraste +${healAmount} HP.`;
-
   if (isLocalDuel()) {
-    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
-    AppState.battle.turn += 1;
-    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
-    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
-    updateBattleUI();
-    updateBattleTeamsRosterUI();
-    document.getElementById('battle-log').textContent = AppState.battle.networkMatch ? `¡${p.name} usó la mochila! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.` : `¡${p.name} usó la mochila! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
-    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    hideSubMenu();
+    document.getElementById('battle-log').textContent = 'La captura con comida está desactivada en los duelos contra amigos.';
     return;
   }
 
+  const enemy = AppState.battle.enemy;
+  const species = CREATURE_DATABASE[enemy?.key];
+  const food = Object.values(CREATURE_DATABASE).map(creature => creature.favoriteFood).find(item => item.id === itemType);
+  if (!enemy || !species || !food) return;
+  if ((AppState.inventory[itemType] || 0) <= 0) {
+    document.getElementById('battle-log').textContent = `No te quedan ${food.name.toLowerCase()}.`;
+    populateBackpackControls();
+    return;
+  }
+
+  SFX.playQRScan();
+  AppState.inventory[itemType] -= 1;
+  hideSubMenu();
+  const chance = getCaptureChance(enemy, itemType);
+  if (Math.random() < chance) {
+    const isNew = !AppState.unlockedCreatures.includes(species.id);
+    if (isNew) {
+      AppState.unlockedCreatures.push(species.id);
+      AppState.creatureCopies[species.id] = 1;
+      if (!AppState.recentlyUnlocked.includes(species.id)) AppState.recentlyUnlocked.push(species.id);
+    } else {
+      AppState.creatureCopies[species.id] = (AppState.creatureCopies[species.id] || 1) + 1;
+    }
+    try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+    try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
+    awardProfileXP(isNew ? 100 : 50);
+    AppState.battle.finished = true;
+    document.getElementById('battle-controls-main').classList.add('hidden');
+    document.getElementById('battle-log').textContent = `¡${species.name} se acercó a ${food.name} y fue capturado!`;
+    renderCollectionGrid();
+    renderFloraFaunaInfo();
+    renderExplorerProgress();
+    if (reserveMap) renderReserveAnimalMarkers();
+    alert(isNew
+      ? `🎉 ¡Capturaste a ${species.name} ${species.icon}! Se sumó a tu colección y ganaste 100 EXP.`
+      : `🎉 ¡Capturaste otro ${species.name} ${species.icon}! Ahora tienes ${AppState.creatureCopies[species.id]} y ganaste 50 EXP.`);
+    navigateTo('coleccion');
+    return;
+  }
+
+  document.getElementById('battle-log').textContent = `¡${enemy.name} rechazó ${food.name}! Probabilidad: ${Math.round(chance * 100)}%. La criatura contraataca.`;
   AppState.battle.isPlayerTurn = false;
-  setTimeout(executeEnemyTurn, 1500);
+  setTimeout(executeEnemyTurn, 1300);
 }
 
 function confirmExitBattle() {

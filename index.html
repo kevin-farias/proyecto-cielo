@@ -777,7 +777,7 @@
                 <button class="btn-battle btn-skill" onclick="useSkill('refugio')">
                   ✨ Habilidad
                 </button>
-                <button class="btn-battle btn-item" onclick="useItem('pocion')">
+                <button class="btn-battle btn-item" onclick="showSubMenu('items')">
                   🎒 Mochila
                 </button>
                 <button class="btn-battle btn-switch" onclick="showSubMenu('switch')">
@@ -793,6 +793,10 @@
               <!-- Submenu Switch Creature Actions -->
               <div class="battle-controls hidden" id="battle-controls-switch">
                 <!-- Dynamically populated creature switch buttons from team -->
+              </div>
+
+              <div class="battle-controls hidden" id="battle-controls-items">
+                <!-- Baits and capture actions are populated for bot battles only. -->
               </div>
 
               <div class="battle-intro-overlay" id="battle-intro-overlay" aria-hidden="true">
