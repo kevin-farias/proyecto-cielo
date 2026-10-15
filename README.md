@@ -20,6 +20,15 @@ Prototipo interactivo y navegable de alta fidelidad que simula una aplicación m
 3. Abre en tu navegador preferido:
    👉 **http://localhost:3000**
 
+### Jugar por Wi‑Fi en dos computadoras
+
+1. Conecta ambas computadoras a la misma red Wi‑Fi.
+2. Inicia `node server.js` en una de ellas. La consola muestra su dirección de red, por ejemplo `http://192.168.1.25:3000`.
+3. En ambas computadoras abre esa dirección. El creador de la sala comparte el código de 5 caracteres y el otro jugador lo ingresa.
+4. Cada jugador elige tres criaturas y juega sus turnos desde su propia computadora.
+
+La computadora que ejecuta el servidor debe permanecer encendida durante la partida. Si Windows pregunta si Node.js puede aceptar conexiones en la red privada, permite el acceso para que la otra computadora pueda conectarse.
+
 ---
 
 ## 🌟 Características Destacadas

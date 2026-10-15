@@ -533,7 +533,7 @@
                     <div class="mode-icon-box">👥</div>
                     <div class="mode-text">
                       <strong>pelea contra amigo local</strong>
-                      <span>Duelo entre 2 entrenadores en el mismo teléfono</span>
+                      <span>Duelo en el mismo teléfono o por Wi‑Fi local</span>
                     </div>
                     <span class="mode-arrow">→</span>
                   </button>
@@ -555,31 +555,38 @@
               </div>
 
               <div class="screen-content scrollable">
-                <div class="section-tag">JUGADORES LOCALES</div>
+                <div class="section-tag">DUELO LOCAL ENTRE AMIGOS</div>
+                <p class="select-hint-text">Juega en el mismo teléfono o conecta dos computadoras a la misma red Wi‑Fi. Para jugar por Wi‑Fi, ambos deben abrir la dirección de red que muestra el servidor.</p>
 
-                <div class="players-list mt-3">
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona1')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 1</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
+                <div class="local-quick-match mt-2 mb-3">
+                  <label class="select-hint-text" for="lan-player-name">Tu nombre</label>
+                  <input id="lan-player-name" class="text-input" maxlength="20" placeholder="Entrenador" value="Entrenador">
+                  <button class="btn-figma btn-accent full-width mt-2" onclick="createLanRoom()">📡 Crear sala por Wi‑Fi</button>
+                  <div class="mt-2">
+                    <input id="lan-room-code" class="text-input" maxlength="5" placeholder="Código de sala" autocomplete="off">
+                    <button class="btn-figma full-width mt-2" onclick="joinLanRoom()">🔗 Unirme a una sala</button>
+                  </div>
+                  <p id="lan-room-status" class="select-hint-text mt-2" aria-live="polite"></p>
+                </div>
+
+                <div class="local-quick-match mt-2 mb-3">
+                  <button class="btn-figma full-width" onclick="startLocalMultiplayer('Jugador 1', 'Jugador 2')">
+                    ⚔️ INICIAR DUELO (JUGADOR 1 vs JUGADOR 2)
+                  </button>
+                </div>
+
+                <div class="section-tag mt-3">O ELIGE PERFILES RIVALES</div>
+                <div class="players-list mt-2">
+                  <button class="player-item-btn" onclick="startLocalMultiplayer('Persona 1', 'Persona 2')">
+                    <span class="player-avatar">👥</span>
+                    <span class="player-name">Persona 1 vs Persona 2</span>
+                    <span class="player-status">Duelo 1v1 ›</span>
                   </button>
 
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona2')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 2</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
-                  </button>
-
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona3')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 3</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
-                  </button>
-
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona4')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 4</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
+                  <button class="player-item-btn" onclick="startLocalMultiplayer('Persona 3', 'Persona 4')">
+                    <span class="player-avatar">👥</span>
+                    <span class="player-name">Persona 3 vs Persona 4</span>
+                    <span class="player-status">Duelo 1v1 ›</span>
                   </button>
                 </div>
               </div>
@@ -590,12 +597,12 @@
                  ========================================== -->
             <section class="screen" id="screen-seleccionar_criatura">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('pelea')">←</button>
-                <h3>Elige 3 Criaturas</h3>
+                <button class="btn-back" onclick="handleTeamSelectionBack()">←</button>
+                <h3 id="select-team-title">Elige 3 Criaturas</h3>
               </div>
 
               <div class="screen-content scrollable">
-                <div class="section-tag">FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)</div>
+                <div class="section-tag" id="select-team-tag">FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)</div>
 
                 <!-- Team Slots Bar -->
                 <div class="team-slots-bar mt-2">
@@ -627,13 +634,13 @@
 
                 <!-- Floating/Fixed confirm button -->
                 <div class="team-confirm-wrapper mt-2">
-                  <button id="btn-confirm-team" class="btn-figma btn-accent full-width" onclick="confirmTeamAndLaunchBattle()" disabled>
+                  <button id="btn-confirm-team" class="btn-figma btn-accent full-width" onclick="handleTeamConfirm()" disabled>
                     ⚔️ SELECCIONA 3 CRIATURAS (0/3)
                   </button>
                 </div>
 
-                <div class="section-tag mt-3">TUS CRIATURAS DISPONIBLES</div>
-                <p class="select-hint-text">Toca una criatura para sumarla o quitarla de tu equipo:</p>
+                <div class="section-tag mt-3" id="select-available-tag">TUS CRIATURAS DISPONIBLES</div>
+                <p class="select-hint-text" id="select-hint-tag">Toca una criatura para sumarla o quitarla de tu equipo:</p>
 
                 <div class="creature-select-grid mt-2" id="creature-selection-container">
                   <!-- Dynamically populated from AppState.unlockedCreatures -->
@@ -827,22 +834,26 @@
         <button class="modal-close" onclick="closeModal('modal-creature')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="creature-detail-header">
-          <div class="creature-detail-avatar" id="creature-modal-icon">🌸</div>
-          <div>
-            <h3 id="creature-modal-name">Picaflor Cometa</h3>
-            <span class="badge" id="creature-modal-badge">Polinizador Serrano</span>
+        <article class="species-card" id="species-card">
+          <div class="species-card-topline">
+            <span id="creature-modal-badge">Fauna serrana</span>
+            <strong><small>VIDA</small> <span id="c-hp">120</span></strong>
           </div>
-        </div>
-        <div class="creature-stats mt-3">
-          <div class="stat-row"><span>Vida (HP):</span> <strong id="c-hp">120 HP</strong></div>
-          <div class="stat-row"><span>Velocidad:</span> <strong id="c-spd">95 SPD</strong></div>
-          <div class="stat-row"><span>Ataque:</span> <strong id="c-atk">45 ATK</strong></div>
-          <div class="stat-row"><span>Hábitat:</span> <strong id="c-habitat">Sierras de Córdoba</strong></div>
-        </div>
-        <p class="creature-desc mt-3" id="creature-modal-desc">
-          Ave mítica de agilidad sorprendente que habita en las quebradas y bosques autóctonos.
-        </p>
+          <h3 id="creature-modal-name">Picaflor Cometa</h3>
+          <div class="species-art-frame" id="creature-modal-art-frame">
+            <img id="creature-modal-art" alt="Ilustración de la especie" hidden>
+            <span class="species-art-fallback" id="creature-modal-icon" aria-hidden="true">🌸</span>
+            <span class="species-art-caption">ESPECIE NATIVA • CÓRDOBA</span>
+          </div>
+          <div class="species-card-facts">
+            <div><small>HÁBITAT</small><strong id="c-habitat">Sierras de Córdoba</strong></div>
+            <div><small>VELOCIDAD</small><strong id="c-spd">95</strong></div>
+            <div><small>FUERZA</small><strong id="c-atk">45</strong></div>
+          </div>
+          <p class="creature-desc mt-3" id="creature-modal-desc"></p>
+          <div class="species-moves" id="creature-modal-moves"></div>
+          <p class="species-card-footnote">Ficha de campo • Proyecto Cielo</p>
+        </article>
         <button class="btn-figma btn-primary full-width mt-3" onclick="closeModal('modal-creature')">Entendido</button>
       </div>
     </div>

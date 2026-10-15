@@ -17,9 +17,9 @@ const CREATURE_DATABASE = {
     habitat: 'Quebradas y Bosque Serrano',
     desc: 'Ave mítica de agilidad sorprendente que habita en las sierras cordobesas. Posee una cola iridiscente bífida y su polinización es indispensable para la flora autóctona.',
     moves: [
-      { name: 'Picotazo Veloz', dmg: 35, text: '¡Picotazo certero!' },
-      { name: 'Viento Serrano', dmg: 45, text: '¡Ráfaga de viento!' },
-      { name: 'Tormenta Hojas', dmg: 60, text: '¡CRÍTICO DE HOJAS!' }
+      { name: 'Picotazo Veloz', dmg: 35, uses: 5, maxUses: 5, text: '¡Picotazo certero!' },
+      { name: 'Viento Serrano', dmg: 45, uses: 4, maxUses: 4, text: '¡Ráfaga de viento!' },
+      { name: 'Tormenta Hojas', dmg: 60, uses: 2, maxUses: 2, text: '¡CRÍTICO DE HOJAS!' }
     ]
   },
   yaguarete: {
@@ -35,9 +35,9 @@ const CREATURE_DATABASE = {
     habitat: 'Bosques Nativos de Córdoba',
     desc: 'El felino más grande de América. Es el apex predator de la red trófica local, vital para mantener el equilibrio poblacional de los herbívoros.',
     moves: [
-      { name: 'Zarpazo Feroz', dmg: 45, text: '¡Impacto salvaje!' },
-      { name: 'Mordisco Selvático', dmg: 55, text: '¡Mordisco devastador!' },
-      { name: 'Garra Esmeralda', dmg: 70, text: '¡ATAQUE CRÍTICO FELINO!' }
+      { name: 'Zarpazo Feroz', dmg: 45, uses: 5, maxUses: 5, text: '¡Impacto salvaje!' },
+      { name: 'Mordisco Selvático', dmg: 55, uses: 4, maxUses: 4, text: '¡Mordisco devastador!' },
+      { name: 'Garra Esmeralda', dmg: 70, uses: 2, maxUses: 2, text: '¡ATAQUE CRÍTICO FELINO!' }
     ]
   },
   pecari: {
@@ -53,9 +53,9 @@ const CREATURE_DATABASE = {
     habitat: 'Monte y Matorrales',
     desc: 'Mamífero nativo gregario que vive en manadas. Se alimenta de frutos secos, raicillas y colabora dispersando semillas por el terreno.',
     moves: [
-      { name: 'Embestida Serrana', dmg: 35, text: '¡Embestida de monte!' },
-      { name: 'Pisotón Cobre', dmg: 45, text: '¡Pisotón contundente!' },
-      { name: 'Furia Terrestre', dmg: 60, text: '¡DEMOLICIÓN SERRANA!' }
+      { name: 'Embestida Serrana', dmg: 35, uses: 5, maxUses: 5, text: '¡Embestida de monte!' },
+      { name: 'Pisotón Cobre', dmg: 45, uses: 4, maxUses: 4, text: '¡Pisotón contundente!' },
+      { name: 'Furia Terrestre', dmg: 60, uses: 2, maxUses: 2, text: '¡DEMOLICIÓN SERRANA!' }
     ]
   },
   quebracho: {
@@ -71,9 +71,9 @@ const CREATURE_DATABASE = {
     habitat: 'Bosque Serranos de Córdoba',
     desc: 'Especie vegetal insignia de la reserva natural con ejemplares milenarios de 100 a 400 años de edad que no forman bosques en ningún otro lugar.',
     moves: [
-      { name: 'Raíz Milenaria', dmg: 30, text: '¡Golpe de raíz ancestral!' },
-      { name: 'Látigo de Ramas', dmg: 40, text: '¡Azote de vegetación!' },
-      { name: 'Espina Serrana', dmg: 55, text: '¡DEFENSA ESPINOSA!' }
+      { name: 'Raíz Milenaria', dmg: 30, uses: 5, maxUses: 5, text: '¡Golpe de raíz ancestral!' },
+      { name: 'Látigo de Ramas', dmg: 40, uses: 4, maxUses: 4, text: '¡Azote de vegetación!' },
+      { name: 'Espina Serrana', dmg: 55, uses: 2, maxUses: 2, text: '¡DEFENSA ESPINOSA!' }
     ]
   },
   buho: {
@@ -89,9 +89,9 @@ const CREATURE_DATABASE = {
     habitat: 'Algarrobales Nocturnos',
     desc: 'Depredador nocturno clave para el control biológico de roedores en las sierras. Gran visión térmica y vuelo silencioso.',
     moves: [
-      { name: 'Ataque Silencioso', dmg: 40, text: '¡Sorpresa nocturna!' },
-      { name: 'Garra Alada', dmg: 50, text: '¡Zarpazo aéreo!' },
-      { name: 'Mirada Hipnótica', dmg: 65, text: '¡GOLPE DE SOMBRAS!' }
+      { name: 'Ataque Silencioso', dmg: 40, uses: 5, maxUses: 5, text: '¡Sorpresa nocturna!' },
+      { name: 'Garra Alada', dmg: 50, uses: 4, maxUses: 4, text: '¡Zarpazo aéreo!' },
+      { name: 'Mirada Hipnótica', dmg: 65, uses: 2, maxUses: 2, text: '¡GOLPE DE SOMBRAS!' }
     ]
   },
   zorro: {
@@ -107,9 +107,9 @@ const CREATURE_DATABASE = {
     habitat: 'Matorrales de Punilla',
     desc: 'Cánido nativo astuto y veloz adaptado a las lomas serranas. Desempeña un rol primordial en el ecosistema local.',
     moves: [
-      { name: 'Astucia Serrana', dmg: 35, text: '¡Movimiento veloz!' },
-      { name: 'Embestida Ágil', dmg: 45, text: '¡Ataque sorpresa!' },
-      { name: 'Colmillo Gris', dmg: 60, text: '¡IMPACTO ASTUTO!' }
+      { name: 'Astucia Serrana', dmg: 35, uses: 5, maxUses: 5, text: '¡Movimiento veloz!' },
+      { name: 'Embestida Ágil', dmg: 45, uses: 4, maxUses: 4, text: '¡Ataque sorpresa!' },
+      { name: 'Colmillo Gris', dmg: 60, uses: 2, maxUses: 2, text: '¡IMPACTO ASTUTO!' }
     ]
   }
 };
@@ -131,6 +131,10 @@ const AppState = {
     pendingMode: 'bot',
     botDifficulty: 'facil', // 'facil' | 'normal' | 'dificil'
     selectedTeam: [],       // Array of 3 creature keys chosen for combat
+    localPlayerOneTeam: [],
+    localPlayerOneName: 'Jugador 1',
+    localPlayerTwoName: 'Jugador 2',
+    localTurn: 1,
     playerTeam: [],         // Array of 3 creature objects
     activePlayerIndex: 0,   // Current fighting creature in playerTeam
     enemyTeam: [],          // Array of enemy creature objects
@@ -141,6 +145,138 @@ const AppState = {
     enemy: null             // Reference to active enemy creature
   }
 };
+
+const LanMatch = { code: null, side: 0, version: 0, timer: null, syncing: false };
+const isLocalDuel = () => AppState.battle.mode === 'local' || AppState.battle.mode === 'network';
+
+async function lanRequest(path, body) {
+  const response = await fetch(`/api/rooms${path}`, {
+    method: body ? 'POST' : 'GET',
+    headers: body ? { 'Content-Type': 'application/json' } : {},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'No se pudo conectar con la sala.');
+  return result;
+}
+
+function lanName() {
+  return (document.getElementById('lan-player-name')?.value || '').trim().slice(0, 20) || 'Entrenador';
+}
+
+async function createLanRoom() {
+  try {
+    const room = await lanRequest('', { name: lanName() });
+    LanMatch.code = room.code; LanMatch.side = room.player; LanMatch.version = 0;
+    AppState.battle.localPlayerOneName = lanName();
+    AppState.battle.localPlayerTwoName = 'Esperando rival';
+    AppState.battle.pendingMode = 'local';
+    AppState.battle.networkMatch = true;
+    setLanStatus(`Sala ${room.code}: comparte este código con tu amigo.`);
+    document.getElementById('lan-room-code').value = room.code;
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${lanName()}`;
+    openTeamSelection();
+  } catch (error) { setLanStatus(error.message); }
+}
+
+async function joinLanRoom() {
+  const code = (document.getElementById('lan-room-code')?.value || '').trim().toUpperCase();
+  if (!/^[A-Z0-9]{5}$/.test(code)) return setLanStatus('Escribe el código de 5 letras o números que te compartieron.');
+  try {
+    const room = await lanRequest(`/${code}`, { name: lanName() });
+    LanMatch.code = code; LanMatch.side = room.player; LanMatch.version = 0;
+    AppState.battle.localPlayerOneName = room.names[0];
+    AppState.battle.localPlayerTwoName = lanName();
+    AppState.battle.pendingMode = 'local';
+    AppState.battle.networkMatch = true;
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    setLanStatus(`Conectado a la sala ${code}. Elige tus tres criaturas.`);
+    document.getElementById('select-team-title').textContent = `Equipo de ${lanName()}`;
+    openTeamSelection();
+  } catch (error) { setLanStatus(error.message); }
+}
+
+function setLanStatus(message) {
+  const status = document.getElementById('lan-room-status');
+  if (status) status.textContent = message;
+}
+
+async function submitLanTeam() {
+  const side = LanMatch.side;
+  await lanRequest(`/${LanMatch.code}/team`, { player: side, team: AppState.battle.selectedTeam });
+  setLanStatus('Equipo enviado. Esperando que ambos entrenadores estén listos…');
+  let result;
+  while (true) {
+    result = await lanRequest(`/${LanMatch.code}/state`);
+    if (result.teams[0] && result.teams[1]) break;
+    await new Promise(resolve => setTimeout(resolve, 700));
+  }
+  AppState.battle.localPlayerOneName = result.names[0];
+  AppState.battle.localPlayerTwoName = result.names[1];
+  AppState.battle.localPlayerOneTeam = result.teams[0];
+  AppState.battle.selectedTeam = result.teams[1];
+  confirmTeamAndLaunchBattle();
+}
+
+function makeLanSnapshot() {
+  return {
+    playerTeam: AppState.battle.playerTeam, enemyTeam: AppState.battle.enemyTeam,
+    activePlayerIndex: AppState.battle.activePlayerIndex, activeEnemyIndex: AppState.battle.activeEnemyIndex,
+    localTurn: AppState.battle.localTurn, turn: AppState.battle.turn,
+    finished: Boolean(AppState.battle.finished),
+    log: document.getElementById('battle-log')?.textContent || ''
+  };
+}
+
+async function publishLanSnapshot() {
+  if (!AppState.battle.networkMatch || !LanMatch.code || LanMatch.syncing) return;
+  try {
+    const result = await lanRequest(`/${LanMatch.code}/state`, { state: makeLanSnapshot() });
+    LanMatch.version = result.version;
+  } catch (error) { const log = document.getElementById('battle-log'); if (log) log.textContent = error.message; }
+}
+
+function startLanPolling() {
+  clearInterval(LanMatch.timer);
+  LanMatch.timer = setInterval(async () => {
+    if (!AppState.battle.networkMatch || !LanMatch.code || LanMatch.syncing) return;
+    try {
+      const result = await lanRequest(`/${LanMatch.code}/state`);
+      if (!result.state || result.version <= LanMatch.version) return;
+      LanMatch.syncing = true;
+      const state = result.state;
+      AppState.battle.playerTeam = state.playerTeam;
+      AppState.battle.enemyTeam = state.enemyTeam;
+      AppState.battle.activePlayerIndex = state.activePlayerIndex;
+      AppState.battle.activeEnemyIndex = state.activeEnemyIndex;
+      AppState.battle.localTurn = state.localTurn;
+      AppState.battle.turn = state.turn;
+      AppState.battle.finished = Boolean(state.finished);
+      AppState.battle.player = state.playerTeam[state.activePlayerIndex];
+      AppState.battle.enemy = state.enemyTeam[state.activeEnemyIndex];
+      AppState.battle.localPlayerOneName = result.names[0];
+      AppState.battle.localPlayerTwoName = result.names[1];
+      document.getElementById('battle-log').textContent = state.log;
+      LanMatch.version = result.version;
+      populateAttackControls(); populateSwitchControls(); updateBattleUI(); updateBattleTeamsRosterUI();
+      showBattleControlsForTurn();
+      LanMatch.syncing = false;
+    } catch (_) { /* A brief polling failure is retried on the next cycle. */ }
+  }, 600);
+}
+
+function showBattleControlsForTurn() {
+  const mine = !AppState.battle.finished && (!AppState.battle.networkMatch || AppState.battle.localTurn === LanMatch.side);
+  document.getElementById('battle-controls-main').classList.toggle('hidden', !mine);
+  if (!mine) {
+    document.getElementById('battle-controls-attacks').classList.add('hidden');
+    document.getElementById('battle-controls-switch').classList.add('hidden');
+  }
+  return mine;
+}
 
 // WEBAUDIO SYNTHESIZER
 class SoundEngine {
@@ -303,12 +439,16 @@ function renderCollectionGrid() {
 
       card.innerHTML = `
         <div class="card-badge ${badgeClass}">${data.badge.toUpperCase()}</div>
-        <div class="card-img-placeholder">${data.icon}</div>
+        <div class="card-img-placeholder species-thumb"><img src="assets/species/${key}.png" alt="" hidden><span>${data.icon}</span></div>
         <div class="card-info">
           <h4>${data.name}</h4>
           <p>Nivel ${data.lvl} • Serrano</p>
         </div>
       `;
+      const thumb = card.querySelector('.species-thumb img');
+      const thumbFallback = card.querySelector('.species-thumb span');
+      thumb.onload = () => { thumb.hidden = false; thumbFallback.hidden = true; };
+      thumb.onerror = () => { thumb.hidden = true; thumbFallback.hidden = false; };
     } else {
       card.className = 'creature-card locked';
       card.onclick = () => openQRScanner(key);
@@ -889,11 +1029,36 @@ function showCreatureDetail(id) {
   document.getElementById('creature-modal-name').textContent = data.name;
   document.getElementById('creature-modal-icon').textContent = data.icon;
   document.getElementById('creature-modal-badge').textContent = data.badge;
-  document.getElementById('c-hp').textContent = `${data.hp} HP`;
-  document.getElementById('c-spd').textContent = `${data.spd} SPD`;
-  document.getElementById('c-atk').textContent = `${data.atk} ATK`;
+  document.getElementById('c-hp').textContent = data.hp;
+  document.getElementById('c-spd').textContent = data.spd;
+  document.getElementById('c-atk').textContent = data.atk;
   document.getElementById('c-habitat').textContent = data.habitat;
   document.getElementById('creature-modal-desc').textContent = data.desc;
+
+  const art = document.getElementById('creature-modal-art');
+  const artFallback = document.getElementById('creature-modal-icon');
+  art.alt = `Ilustración de ${data.name} en su hábitat serrano`;
+  art.hidden = true;
+  art.onload = () => { art.hidden = false; artFallback.hidden = true; };
+  art.onerror = () => { art.hidden = true; artFallback.hidden = false; };
+  art.src = `assets/species/${id}.png`;
+
+  const moves = document.getElementById('creature-modal-moves');
+  moves.replaceChildren();
+  const movesTitle = document.createElement('strong');
+  movesTitle.className = 'species-moves-title';
+  movesTitle.textContent = 'MOVIMIENTOS DE LA ESPECIE';
+  moves.appendChild(movesTitle);
+  data.moves.forEach(move => {
+    const row = document.createElement('div');
+    row.className = 'species-move-row';
+    const name = document.createElement('span');
+    name.textContent = move.name;
+    const uses = document.createElement('small');
+    uses.textContent = `${move.maxUses} usos`;
+    row.append(name, uses);
+    moves.appendChild(row);
+  });
 
   openModal('modal-creature');
 }
@@ -914,6 +1079,45 @@ function selectLocalPlayerMode(playerMode) {
   AppState.battle.pendingMode = playerMode;
   AppState.battle.botDifficulty = 'normal';
   openTeamSelection();
+}
+
+function startLocalMultiplayer(playerOne = 'Jugador 1', playerTwo = 'Jugador 2') {
+  AppState.battle.networkMatch = false;
+  LanMatch.code = null; LanMatch.side = 0; clearInterval(LanMatch.timer);
+  AppState.battle.localPlayerOneName = playerOne;
+  AppState.battle.localPlayerTwoName = playerTwo;
+  AppState.battle.localPlayerOneTeam = [];
+  AppState.battle.localTurn = 1;
+  AppState.battle.pendingMode = 'local';
+  AppState.battle.selectedTeam = [];
+  document.getElementById('select-team-title').textContent = `Equipo de ${playerOne}`;
+  openTeamSelection();
+}
+
+function handleTeamSelectionBack() {
+  if (AppState.battle.pendingMode === 'local' && AppState.battle.localPlayerOneTeam.length) {
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${AppState.battle.localPlayerOneName}`;
+  }
+  navigateTo(AppState.battle.pendingMode === 'local' ? 'pelea_local' : 'pelea');
+}
+
+function handleTeamConfirm() {
+  if (AppState.battle.networkMatch && AppState.battle.pendingMode === 'local') {
+    if (AppState.battle.selectedTeam.length !== 3) return;
+    submitLanTeam().catch(error => setLanStatus(error.message));
+    return;
+  }
+  if (AppState.battle.pendingMode === 'local' && !AppState.battle.localPlayerOneTeam.length) {
+    if (AppState.battle.selectedTeam.length !== 3) return;
+    AppState.battle.localPlayerOneTeam = [...AppState.battle.selectedTeam];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${AppState.battle.localPlayerTwoName}`;
+    renderTeamSelectionView();
+    return;
+  }
+  confirmTeamAndLaunchBattle();
 }
 
 function openTeamSelection() {
@@ -1055,7 +1259,7 @@ function confirmTeamAndLaunchBattle() {
   }
   SFX.playClick();
 
-  AppState.battle.mode = AppState.battle.pendingMode;
+  AppState.battle.mode = AppState.battle.networkMatch ? 'network' : AppState.battle.pendingMode;
   const diff = AppState.battle.botDifficulty || 'facil';
 
   // Build Player Team (3 chosen creatures)
@@ -1075,8 +1279,14 @@ function confirmTeamAndLaunchBattle() {
     };
   });
 
+  if (isLocalDuel()) {
+    AppState.battle.playerTeam = AppState.battle.localPlayerOneTeam.map(key => createBattleCreature(key));
+    AppState.battle.enemyTeam = AppState.battle.selectedTeam.map(key => createBattleCreature(key));
+    AppState.battle.localTurn = 1;
+  }
+
   // Build Enemy Team based on chosen Bot Difficulty (or local player)
-  if (diff === 'facil') {
+  else if (diff === 'facil') {
     AppState.battle.enemyTeam = [
       {
         key: 'pecari',
@@ -1184,32 +1394,54 @@ function confirmTeamAndLaunchBattle() {
   AppState.battle.enemy = AppState.battle.enemyTeam[0];
   AppState.battle.turn = 1;
   AppState.battle.isPlayerTurn = true;
+  AppState.battle.finished = false;
 
   // Set difficulty badge
   const diffBadge = document.getElementById('battle-diff-badge');
   if (diffBadge) {
-    if (diff === 'facil') diffBadge.innerHTML = '🟢 Fácil (1 Rival)';
+    if (isLocalDuel()) diffBadge.textContent = AppState.battle.networkMatch ? '📶 Duelo por Wi‑Fi' : '👥 Duelo local';
+    else if (diff === 'facil') diffBadge.innerHTML = '🟢 Fácil (1 Rival)';
     else if (diff === 'normal') diffBadge.innerHTML = '🟡 Normal (2 Rivales)';
     else diffBadge.innerHTML = '🔴 Difícil (3 Rivales Alfa)';
   }
 
   const enemyRosterTitle = document.getElementById('enemy-roster-title');
   if (enemyRosterTitle) {
-    enemyRosterTitle.textContent = `Rival (${AppState.battle.enemyTeam.length}):`;
+    enemyRosterTitle.textContent = isLocalDuel()
+      ? `${AppState.battle.localPlayerTwoName} (3):`
+      : `Rival (${AppState.battle.enemyTeam.length}):`;
   }
+  const playerRosterTitle = document.querySelector('.player-roster .roster-label');
+  if (playerRosterTitle) playerRosterTitle.textContent = isLocalDuel()
+    ? `${AppState.battle.localPlayerOneName} (3):` : 'Tu Equipo (3):';
 
   populateAttackControls();
   populateSwitchControls();
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡Combate iniciado! Tu equipo de 3 criaturas vs BOT (${diff.toUpperCase()}). ¡Turno de ${AppState.battle.player.name}!`;
+  document.getElementById('battle-log').textContent = isLocalDuel()
+    ? (AppState.battle.networkMatch ? `¡Comienza el duelo por Wi‑Fi! Turno de ${AppState.battle.localPlayerOneName}.` : `¡Comienza el duelo! ${AppState.battle.localPlayerOneName}, es tu turno. Pasa el teléfono cuando termine tu jugada.`)
+    : `¡Combate iniciado! Tu equipo de 3 criaturas vs BOT (${diff.toUpperCase()}). ¡Turno de ${AppState.battle.player.name}!`;
 
   navigateTo('battle_arena');
+  if (AppState.battle.networkMatch) { LanMatch.version = 0; publishLanSnapshot(); startLanPolling(); }
+  if (AppState.battle.networkMatch) showBattleControlsForTurn();
+}
+
+function createBattleCreature(key) {
+  const data = CREATURE_DATABASE[key];
+  return { key, name: data.name, icon: data.icon, lvl: data.lvl, hp: data.hp,
+    maxHp: data.maxHp, spd: data.spd, atk: data.atk,
+    moves: JSON.parse(JSON.stringify(data.moves)), isFainted: false };
 }
 
 function populateAttackControls() {
-  const p = AppState.battle.player;
+  const p = isLocalDuel()
+    ? (AppState.battle.localTurn === 1
+      ? AppState.battle.playerTeam[AppState.battle.activePlayerIndex]
+      : AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex])
+    : AppState.battle.player;
   const attackControls = document.getElementById('battle-controls-attacks');
   if (!attackControls || !p) return;
 
@@ -1217,8 +1449,10 @@ function populateAttackControls() {
   p.moves.forEach(m => {
     const btn = document.createElement('button');
     btn.className = 'btn-battle btn-sub';
-    btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text);
-    btn.innerHTML = `⚡ ${m.name} (${m.dmg} DMG)`;
+    btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text, m);
+    btn.disabled = m.uses <= 0;
+    if (btn.disabled) btn.classList.add('exhausted');
+    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})`;
     attackControls.appendChild(btn);
   });
 
@@ -1234,8 +1468,12 @@ function populateSwitchControls() {
   if (!switchControls) return;
 
   switchControls.innerHTML = '';
-  AppState.battle.playerTeam.forEach((creature, idx) => {
-    const isCurrent = idx === AppState.battle.activePlayerIndex;
+  const team = isLocalDuel() && AppState.battle.localTurn === 2
+    ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+  const activeIndex = isLocalDuel() && AppState.battle.localTurn === 2
+    ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+  team.forEach((creature, idx) => {
+    const isCurrent = idx === activeIndex;
     const isFainted = creature.hp <= 0;
 
     const btn = document.createElement('button');
@@ -1261,15 +1499,24 @@ function populateSwitchControls() {
 }
 
 function switchActivePlayerCreature(newIndex) {
-  if (newIndex === AppState.battle.activePlayerIndex) return;
-  const target = AppState.battle.playerTeam[newIndex];
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  const localPlayerTwo = isLocalDuel() && AppState.battle.localTurn === 2;
+  const team = localPlayerTwo ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+  const currentIndex = localPlayerTwo ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+  if (newIndex === currentIndex) return;
+  const target = team[newIndex];
   if (!target || target.hp <= 0) return;
 
   SFX.playClick();
   hideSubMenu();
 
-  AppState.battle.activePlayerIndex = newIndex;
-  AppState.battle.player = target;
+  if (localPlayerTwo) {
+    AppState.battle.activeEnemyIndex = newIndex;
+    AppState.battle.enemy = target;
+  } else {
+    AppState.battle.activePlayerIndex = newIndex;
+    AppState.battle.player = target;
+  }
 
   populateAttackControls();
   populateSwitchControls();
@@ -1278,14 +1525,26 @@ function switchActivePlayerCreature(newIndex) {
 
   document.getElementById('battle-log').textContent = `🔄 ¡Cambiaste a ${target.name}! Entra al combate listo para luchar.`;
 
+  if (isLocalDuel()) {
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    populateAttackControls();
+    populateSwitchControls();
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = `¡${target.name} entra al combate! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    return;
+  }
+
   // Turn passes to enemy
   AppState.battle.isPlayerTurn = false;
   setTimeout(executeEnemyTurn, 1400);
 }
 
 function updateBattleUI() {
-  const p = AppState.battle.player;
-  const e = AppState.battle.enemy;
+  let p = AppState.battle.player;
+  let e = AppState.battle.enemy;
+  if (isLocalDuel() && AppState.battle.localTurn === 2) [p, e] = [e, p];
   if (!p || !e) return;
 
   // HP Bar Width percentages
@@ -1306,7 +1565,9 @@ function updateBattleUI() {
   document.getElementById('enemy-lvl').textContent = `Niv. ${e.lvl}`;
   document.getElementById('enemy-sprite').textContent = e.icon;
 
-  document.getElementById('turn-indicator').textContent = `TURNO ${AppState.battle.turn}: ${AppState.battle.isPlayerTurn ? p.name : e.name}`;
+  document.getElementById('turn-indicator').textContent = isLocalDuel()
+    ? `TURNO ${AppState.battle.turn}: ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}`
+    : `TURNO ${AppState.battle.turn}: ${AppState.battle.isPlayerTurn ? p.name : e.name}`;
 }
 
 function updateBattleTeamsRosterUI() {
@@ -1345,6 +1606,7 @@ function updateBattleTeamsRosterUI() {
 }
 
 function showSubMenu(menuId) {
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   SFX.playClick();
   document.getElementById('battle-controls-main').classList.add('hidden');
   document.getElementById('battle-controls-attacks').classList.add('hidden');
@@ -1368,11 +1630,59 @@ function hideSubMenu() {
 
 function executePlayerAttack(moveName, damage, msgText) {
   if (!AppState.battle.isPlayerTurn) return;
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  if (isLocalDuel()) {
+    const actorTeam = AppState.battle.localTurn === 1 ? AppState.battle.playerTeam : AppState.battle.enemyTeam;
+    const targetTeam = AppState.battle.localTurn === 1 ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+    const actorIndex = AppState.battle.localTurn === 1 ? AppState.battle.activePlayerIndex : AppState.battle.activeEnemyIndex;
+    const targetIndex = AppState.battle.localTurn === 1 ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+    const actor = actorTeam[actorIndex];
+    const target = targetTeam[targetIndex];
+    const move = actor.moves.find(m => m.name === moveName);
+    if (!move || move.uses <= 0) return;
+    move.uses -= 1;
+    SFX.playAttack();
+    hideSubMenu();
+    target.hp = Math.max(0, target.hp - damage);
+    if (target.hp <= 0) {
+      target.isFainted = true;
+      const next = targetTeam.findIndex(c => c.hp > 0);
+      if (next >= 0) {
+        if (AppState.battle.localTurn === 1) AppState.battle.activeEnemyIndex = next;
+        else AppState.battle.activePlayerIndex = next;
+      } else {
+        document.getElementById('battle-log').textContent = `¡${target.name} quedó fuera de combate! ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName} gana el duelo.`;
+        AppState.battle.finished = true;
+        updateBattleUI();
+        updateBattleTeamsRosterUI();
+        document.getElementById('battle-controls-main').classList.add('hidden');
+        if (AppState.battle.networkMatch) { publishLanSnapshot(); clearInterval(LanMatch.timer); }
+        alert(`🏆 ¡${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName} ganó el duelo!`);
+        return;
+      }
+    }
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
+    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
+    populateAttackControls();
+    populateSwitchControls();
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = AppState.battle.networkMatch
+      ? `¡${actor.name} usó ${moveName}! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`
+      : `¡${actor.name} usó ${moveName}! ${msgText} Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    return;
+  }
   SFX.playAttack();
 
   hideSubMenu();
   const p = AppState.battle.player;
   const e = AppState.battle.enemy;
+  const currentMove = p.moves?.find(move => move.name === moveName);
+  if (!currentMove || currentMove.uses <= 0) return;
+  currentMove.uses -= 1;
 
   // Animate sprite hit
   const eSprite = document.getElementById('enemy-sprite');
@@ -1383,7 +1693,7 @@ function executePlayerAttack(moveName, damage, msgText) {
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡${p.name} usó ${moveName}! ${msgText} (-${damage} HP)`;
+  document.getElementById('battle-log').textContent = `¡${p.name} usó ${moveName}! ${msgText}`;
 
   // Check if current enemy fainted
   if (e.hp <= 0) {
@@ -1449,7 +1759,7 @@ function executeEnemyTurn() {
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}! (-${atk.damage} HP a ${p.name})`;
+  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}!`;
   
   // Check if active player creature fainted
   if (p.hp <= 0) {
@@ -1492,6 +1802,7 @@ function executeEnemyTurn() {
 
 function useSkill(skillType) {
   if (!AppState.battle.isPlayerTurn) return;
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   SFX.playHeal();
 
   const p = AppState.battle.player;
@@ -1502,12 +1813,25 @@ function useSkill(skillType) {
 
   document.getElementById('battle-log').textContent = `¡${p.name} usó Habilidad Refugio Natural! Regeneraste +${healAmount} HP.`;
 
+  if (isLocalDuel()) {
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
+    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = AppState.battle.networkMatch ? `¡${p.name} usó Habilidad Refugio Natural! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.` : `¡${p.name} usó Habilidad Refugio Natural! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    return;
+  }
+
   AppState.battle.isPlayerTurn = false;
   setTimeout(executeEnemyTurn, 1500);
 }
 
 function useItem(itemType) {
   if (!AppState.battle.isPlayerTurn) return;
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   SFX.playHeal();
 
   const p = AppState.battle.player;
@@ -1517,6 +1841,18 @@ function useItem(itemType) {
   updateBattleTeamsRosterUI();
 
   document.getElementById('battle-log').textContent = `¡Usaste Poción Ecológica de la Mochila en ${p.name}! Restauraste +${healAmount} HP.`;
+
+  if (isLocalDuel()) {
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
+    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = AppState.battle.networkMatch ? `¡${p.name} usó la mochila! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.` : `¡${p.name} usó la mochila! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    return;
+  }
 
   AppState.battle.isPlayerTurn = false;
   setTimeout(executeEnemyTurn, 1500);
