@@ -125,6 +125,7 @@ const AppState = {
   isLandscape: false,
   unlockedCreatures: ['picaflor', 'yaguarete', 'pecari', 'quebracho'],
   recentlyUnlocked: [], // Tracks newly captured creatures in this session!
+  profileXP: 0,
   
   // Battle state
   battle: {
@@ -378,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateClock, 1000);
 
   // Render Initial Views
+  restoreExplorerProgress();
   renderCollectionGrid();
   renderFloraFaunaInfo();
   initializeProfile();
@@ -578,6 +580,110 @@ function initializeProfile() {
   const name = localStorage.getItem('explorer_profile_name') || 'Explorador';
   input.value = name;
   renderProfileGreeting(name);
+  renderExplorerProgress();
+}
+
+function restoreExplorerProgress() {
+  try {
+    const savedCollection = JSON.parse(localStorage.getItem('explorer_unlocked_creatures') || 'null');
+    if (Array.isArray(savedCollection)) {
+      AppState.unlockedCreatures = [...new Set(savedCollection.filter(id => CREATURE_DATABASE[id]))];
+    }
+    const savedXP = Number(localStorage.getItem('explorer_profile_xp'));
+    if (Number.isFinite(savedXP) && savedXP >= 0) AppState.profileXP = savedXP;
+  } catch (error) {
+    // Keep the default collection and progress when browser storage is unavailable.
+  }
+}
+
+function getExplorerLevel() {
+  const xpPerLevel = 500;
+  const xp = Math.max(0, AppState.profileXP);
+  return {
+    level: Math.floor(xp / xpPerLevel) + 1,
+    currentXP: xp % xpPerLevel,
+    xpPerLevel,
+    totalXP: xp
+  };
+}
+
+function renderExplorerProgress() {
+  const levelLabel = document.getElementById('profile-level-label');
+  const xpFill = document.getElementById('profile-xp-fill');
+  const xpLabel = document.getElementById('profile-xp-label');
+  const xpTrack = document.querySelector('.profile-xp-track');
+  const animalList = document.getElementById('profile-animal-list');
+  const level = getExplorerLevel();
+  if (levelLabel) levelLabel.textContent = `Nivel ${level.level} · ${level.totalXP} EXP`;
+  if (xpFill) xpFill.style.width = `${(level.currentXP / level.xpPerLevel) * 100}%`;
+  if (xpLabel) xpLabel.textContent = `${level.currentXP} / ${level.xpPerLevel} EXP para el próximo nivel`;
+  if (xpTrack) xpTrack.setAttribute('aria-valuenow', String(level.currentXP));
+  if (animalList) {
+    animalList.replaceChildren();
+    if (!AppState.unlockedCreatures.length) {
+      animalList.textContent = 'Aún no descubriste animales.';
+    } else {
+      AppState.unlockedCreatures.forEach(id => {
+        const creature = CREATURE_DATABASE[id];
+        if (!creature) return;
+        const chip = document.createElement('span');
+        chip.className = 'profile-animal-chip';
+        chip.textContent = `${creature.icon} ${creature.name}`;
+        animalList.append(chip);
+      });
+    }
+  }
+}
+
+function awardProfileXP(amount) {
+  const previousLevel = getExplorerLevel().level;
+  AppState.profileXP += amount;
+  try { localStorage.setItem('explorer_profile_xp', String(AppState.profileXP)); } catch (error) {}
+  renderExplorerProgress();
+  const nextLevel = getExplorerLevel().level;
+  if (nextLevel > previousLevel) {
+    const greeting = document.getElementById('profile-greeting');
+    if (greeting) greeting.textContent = `¡Subiste al nivel ${nextLevel}! Sigue explorando la reserva.`;
+  }
+}
+
+async function shareExplorerProfile() {
+  const name = document.getElementById('profile-name')?.value.trim() || 'Explorador';
+  const level = getExplorerLevel();
+  const animals = AppState.unlockedCreatures
+    .map(id => CREATURE_DATABASE[id])
+    .filter(Boolean)
+    .map(creature => `${creature.icon} ${creature.name}`);
+  const profileText = [
+    `🌿 Perfil de explorador · Proyecto Cielo`,
+    `Nombre: ${name}`,
+    `Nivel ${level.level} · ${level.totalXP} EXP`,
+    `Animales descubiertos (${animals.length}/${Object.keys(CREATURE_DATABASE).length}): ${animals.join(', ') || 'ninguno todavía'}`
+  ].join('\n');
+  const status = document.getElementById('profile-share-status');
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: `Perfil de ${name}`, text: profileText });
+      if (status) status.textContent = '¡Perfil compartido!';
+      return;
+    }
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(profileText);
+    } else {
+      const copyField = document.createElement('textarea');
+      copyField.value = profileText;
+      copyField.style.position = 'fixed';
+      copyField.style.opacity = '0';
+      document.body.append(copyField);
+      copyField.select();
+      const copied = document.execCommand('copy');
+      copyField.remove();
+      if (!copied) throw new Error('No se pudo copiar');
+    }
+    if (status) status.textContent = 'Perfil copiado. Ya puedes pegarlo y compartirlo.';
+  } catch (error) {
+    if (error.name !== 'AbortError' && status) status.textContent = 'No se pudo compartir. Inténtalo otra vez.';
+  }
 }
 
 function renderProfileGreeting(name) {
@@ -589,7 +695,7 @@ function saveProfileName() {
   const input = document.getElementById('profile-name');
   const name = input?.value.trim().slice(0, 24) || 'Explorador';
   if (input) input.value = name;
-  localStorage.setItem('explorer_profile_name', name);
+  try { localStorage.setItem('explorer_profile_name', name); } catch (error) {}
   renderProfileGreeting(name);
 }
 
@@ -1259,6 +1365,10 @@ function completeQRDiscovery(targetId) {
   const isNew = !AppState.unlockedCreatures.includes(targetId);
   if (isNew) AppState.unlockedCreatures.push(targetId);
   if (isNew && !AppState.recentlyUnlocked.includes(targetId)) AppState.recentlyUnlocked.push(targetId);
+  if (isNew) {
+    try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+    awardProfileXP(100);
+  }
 
   alert(isNew
     ? `🎉 ¡NUEVA CRIATURA DESCUBIERTA!\n\nEncontraste a: ${info.name} ${info.icon}\n\nSe añadió a tu colección y a la información de flora y fauna.`
@@ -1266,6 +1376,7 @@ function completeQRDiscovery(targetId) {
 
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  renderExplorerProgress();
   if (reserveMap) renderReserveAnimalMarkers();
   navigateTo('coleccion');
 }
@@ -1970,6 +2081,7 @@ function executePlayerAttack(moveName, damage, msgText) {
       // All enemies defeated -> Complete Victory!
       setTimeout(() => {
         const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
+        awardProfileXP(350);
         alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Tu equipo ha ganado +350 EXP y protegido la Reserva Natural Serrana!`);
         navigateTo('pelea');
       }, 600);

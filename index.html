@@ -164,6 +164,19 @@
                     </div>
                     <span id="profile-greeting">Tu aventura comienza aquí</span>
                   </div>
+                  <div class="profile-progress-panel">
+                    <div class="profile-level-row">
+                      <strong id="profile-level-label">Nivel 1 · 0 EXP</strong>
+                      <span id="profile-xp-label">0 / 500 EXP para el próximo nivel</span>
+                    </div>
+                    <div class="profile-xp-track" role="progressbar" aria-label="Experiencia para el próximo nivel" aria-valuemin="0" aria-valuemax="500">
+                      <span id="profile-xp-fill"></span>
+                    </div>
+                    <strong class="profile-animals-title">Animales descubiertos</strong>
+                    <div id="profile-animal-list" class="profile-animal-list"></div>
+                    <button class="btn-figma btn-secondary profile-share-button" type="button" onclick="shareExplorerProfile()">↗ Compartir perfil</button>
+                    <span id="profile-share-status" class="profile-share-status" aria-live="polite"></span>
+                  </div>
                 </div>
                 <div class="home-music-card">
                   <div><strong>🎵 Música de inicio</strong><span>LOFI • Proyecto Cielo</span></div>
