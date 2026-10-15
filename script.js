@@ -540,6 +540,7 @@ function navigateTo(screenId) {
   // AUTOMATIC HORIZONTAL ORIENTATION FOR BATTLE SCREEN!
   if (screenId === 'battle_arena') {
     setLandscapeMode(true);
+    requestAnimationFrame(() => playBattleEntranceAnimation());
   } else {
     setLandscapeMode(false);
   }
@@ -553,6 +554,22 @@ function navigateTo(screenId) {
       item.classList.add('active-step');
     }
   });
+}
+
+function playBattleEntranceAnimation() {
+  const arena = document.getElementById('screen-battle_arena');
+  const message = document.getElementById('battle-intro-message');
+  if (!arena || !message) return;
+
+  const battle = AppState.battle;
+  if (battle.networkMatch) message.textContent = '¡Comienza el duelo por Wi‑Fi!';
+  else if (battle.mode === 'local') message.textContent = `¡${battle.localPlayerTwoName} te desafía!`;
+  else message.textContent = `¡${battle.enemy?.name || 'Un rival'} te desafía!`;
+
+  arena.classList.remove('battle-entering');
+  void arena.offsetWidth;
+  arena.classList.add('battle-entering');
+  window.setTimeout(() => arena.classList.remove('battle-entering'), 1750);
 }
 
 function initializeProfile() {
