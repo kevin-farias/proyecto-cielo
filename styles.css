@@ -1865,9 +1865,12 @@ body {
 .park-presence-actions { display: grid; grid-template-columns: 1fr; gap: 7px; }
 .park-presence-actions .btn-figma { min-height: 38px; padding: 8px; font-size: 9px; }
 .park-presence-actions button:disabled { opacity: .48; cursor: not-allowed; filter: grayscale(.5); }
+.park-players-inline:not([hidden]) { display: block; }
 .park-players-inline { margin-top: 10px; padding: 11px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); }
 .park-players-inline > strong { display: block; margin-bottom: 8px; font-size: 10px; }
 .park-players-inline .park-players-list { max-height: 260px; }
+.park-entry-code-display { padding: 10px; border-radius: 10px; background: var(--card-bg); font-size: 11px; }
+.park-entry-code-display output { color: var(--primary-accent); font-size: 18px; font-weight: 900; letter-spacing: .16em; }
 .park-players-modal { max-height: 88vh; overflow-y: auto; }
 .park-player-count, .park-player-note { color: var(--text-muted); font-size: 9px; }
 .park-player-note { margin: 0 0 12px; }

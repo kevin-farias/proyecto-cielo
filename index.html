@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
   <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=park-registry-3">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.css">
   <script defer src="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.js"></script>
 </head>
@@ -949,7 +949,8 @@
         <div class="qr-camera-sim park-entry-camera" aria-hidden="true">
           <div class="camera-grid"></div><div class="scan-target-box"></div><div class="laser-beam"></div>
         </div>
-        <p class="mt-3">Escribe un código de seis números para registrar la entrada. Puedes cambiarlo cuando quieras; el campo siempre se abre vacío.</p>
+        <p class="mt-3">Usa este código para simular el acceso. También puedes escribir otro de seis números para cambiarlo.</p>
+        <p class="park-entry-code-display">Código de entrada: <output id="park-entry-current-code">600040</output></p>
         <button class="btn-figma btn-accent mt-3" type="button" onclick="simulateParkEntryScan()">📷 Simular escaneo de entrada</button>
         <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemParkEntryCode();">
           <label for="park-entry-code">Tu código de acceso</label>
@@ -1080,6 +1081,6 @@
   </script>
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=park-registry-3"></script>
 </body>
 </html>

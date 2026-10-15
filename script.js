@@ -143,6 +143,7 @@ const CREATURE_DATABASE = {
 // STATE MANAGEMENT
 const AppState = {
   currentScreen: 'splash',
+  parkCheckedIn: false,
   soundEnabled: true,
   musicEnabled: true,
   musicVolume: 0.8,
@@ -226,6 +227,7 @@ function savePersistentProgress() {
   progress.profileXP = Math.max(progress.profileXP, AppState.profileXP);
   progress.secretBattleWins = Math.max(progress.secretBattleWins, getSecretBattleWins());
   progress.secretRewardClaimed = progress.secretRewardClaimed || hasClaimedSecretReward();
+  progress.parkCheckedIn = progress.parkCheckedIn || AppState.parkCheckedIn;
   writeLocalPersistentProgress(progress);
   progressSaveQueue = progressSaveQueue.catch(() => {}).then(() => fetch('/api/progress', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(progress)
@@ -260,6 +262,7 @@ async function syncPersistentProgress() {
       parkEntryCode: local.parkEntryCode || remote.parkEntryCode || ''
     };
     writeLocalPersistentProgress(progress);
+    AppState.parkCheckedIn = progress.parkCheckedIn;
     restoreExplorerProgress();
     renderCollectionGrid();
     renderFloraFaunaInfo();
@@ -275,6 +278,7 @@ async function syncPersistentProgress() {
 }
 
 const RESERVE_ENTRY_CODE_KEY = 'reserve_park_entry_code';
+const DEFAULT_RESERVE_ENTRY_CODE = '600040';
 const RESERVE_BOT_PROFILES = [
   { id: 'bot-luna', name: 'LunaSerrana', avatar: '🌙', level: 8, xp: 375, animals: ['picaflor', 'buho', 'zorro'], coordinates: [-64.5185, -30.8591] },
   { id: 'bot-tomi', name: 'Tomi del Monte', avatar: '🧭', level: 12, xp: 580, animals: ['yaguarete', 'pecari', 'quebracho', 'zorro'], coordinates: [-64.5232, -30.8602] },
@@ -847,8 +851,11 @@ function saveProfileName() {
 }
 
 function isCheckedIntoPark() {
-  try { return localStorage.getItem('reserve_park_checked_in') === 'true'; }
-  catch (error) { return false; }
+  if (AppState.parkCheckedIn) return true;
+  try {
+    AppState.parkCheckedIn = localStorage.getItem('reserve_park_checked_in') === 'true';
+    return AppState.parkCheckedIn;
+  } catch (error) { return false; }
 }
 
 function renderParkEntryStatus() {
@@ -866,6 +873,15 @@ function renderParkEntryStatus() {
     if (checkedIn) renderParkPlayerCards(inlineList, getReserveVisitors());
     else inlineList.replaceChildren();
   }
+  renderReserveEntryCode();
+}
+
+function renderReserveEntryCode() {
+  const codeDisplay = document.getElementById('park-entry-current-code');
+  if (!codeDisplay) return;
+  let code = DEFAULT_RESERVE_ENTRY_CODE;
+  try { code = localStorage.getItem(RESERVE_ENTRY_CODE_KEY) || code; } catch (error) {}
+  codeDisplay.textContent = code;
 }
 
 function openParkEntryScanner() {
@@ -875,6 +891,7 @@ function openParkEntryScanner() {
   if (input) input.value = '';
   if (feedback) feedback.textContent = '';
   previewParkEntryCode('');
+  renderReserveEntryCode();
   openModal('modal-park-entry');
 }
 
@@ -885,7 +902,7 @@ function previewParkEntryCode(value) {
 
 function simulateParkEntryScan() {
   SFX.playQRScan();
-  let code = '';
+  let code = DEFAULT_RESERVE_ENTRY_CODE;
   try { code = localStorage.getItem(RESERVE_ENTRY_CODE_KEY) || ''; } catch (error) {}
   if (!code) {
     code = String(Math.floor(100000 + Math.random() * 900000));
@@ -911,6 +928,7 @@ function redeemParkEntryCode() {
 
 function registerParkEntry(code, simulatedScan) {
   if (!/^\d{6}$/.test(code || '')) return;
+  AppState.parkCheckedIn = true;
   try {
     localStorage.setItem(RESERVE_ENTRY_CODE_KEY, code);
     localStorage.setItem('reserve_park_checked_in', 'true');
@@ -948,13 +966,13 @@ function openParkPlayers() {
   const list = document.getElementById('park-players-list');
   const count = document.getElementById('park-player-count');
   const modal = document.getElementById('modal-park-players');
-  if (!list || !modal) return;
-  if (count) count.textContent = `${visitors.length} ${visitors.length === 1 ? 'jugador presente' : 'jugadores presentes'}`;
-  renderParkPlayerCards(list, visitors);
   const inlinePanel = document.getElementById('park-players-inline');
   const inlineList = document.getElementById('park-players-inline-list');
   if (inlinePanel) inlinePanel.hidden = false;
   if (inlineList) renderParkPlayerCards(inlineList, visitors);
+  if (!modal || !list) return;
+  if (count) count.textContent = `${visitors.length} ${visitors.length === 1 ? 'jugador presente' : 'jugadores presentes'}`;
+  renderParkPlayerCards(list, visitors);
   modal.classList.remove('hidden');
   modal.style.zIndex = '1001';
 }
@@ -1017,7 +1035,11 @@ function openReservePlayerProfile(profileId) {
 
 function leavePark() {
   try { localStorage.removeItem('reserve_park_checked_in'); } catch (error) {}
+  AppState.parkCheckedIn = false;
   closeModal('modal-park-players');
+  const inlinePanel = document.getElementById('park-players-inline');
+  if (inlinePanel) inlinePanel.hidden = true;
+  savePersistentProgress();
   renderParkEntryStatus();
   if (reserveMap) renderReservePlayerMarkers();
 }

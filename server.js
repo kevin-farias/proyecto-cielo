@@ -115,7 +115,7 @@ const server = http.createServer((req, res) => {
     }).catch(() => { if (!res.headersSent) sendJson(res, 400, { error: 'Solicitud inválida.' }); });
     return;
   }
-  let reqUrl = req.url === '/' ? '/index.html' : req.url;
+  let reqUrl = url.pathname === '/' ? '/index.html' : url.pathname;
   // Prevent path traversal
   const safePath = path.normalize(reqUrl).replace(/^(\.\.[\/\\])+/, '');
   let filePath = path.join(PUBLIC_DIR, safePath);
@@ -132,6 +132,7 @@ const server = http.createServer((req, res) => {
 
     res.writeHead(200, {
       'Content-Type': contentType,
+      'Cache-Control': ['.html', '.js', '.css'].includes(ext) ? 'no-store' : 'public, max-age=3600',
       'Access-Control-Allow-Origin': '*'
     });
     fs.createReadStream(filePath).pipe(res);
