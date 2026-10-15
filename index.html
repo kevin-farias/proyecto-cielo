@@ -884,18 +884,18 @@
         <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemQRFromInput();">
           <label for="manual-qr-code">Código de especie</label>
           <div class="manual-qr-row">
-            <input id="manual-qr-code" autocomplete="off" autocapitalize="characters" placeholder="CIELO-BUHO">
+            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="735461" aria-describedby="qr-code-help">
             <button class="btn-figma btn-secondary" type="submit">Usar código</button>
           </div>
-          <details class="qr-code-help">
+          <details class="qr-code-help" id="qr-code-help">
             <summary>Ver códigos para probar</summary>
             <ul>
-              <li>Picaflor: <code>CIELO-PICAFLOR</code></li>
-              <li>Yaguareté: <code>CIELO-YAGUARETE</code></li>
-              <li>Pecarí: <code>CIELO-PECARI</code></li>
-              <li>Quebracho: <code>CIELO-QUEBRACHO</code></li>
-              <li>Búho: <code>CIELO-BUHO</code></li>
-              <li>Zorro: <code>CIELO-ZORRO</code></li>
+              <li>Picaflor: <code>100001</code></li>
+              <li>Yaguareté: <code>100002</code></li>
+              <li>Pecarí: <code>100003</code></li>
+              <li>Quebracho: <code>100004</code></li>
+              <li>Búho: <code>100005</code></li>
+              <li>Zorro: <code>100006</code></li>
             </ul>
           </details>
           <p id="qr-code-status" class="qr-code-status" aria-live="polite"></p>

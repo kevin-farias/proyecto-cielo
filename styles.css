@@ -1890,7 +1890,7 @@ body {
 .manual-qr-form { display: grid; gap: 8px; margin-top: 16px; padding: 12px; text-align: left; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; }
 .manual-qr-form > label { font-size: 10px; font-weight: 800; }
 .manual-qr-row { display: flex; gap: 7px; }
-.manual-qr-row input { min-width: 0; flex: 1; padding: 9px; color: var(--text-main); background: rgba(0,0,0,.25); border: 1px solid var(--card-border); border-radius: 8px; text-transform: uppercase; }
+.manual-qr-row input { min-width: 0; flex: 1; padding: 9px; color: var(--text-main); background: rgba(0,0,0,.25); border: 1px solid var(--card-border); border-radius: 8px; font-variant-numeric: tabular-nums; letter-spacing: .12em; }
 .manual-qr-row button { padding: 8px 10px; font-size: 9px; white-space: nowrap; }
 .qr-code-help { color: var(--text-muted); font-size: 9px; }
 .qr-code-help summary { cursor: pointer; }

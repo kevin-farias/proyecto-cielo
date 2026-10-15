@@ -1302,12 +1302,12 @@ function triggerExitApp() {
 // QR SCANNER SIMULATOR
 let pendingQRTarget = null;
 const QR_CREATURE_CODES = {
-  'CIELO-PICAFLOR': 'picaflor',
-  'CIELO-YAGUARETE': 'yaguarete',
-  'CIELO-PECARI': 'pecari',
-  'CIELO-QUEBRACHO': 'quebracho',
-  'CIELO-BUHO': 'buho',
-  'CIELO-ZORRO': 'zorro'
+  '100001': 'picaflor',
+  '100002': 'yaguarete',
+  '100003': 'pecari',
+  '100004': 'quebracho',
+  '100005': 'buho',
+  '100006': 'zorro'
 };
 
 function openQRScanner(specificTarget = null) {
@@ -1339,10 +1339,10 @@ function simulateQRDiscovery() {
 }
 
 function redeemQRFromInput() {
-  const code = document.getElementById('manual-qr-code')?.value.trim().toUpperCase();
+  const code = document.getElementById('manual-qr-code')?.value.trim();
   const targetId = QR_CREATURE_CODES[code];
   if (!targetId) {
-    setQRStatus('Código no reconocido. Revisa el formato CIELO-ESPECIE.');
+    setQRStatus('Código no reconocido. Escribe los 6 números del código.');
     return;
   }
   SFX.playQRScan();
