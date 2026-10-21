@@ -935,9 +935,12 @@ function regionalCreatureId(member) {
 REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) => {
   const id = regionalCreatureId(member);
   const photos = REGIONAL_SPECIES_PHOTOS[member];
+  const imageUrl = photos
+    ? (photos[0].startsWith('https://') ? photos[0] : `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(photos[0])}?width=800`)
+    : entry.image;
   const moves = REGIONAL_FIGHT_MOVES[member] || [`Avance de ${entry.name}`, `Defensa de ${entry.name}`, `Movimiento de ${member.split('(')[0].trim()}`];
   CREATURE_DATABASE[id] = {
-    id, name: member, icon: entry.icon, image: photos ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(photos[0])}?width=800` : entry.image,
+    id, name: member, icon: entry.icon, image: imageUrl,
     imageSource: photos?.[1] || entry.source, badge: `${entry.category} • ${entry.name}`, isRegional: true,
     hp: 105 + (memberIndex % 4) * 10, maxHp: 105 + (memberIndex % 4) * 10,
     spd: 58 + (memberIndex % 5) * 6, atk: 42 + (memberIndex % 4) * 4, lvl: 10 + (memberIndex % 5),
