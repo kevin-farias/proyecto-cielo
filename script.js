@@ -183,6 +183,20 @@ const LanMatch = { code: null, side: 0, version: 0, timer: null, syncing: false 
 const isLocalDuel = () => AppState.battle.mode === 'local' || AppState.battle.mode === 'network';
 
 let progressSaveQueue = Promise.resolve();
+const LOCAL_ACCOUNT_PROGRESS_KEY = 'proyecto_cielo_accounts_v1';
+const LOCAL_ADMIN_SAVES_KEY = 'proyecto_cielo_admin_saves_v1';
+const browserOnlySite = location.protocol === 'file:' || location.hostname.endsWith('.github.io');
+function readLocalAccountStore() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_ACCOUNT_PROGRESS_KEY) || '{}') || {}; }
+  catch (error) { return {}; }
+}
+function writeLocalAccountProgress(account, progress) {
+  try {
+    const accounts = readLocalAccountStore();
+    accounts[account || 'explorador'] = progress;
+    localStorage.setItem(LOCAL_ACCOUNT_PROGRESS_KEY, JSON.stringify(accounts));
+  } catch (error) {}
+}
 function readLocalPersistentProgress() {
   const readJson = (key, fallback) => {
     try { return JSON.parse(localStorage.getItem(key) || 'null') || fallback; } catch (error) { return fallback; }
@@ -605,38 +619,55 @@ function progressPayload() {
   return { ...currentProgress, ...local, unlockedCreatures: AppState.unlockedCreatures, creatureCopies: AppState.creatureCopies, profileXP: AppState.profileXP, recentlyUnlocked: [], profileName: localStorage.getItem('explorer_profile_name') || 'Explorador', trophicAbsent: currentProgress.trophicAbsent || [], parkCheckedIn: AppState.parkCheckedIn || local.parkCheckedIn, updatedAt: new Date().toISOString() };
 }
 async function saveProgress() {
-  try { await fetch('/api/progress', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ account: currentAccount, progress: { ...currentProgress, ...progressPayload() } }) }); } catch (error) { console.warn('No se pudo guardar el progreso en el servidor.', error); }
+  const progress = { ...currentProgress, ...progressPayload() };
+  writeLocalAccountProgress(currentAccount, progress);
+  if (browserOnlySite) return;
+  try {
+    const response = await fetch('/api/progress', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ account: currentAccount, progress }) });
+    if (!response.ok) console.warn('El servidor no guardó el progreso; se conserva en este navegador.');
+  } catch (error) { console.warn('No se pudo guardar en el servidor; se conserva en este navegador.', error); }
 }
 async function loadAccountProgress() {
-  try {
-    AppState.unlockedCreatures = ['picaflor', 'yaguarete', 'pecari', 'quebracho'];
-    AppState.creatureCopies = { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 };
-    AppState.profileXP = 0;
-    AppState.parkCheckedIn = false;
-    const savedName = localStorage.getItem('explorer_profile_name') || 'Mateo';
-    const accountName = localStorage.getItem('explorer_account_id') || savedName;
-    currentAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
-    localStorage.setItem('explorer_account_id', currentAccount);
-    const response = await fetch(`/api/progress?account=${encodeURIComponent(currentAccount)}`);
-    currentProgress = await response.json();
-    if (Array.isArray(currentProgress.unlockedCreatures)) AppState.unlockedCreatures = currentProgress.unlockedCreatures.filter(id => CREATURE_DATABASE[id]);
-    if (currentProgress.creatureCopies && typeof currentProgress.creatureCopies === 'object') AppState.creatureCopies = { ...AppState.creatureCopies, ...currentProgress.creatureCopies };
-    if (Number.isFinite(Number(currentProgress.profileXP))) AppState.profileXP = Number(currentProgress.profileXP);
-    writeLocalPersistentProgress({
-      unlockedCreatures: AppState.unlockedCreatures,
-      creatureCopies: AppState.creatureCopies,
-      profileXP: AppState.profileXP,
-      secretBattleWins: Number(currentProgress.secretBattleWins) || 0,
-      secretRewardClaimed: Boolean(currentProgress.secretRewardClaimed),
-      profileName: currentProgress.profileName || localStorage.getItem('explorer_profile_name') || 'Explorador',
-      speciesCodes: currentProgress.speciesCodes || {},
-      parkCheckedIn: Boolean(currentProgress.parkCheckedIn),
-      parkEntryCode: currentProgress.parkEntryCode || ''
-    });
-    AppState.parkCheckedIn = Boolean(currentProgress.parkCheckedIn);
-    restoreSpeciesCodes();
-    AppState.recentlyUnlocked = [];
-  } catch (error) { currentProgress = {}; console.warn('El servidor no está disponible; se inicia una sesión nueva.', error); }
+  AppState.unlockedCreatures = ['picaflor', 'yaguarete', 'pecari', 'quebracho'];
+  AppState.creatureCopies = { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 };
+  AppState.profileXP = 0;
+  AppState.parkCheckedIn = false;
+  const savedName = localStorage.getItem('explorer_profile_name') || 'Mateo';
+  const oldAccount = localStorage.getItem('explorer_account_id') || '';
+  const accountName = oldAccount || savedName;
+  currentAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
+  localStorage.setItem('explorer_account_id', currentAccount);
+  const accounts = readLocalAccountStore();
+  let saved = accounts[currentAccount] || {};
+  if (!accounts[currentAccount] && oldAccount === currentAccount && localStorage.getItem('proyecto_cielo_accounts_migrated') !== 'true') {
+    saved = { ...saved, ...readLocalPersistentProgress() };
+  }
+  currentProgress = saved;
+  if (!browserOnlySite) {
+    try {
+      const response = await fetch(`/api/progress?account=${encodeURIComponent(currentAccount)}`);
+      if (response.ok) currentProgress = { ...saved, ...(await response.json()) };
+    } catch (error) { console.warn('Servidor no disponible; se usará el progreso guardado en este navegador.'); }
+  }
+  if (Array.isArray(currentProgress.unlockedCreatures)) AppState.unlockedCreatures = currentProgress.unlockedCreatures.filter(id => CREATURE_DATABASE[id]);
+  if (currentProgress.creatureCopies && typeof currentProgress.creatureCopies === 'object') AppState.creatureCopies = { ...AppState.creatureCopies, ...currentProgress.creatureCopies };
+  if (Number.isFinite(Number(currentProgress.profileXP))) AppState.profileXP = Number(currentProgress.profileXP);
+  AppState.parkCheckedIn = Boolean(currentProgress.parkCheckedIn);
+  writeLocalPersistentProgress({
+    unlockedCreatures: AppState.unlockedCreatures,
+    creatureCopies: AppState.creatureCopies,
+    profileXP: AppState.profileXP,
+    secretBattleWins: Number(currentProgress.secretBattleWins) || 0,
+    secretRewardClaimed: Boolean(currentProgress.secretRewardClaimed),
+    profileName: currentProgress.profileName || localStorage.getItem('explorer_profile_name') || 'Explorador',
+    speciesCodes: currentProgress.speciesCodes || {},
+    parkCheckedIn: Boolean(currentProgress.parkCheckedIn),
+    parkEntryCode: currentProgress.parkEntryCode || ''
+  });
+  writeLocalAccountProgress(currentAccount, currentProgress);
+  localStorage.setItem('proyecto_cielo_accounts_migrated', 'true');
+  restoreSpeciesCodes();
+  AppState.recentlyUnlocked = [];
 }
 
 function updateClock() {
@@ -1157,11 +1188,28 @@ async function openAdminPanel() {
   try {
     const result = await adminRequest({ pin, action: 'list' });
     renderAdminSaves(result.saves || [], pin);
-    document.getElementById('admin-status').textContent = `Acceso de administrador habilitado. Cuentas guardadas: ${Object.keys(result.accounts || {}).length}.`;
+    document.getElementById('admin-status').textContent = result.localOnly
+      ? `Panel local habilitado: ${Object.keys(result.accounts || {}).length} cuentas guardadas en este navegador. Los respaldos no se sincronizan con otros dispositivos.`
+      : `Acceso de administrador habilitado. Cuentas guardadas: ${Object.keys(result.accounts || {}).length}.`;
     panel.dataset.pin = pin;
   } catch (error) { panel.hidden = true; alert(error.message); }
 }
 async function adminRequest(payload) {
+  if (browserOnlySite) {
+    if (String(payload.pin || '') !== '1234') throw new Error('PIN incorrecto. En la publicación gratuita, el PIN local es 1234.');
+    const accounts = readLocalAccountStore();
+    let saves = [];
+    try { saves = JSON.parse(localStorage.getItem(LOCAL_ADMIN_SAVES_KEY) || '[]') || []; } catch (error) {}
+    if (payload.action === 'save') {
+      saves.push({ createdAt: new Date().toISOString(), accounts: JSON.parse(JSON.stringify(accounts)) });
+      localStorage.setItem(LOCAL_ADMIN_SAVES_KEY, JSON.stringify(saves));
+    } else if (payload.action === 'restore') {
+      const save = saves[Number(payload.index)];
+      if (!save) throw new Error('Guardado no encontrado.');
+      localStorage.setItem(LOCAL_ACCOUNT_PROGRESS_KEY, JSON.stringify(save.accounts || {}));
+    }
+    return { ok: true, localOnly: true, saves, accounts: readLocalAccountStore() };
+  }
   const response = await fetch('/api/admin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || 'No se pudo completar la acción.');

@@ -55,13 +55,13 @@ La partida activa empieza desde cero en cada apertura o recarga; el progreso de 
 
 En **Ajustes → Administración y respaldos** se puede crear y restaurar una copia de todas las cuentas. Para este prototipo local, el PIN predeterminado es `1234`; puedes definir `ADMIN_PIN` antes de iniciar `node server.js` para cambiarlo. No es un sistema de autenticación apropiado para publicar en internet.
 
-### Publicar en internet
+### Publicación gratuita para compartir
 
-El archivo `render.yaml` prepara un servicio web de Node en Render, con almacenamiento persistente para las cuentas y una URL pública HTTPS. Para publicarlo, inicia sesión en [Render](https://dashboard.render.com/), crea un **Blueprint** desde este repositorio y confirma la creación del servicio. Render genera un `ADMIN_PIN` aleatorio para la publicación; consúltalo en la configuración del servicio para usar los respaldos de administrador.
+El flujo de GitHub Pages publica el sitio estático cada vez que se actualiza `main`. Cuando se complete la primera ejecución, la URL será `https://kevin-farias.github.io/proyecto-cielo/`. GitHub Pages es gratuito para repositorios públicos.
 
-Esta configuración usa un plan pago de Render porque el plan gratuito se suspende tras inactividad y no permite disco persistente; ese plan no puede garantizar disponibilidad continua ni conservar el archivo de guardados tras reinicios. Revisa el costo que muestra Render y confirma el plan antes de crear el servicio.
+Esta publicación guarda el progreso de cada cuenta, las simulaciones de la red trófica y los respaldos de administrador en el navegador y dispositivo que se usen. No sincroniza progreso entre teléfonos ni personas. Los respaldos locales usan el PIN `1234`; guarda los datos desde el mismo navegador donde se crearon. El duelo por Wi‑Fi requiere el servidor Node local; el sitio público conserva el modo de duelo en el mismo dispositivo.
 
-Los perfiles de esta app se identifican por nombre y no tienen inicio de sesión ni contraseña propia. Al publicarla, cualquiera que conozca el nombre de un perfil podría consultar o modificar su progreso; usa apodos y no guardes información personal.
+La publicación con el servidor completo y archivos persistentes sigue disponible mediante `render.yaml`, pero requiere un servicio de pago de Render.
 
 ---
 
