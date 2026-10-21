@@ -430,6 +430,9 @@ const TROPHIC_SPECIES = [
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
+  let savedTheme = 'green';
+  try { savedTheme = localStorage.getItem('app_theme') || 'green'; } catch (_) {}
+  setAppTheme(savedTheme, false);
   await loadAccountProgress();
   updateClock();
   setInterval(updateClock, 1000);
@@ -493,6 +496,17 @@ function updateClock() {
   const mins = String(now.getMinutes()).padStart(2, '0');
   const clockEl = document.getElementById('status-time');
   if (clockEl) clockEl.textContent = `${hrs}:${mins}`;
+}
+
+function setAppTheme(theme, persist = true) {
+  const allowedThemes = ['green', 'light', 'dark'];
+  const selectedTheme = allowedThemes.includes(theme) ? theme : 'green';
+  document.documentElement.dataset.theme = selectedTheme;
+  const selector = document.getElementById('app-theme-select');
+  if (selector) selector.value = selectedTheme;
+  if (persist) {
+    try { localStorage.setItem('app_theme', selectedTheme); } catch (_) {}
+  }
 }
 
 // RENDER COLLECTION GRID
