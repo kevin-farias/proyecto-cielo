@@ -853,35 +853,6 @@ input[type="range"] {
   line-height: 1.35;
 }
 
-/* Hide Google Translate top banner bar to protect mobile simulation view */
-.goog-te-banner-frame.skiptranslate,
-.goog-te-banner-frame {
-  display: none !important;
-  visibility: hidden !important;
-}
-
-body {
-  top: 0px !important;
-}
-
-#google_translate_element {
-  display: none !important;
-}
-
-.goog-tooltip {
-  display: none !important;
-}
-
-.goog-tooltip:hover {
-  display: none !important;
-}
-
-.goog-text-highlight {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
 .art-preview-box {
   background: rgba(0,0,0,0.3);
   border: 1px solid var(--card-border);
@@ -2226,6 +2197,16 @@ body {
 .trophic-link { padding: 5px 7px; border-radius: 6px; background: rgba(92,196,137,.09); color: var(--text-muted); font-size: 9px; }
 .trophic-link.is-absent { opacity: .4; text-decoration: line-through; }
 .trophic-impact { margin-top: 12px; padding: 11px; border-left: 3px solid #e5ad4b; border-radius: 5px; background: rgba(229,173,75,.1); font-size: 11px; line-height: 1.55; }
+.app-popup-backdrop { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 20px; background: rgba(2, 12, 9, .78); backdrop-filter: blur(5px); }
+.app-popup { width: min(100%, 360px); padding: 22px; border: 1px solid rgba(111, 230, 155, .55); border-radius: 20px; color: var(--text-main); background: linear-gradient(155deg, #173d30, #0a1d18); box-shadow: 0 22px 70px rgba(0,0,0,.55), 0 0 30px rgba(74, 215, 132, .12); animation: app-popup-in .18s ease-out; }
+.app-popup h3 { margin: 0 0 10px; font-size: 18px; color: #b6f5c8; }
+.app-popup p { margin: 0; white-space: pre-line; font-size: 13px; line-height: 1.55; }
+.app-popup input { width: 100%; margin-top: 16px; padding: 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; color: var(--text-main); background: rgba(0,0,0,.28); }
+.app-popup-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
+.app-popup-actions button { border: 0; border-radius: 10px; padding: 10px 15px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.app-popup-cancel { color: var(--text-main); background: rgba(255,255,255,.12); }
+.app-popup-accept { color: #062012; background: linear-gradient(135deg, #79eaa0, #47c978); }
+@keyframes app-popup-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
 /* UTILITY CLASSES */
 .mb-3 { margin-bottom: 12px; }
