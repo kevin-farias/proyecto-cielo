@@ -185,7 +185,7 @@ const isLocalDuel = () => AppState.battle.mode === 'local' || AppState.battle.mo
 let progressSaveQueue = Promise.resolve();
 const LOCAL_ACCOUNT_PROGRESS_KEY = 'proyecto_cielo_accounts_v1';
 const LOCAL_ADMIN_SAVES_KEY = 'proyecto_cielo_admin_saves_v1';
-const browserOnlySite = location.protocol === 'file:' || location.hostname.endsWith('.github.io');
+const browserOnlySite = location.protocol === 'file:' || location.hostname.endsWith('.github.io') || location.hostname.endsWith('.onrender.com');
 function readLocalAccountStore() {
   try { return JSON.parse(localStorage.getItem(LOCAL_ACCOUNT_PROGRESS_KEY) || '{}') || {}; }
   catch (error) { return {}; }

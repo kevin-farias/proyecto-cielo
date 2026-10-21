@@ -57,11 +57,11 @@ En **Ajustes → Administración y respaldos** se puede crear y restaurar una co
 
 ### Publicación gratuita para compartir
 
-El flujo de GitHub Pages publica el sitio estático cada vez que se actualiza `main`. Cuando se complete la primera ejecución, la URL será `https://kevin-farias.github.io/proyecto-cielo/`. GitHub Pages es gratuito para repositorios públicos.
+`render.yaml` prepara un servicio web gratuito de Node en Render. Para publicarlo sin configurar GitHub Pages, inicia sesión en [Render](https://dashboard.render.com/), ve a **New → Blueprint**, conecta este repositorio y elige la rama `main`. Render publicará una URL HTTPS para compartir. El servicio gratuito se suspende tras 15 minutos sin visitas y puede tardar cerca de un minuto en volver a arrancar.
 
-Esta publicación guarda el progreso de cada cuenta, las simulaciones de la red trófica y los respaldos de administrador en el navegador y dispositivo que se usen. No sincroniza progreso entre teléfonos ni personas. Los respaldos locales usan el PIN `1234`; guarda los datos desde el mismo navegador donde se crearon. El duelo por Wi‑Fi requiere el servidor Node local; el sitio público conserva el modo de duelo en el mismo dispositivo.
+El progreso por cuenta, la red trófica y los respaldos de administrador se guardan localmente en cada navegador y dispositivo; no se sincronizan entre teléfonos. Los respaldos locales usan el PIN `1234`. El duelo por Wi‑Fi funciona mientras el servicio está activo, pero las salas terminan si Render lo reinicia o suspende.
 
-La publicación con el servidor completo y archivos persistentes sigue disponible mediante `render.yaml`, pero requiere un servicio de pago de Render.
+También se conserva `.github/workflows/pages.yml` para GitHub Pages. Esa opción necesita que una persona con permisos de administración active Pages en la configuración del repositorio.
 
 ---
 

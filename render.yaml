@@ -2,18 +2,12 @@ services:
   - type: web
     name: proyecto-cielo
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: node --check server.js
     startCommand: node server.js
     healthCheckPath: /
-    disk:
-      name: proyecto-cielo-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: PORT
         value: "10000"
-      - key: DATA_FILE
-        value: /var/data/progress.json
       - key: ADMIN_PIN
         generateValue: true
