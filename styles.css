@@ -961,6 +961,7 @@ input[type="range"] {
   padding: 12px 10px;
   font-size: 12px;
 }
+.session-reset-button { width: 100%; margin-top: 9px; border-color: var(--primary-accent); }
 
 .footer-note {
   margin-top: auto;
@@ -1281,6 +1282,7 @@ input[type="range"] {
 .regional-fauna-photo.photo-unavailable::after { content: attr(data-icon); position: absolute; inset: 0; display: grid; place-items: center; font-size: 58px; }
 .regional-fauna-body { padding: 11px 12px 13px; }
 .regional-fauna-category { display: inline-block; margin-bottom: 5px; padding: 3px 8px; border-radius: 20px; background: color-mix(in srgb,var(--primary-accent) 16%,transparent); color: var(--primary-accent); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
+.regional-fauna-group { padding: 7px 8px; border-left: 3px solid var(--primary-accent); border-radius: 0 6px 6px 0; background: color-mix(in srgb,var(--primary-accent) 9%,transparent); font-size: 10px !important; }
 .regional-fauna-body h5 { margin: 0 0 9px; color: var(--primary-accent); font-size: 14px; line-height: 1.25; }
 .regional-fauna-body p { margin: 6px 0 0; color: var(--text-main); font-size: 11px; line-height: 1.45; }
 .regional-fauna-body p strong { color: var(--primary-accent); }

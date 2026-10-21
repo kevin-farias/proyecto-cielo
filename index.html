@@ -253,6 +253,9 @@
                     <span class="btn-icon">↳</span> SALIR
                   </button>
                 </div>
+                <button class="btn-figma btn-secondary session-reset-button" type="button" onclick="restartCurrentSession()">
+                  <span class="btn-icon">↻</span> REINICIAR SESIÓN
+                </button>
 
                 <div class="footer-note">
                   <p>Conecta con la naturaleza y conserva las especies.</p>
@@ -460,15 +463,15 @@
                     <p>Árbol nativo característico del estrato arbóreo del bosque serrano cordobés.</p>
                   </div>
 
-                  <h4 class="mt-4">Fauna Autóctona (Descubierta en tu Colección)</h4>
-                  <p class="select-hint-text">Fichas actualizadas de las criaturas que has descubierto:</p>
+                  <h4 class="mt-4">Fauna original de la colección</h4>
+                  <p class="select-hint-text">Se conservan las seis fichas del juego. Las etiquetas indican cuáles descubriste en esta cuenta:</p>
                   
                   <div id="flora-fauna-dynamic-container">
                     <!-- Populated dynamically from unlocked collection creatures! -->
                   </div>
 
                   <h4 class="mt-4">Fauna nativa de la región</h4>
-                  <p class="select-hint-text">Fichas con hábitat, alimentación, función ecológica y efectos posibles de su desaparición. Las fotos son representativas del grupo y cada una enlaza a su fuente.</p>
+                  <p class="select-hint-text">Una ficha individual por cada animal del listado, con hábitat, alimentación, función ecológica y qué podría pasar si desaparece. Las fotos representativas enlazan a su fuente.</p>
                   <div id="regional-fauna-gallery" class="regional-fauna-gallery"></div>
                 </div>
               </div>
@@ -1004,6 +1007,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=fauna-fichas-1"></script>
+  <script src="script.js?v=fauna-fichas-individuales-reinicio-2"></script>
 </body>
 </html>
