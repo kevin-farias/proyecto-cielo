@@ -1287,12 +1287,18 @@ input[type="range"] {
 .regional-fauna-body h5 { margin: 0 0 9px; color: var(--primary-accent); font-size: 14px; line-height: 1.25; }
 .regional-fauna-body p { margin: 6px 0 0; color: var(--text-main); font-size: 11px; line-height: 1.45; }
 .regional-fauna-body p strong { color: var(--primary-accent); }
+.regional-fight-moves { margin-top: 10px; padding: 9px; border: 1px solid var(--card-border); border-radius: 9px; background: color-mix(in srgb,var(--primary-accent) 8%,var(--card-bg)); }
+.regional-fight-moves > strong { color: var(--primary-accent); font-size: 11px; }
+.regional-fight-moves ul { display: grid; gap: 4px; margin: 6px 0 0; padding-left: 17px; color: var(--text-main); font-size: 10px; line-height: 1.4; }
+.regional-unlock-hint { color: var(--text-muted) !important; font-size: 10px !important; }
+.regional-unlock-button { width: 100%; min-height: 36px; margin-top: 8px; }
 @media (max-width: 520px) {
   .regional-fauna-gallery { grid-template-columns: 1fr; gap: 10px; }
   .regional-fauna-photo { height: 190px; }
   .regional-flora-visual { height: 120px; }
   .regional-fauna-body { padding: 12px; }
   .regional-fauna-body p { font-size: 12px; }
+  .regional-fight-moves ul { font-size: 11px; }
 }
 
 /* BATTLE GUIDE & ACTION BUTTONS */

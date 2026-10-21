@@ -665,7 +665,7 @@ function renderCollectionGrid() {
   if (!container) return;
 
   container.innerHTML = '';
-  const allKeys = ['picaflor', 'yaguarete', 'buho', 'pecari', 'zorro', 'quebracho', 'rey_bosque'];
+  const allKeys = Object.keys(CREATURE_DATABASE);
   const unlockedCount = AppState.unlockedCreatures.length;
 
   if (tag) {
@@ -723,7 +723,7 @@ function renderFloraFaunaInfo() {
   // Keep the original game species visible even when an account has no saved unlocks.
   Object.keys(CREATURE_DATABASE).forEach(key => {
     const data = CREATURE_DATABASE[key];
-    if (!data) return;
+    if (!data || data.isRegional) return;
 
     const card = document.createElement('div');
     card.className = 'species-card';
@@ -833,24 +833,113 @@ const REGIONAL_FAUNA_IMPACTS = {
   'Jote cabeza colorada (Cathartes aura)': 'Habría menos búsqueda y consumo de carroña en áreas serranas; otros carroñeros recibirían más competencia por los restos disponibles.'
 };
 
+const REGIONAL_FIGHT_MOVES = {
+  'Mojarras y mojarrones (varias especies)': ['Destello de escamas', 'Giro de cardumen', 'Salto de corriente'],
+  'Percas (Percichthys spp.)': ['Mordida de arroyo', 'Aleta cortante', 'Emboscada de piedra'],
+  'Costeritos (nombre local; especie por confirmar)': ['Dardo de agua', 'Vuelta de remanso', 'Cardumen relámpago'],
+  'Sapos comunes (Rhinella arenarum y afines)': ['Salto de charca', 'Lengua certera', 'Defensa granulada'],
+  'Ranitas del zarzal (Boana pulchella)': ['Brinco del zarzal', 'Canto vibrante', 'Salto entre hojas'],
+  'Escuerzos (Ceratophrys spp.; especie según localidad)': ['Bocanada voraz', 'Salto cazador', 'Mordida de escuerzo'],
+  'Lampalagua / boa de las vizcacheras (Boa constrictor occidentalis)': ['Acecho silencioso', 'Abrazo constrictor', 'Emboscada de vizcachera'],
+  'Víbora de la cruz / yarará grande (Bothrops alternatus)': ['Avance sigiloso', 'Finta de hojas', 'Golpe de yarará'],
+  'Iguana overa / teyú (Salvator merianae)': ['Coletazo de teyú', 'Carrera del monte', 'Garra overa'],
+  'Lagartos serranos (varias especies; incluye Contomastix serrana)': ['Carrera de roquedal', 'Salto de grieta', 'Cola escurridiza'],
+  'Murciélago cola de ratón (Tadarida brasiliensis)': ['Eco veloz', 'Giro nocturno', 'Ráfaga de alas'],
+  'Cuis moro (nombre común variable; cuises del género Galea)': ['Esquiva de pastizal', 'Mordisqueo veloz', 'Túnel sorpresa'],
+  'Mulita pampeana (Dasypus hybridus)': ['Pala excavadora', 'Bola acorazada', 'Carga de mulita'],
+  'Comadreja overa (Didelphis albiventris)': ['Trepada fugaz', 'Manotazo nocturno', 'Astucia de comadreja'],
+  'Comadrejita enana (Thylamys spp.; especie según región)': ['Salto diminuto', 'Mordida rápida', 'Escabullida serrana'],
+  'Gato montés (Leopardus geoffroyi)': ['Zarpazo moteado', 'Acecho entre arbustos', 'Salto de gato montés'],
+  'Puma (Puma concolor)': ['Zarpazo de sierra', 'Rugido de quebrada', 'Emboscada del puma'],
+  'Corzuela parda (Subulo gouazoubira)': ['Brinco de corzuela', 'Patada de monte', 'Carrera entre árboles'],
+  'Martín pescador chico (Chloroceryle americana; nombre compartido por otras especies)': ['Picada sobre el agua', 'Aleteo de ribera', 'Pesca relámpago'],
+  'Caburé chico (Glaucidium brasilianum)': ['Vuelo silencioso', 'Garra del caburé', 'Mirada nocturna'],
+  'Perdiz serrana (tinámido serrano; especie según localidad)': ['Aleteo de pastizal', 'Picotazo de monte', 'Carrera rasante'],
+  'Martineta copetona (Eudromia elegans)': ['Zancada veloz', 'Aleteo copetón', 'Carrera de martineta'],
+  'Catitas verdes (especies locales por confirmar)': ['Picoteo de semillas', 'Aleteo verde', 'Llamada del monte'],
+  'Cotorras serranas (nombre común local; especies por confirmar)': ['Picotazo serrano', 'Vuelo en bandada', 'Giro de quebrada'],
+  'Calandrias (Mimus spp.)': ['Canto imitador', 'Picotazo ágil', 'Vuelo de calandria'],
+  'Jilgueros serranos (Sicalis spp.; nombre según región)': ['Picoteo dorado', 'Aleteo de jilguero', 'Canto serrano'],
+  'Tordos (varias especies locales)': ['Picotazo de bandada', 'Aleteo oscuro', 'Coro del pastizal'],
+  'Jote cabeza negra (Coragyps atratus)': ['Planeo térmico', 'Ala de corriente', 'Giro carroñero'],
+  'Jote cabeza colorada (Cathartes aura)': ['Planeo de quebrada', 'Rastreo de aire', 'Ala colorada']
+};
+
+const REGIONAL_SPECIES_PHOTOS = {
+  'Sapos comunes (Rhinella arenarum y afines)': ['Rhinella arenarum 101654615.jpg', 'https://commons.wikimedia.org/wiki/Category:Amphibians_of_Argentina'],
+  'Ranitas del zarzal (Boana pulchella)': ['Ranita del zarzal (Boana pulchella).jpg', 'https://commons.wikimedia.org/wiki/Category:Amphibians_of_Argentina'],
+  'Escuerzos (Ceratophrys spp.; especie según localidad)': ['Ceratophrys ornata 6849925.jpg', 'https://commons.wikimedia.org/wiki/Category:Amphibians_of_Argentina'],
+  'Lampalagua / boa de las vizcacheras (Boa constrictor occidentalis)': ['Boa constrictor occidentalis 102416785.jpg', 'https://commons.wikimedia.org/wiki/Category:Boa_constrictor_occidentalis'],
+  'Víbora de la cruz / yarará grande (Bothrops alternatus)': ['Yarará (Bothrops alternatus), Uruguay, 2022.jpg', 'https://commons.wikimedia.org/wiki/Category:Bothrops_alternatus'],
+  'Iguana overa / teyú (Salvator merianae)': ['Lagarto Overo (Salvator merianae).jpg', 'https://commons.wikimedia.org/wiki/Category:Salvator_merianae'],
+  'Murciélago cola de ratón (Tadarida brasiliensis)': ['Brazilian Free-tailed Bat.jpg', 'https://commons.wikimedia.org/wiki/Category:Tadarida_brasiliensis'],
+  'Mojarras y mojarrones (varias especies)': ['Odontostilbe paraguayensis.jpg', 'https://sib.gob.ar/especies/odontostilbe-paraguayensis'],
+  'Cuis moro (nombre común variable; cuises del género Galea)': ['Galea musteloides.jpg', 'https://commons.wikimedia.org/wiki/Category:Galea_musteloides'],
+  'Mulita pampeana (Dasypus hybridus)': ['Dasypus hybridus.jpg', 'https://commons.wikimedia.org/wiki/Category:Dasypus_hybridus'],
+  'Comadreja overa (Didelphis albiventris)': ['Didelphis albiventris.jpg', 'https://commons.wikimedia.org/wiki/Category:Didelphis_albiventris'],
+  'Comadrejita enana (Thylamys spp.; especie según región)': ['Thylamys pallidior.jpg', 'https://commons.wikimedia.org/wiki/Category:Thylamys'],
+  'Gato montés (Leopardus geoffroyi)': ['Leopardus geoffroyi.jpg', 'https://commons.wikimedia.org/wiki/Category:Leopardus_geoffroyi'],
+  'Puma (Puma concolor)': ['Puma concolor.jpg', 'https://commons.wikimedia.org/wiki/Category:Puma_concolor'],
+  'Corzuela parda (Subulo gouazoubira)': ['Subulo gouazoubira.jpg', 'https://commons.wikimedia.org/wiki/Category:Subulo_gouazoubira'],
+  'Martín pescador chico (Chloroceryle americana; nombre compartido por otras especies)': ['Chloroceryle americana.jpg', 'https://commons.wikimedia.org/wiki/Category:Chloroceryle_americana'],
+  'Caburé chico (Glaucidium brasilianum)': ['Glaucidium brasilianum.jpg', 'https://commons.wikimedia.org/wiki/Category:Glaucidium_brasilianum'],
+  'Martineta copetona (Eudromia elegans)': ['Eudromia elegans.jpg', 'https://commons.wikimedia.org/wiki/Category:Eudromia_elegans'],
+  'Calandrias (Mimus spp.)': ['Mimus saturninus.jpg', 'https://commons.wikimedia.org/wiki/Category:Mimus_saturninus'],
+  'Jilgueros serranos (Sicalis spp.; nombre según región)': ['Sicalis luteola.jpg', 'https://commons.wikimedia.org/wiki/Category:Sicalis_luteola'],
+  'Tordos (varias especies locales)': ['Molothrus bonariensis.jpg', 'https://commons.wikimedia.org/wiki/Category:Molothrus_bonariensis'],
+  'Jote cabeza negra (Coragyps atratus)': ['Coragyps atratus.jpg', 'https://commons.wikimedia.org/wiki/Category:Coragyps_atratus'],
+  'Jote cabeza colorada (Cathartes aura)': ['Cathartes aura.jpg', 'https://commons.wikimedia.org/wiki/Category:Cathartes_aura']
+};
+
+function regionalCreatureId(member) {
+  const slug = member.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+  return `regional_${slug}`;
+}
+
+REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) => {
+  const id = regionalCreatureId(member);
+  const photos = REGIONAL_SPECIES_PHOTOS[member];
+  const moves = REGIONAL_FIGHT_MOVES[member] || [`Avance de ${entry.name}`, `Defensa de ${entry.name}`, `Movimiento de ${member.split('(')[0].trim()}`];
+  CREATURE_DATABASE[id] = {
+    id, name: member, icon: entry.icon, image: photos ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(photos[0])}?width=800` : entry.image,
+    imageSource: photos?.[1] || entry.source, badge: `${entry.category} • ${entry.name}`, isRegional: true,
+    hp: 105 + (memberIndex % 4) * 10, maxHp: 105 + (memberIndex % 4) * 10,
+    spd: 58 + (memberIndex % 5) * 6, atk: 42 + (memberIndex % 4) * 4, lvl: 10 + (memberIndex % 5),
+    favoriteFood: { id: 'berries', name: 'Frutos silvestres', icon: '🫐' },
+    habitat: entry.habitat, desc: entry.memberImpacts?.[memberIndex] || REGIONAL_FAUNA_IMPACTS[member] || entry.loss,
+    moves: moves.map((name, moveIndex) => ({ name, dmg: [32, 44, 58][moveIndex], uses: [5, 4, 2][moveIndex], maxUses: [5, 4, 2][moveIndex], text: `¡${name}!` }))
+  };
+}));
+
 function renderRegionalFauna() {
   const gallery = document.getElementById('regional-fauna-gallery');
   if (!gallery) return;
   gallery.innerHTML = '';
   REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) => {
+    const creatureId = regionalCreatureId(member);
+    const creatureData = CREATURE_DATABASE[creatureId];
     const card = document.createElement('article');
     card.className = 'regional-fauna-card';
     const figure = document.createElement('figure');
     figure.className = 'regional-fauna-photo';
     const image = document.createElement('img');
-    image.src = entry.image;
-    image.alt = `Foto representativa de ${entry.name}; ficha de ${member}`;
+    image.src = creatureData?.image || entry.image;
+    image.alt = `Imagen de referencia para ${member}`;
     image.loading = 'lazy';
     image.referrerPolicy = 'no-referrer';
-    image.onerror = () => { image.hidden = true; figure.classList.add('photo-unavailable'); figure.dataset.icon = entry.icon; };
+    image.onerror = () => {
+      if (!image.dataset.groupFallback && entry.image && image.src !== entry.image) {
+        image.dataset.groupFallback = 'true';
+        image.src = entry.image;
+        return;
+      }
+      image.hidden = true;
+      figure.classList.add('photo-unavailable');
+      figure.dataset.icon = entry.icon;
+    };
     figure.appendChild(image);
     const credit = document.createElement('a');
-    credit.href = entry.source;
+    credit.href = creatureData?.imageSource || entry.source;
     credit.target = '_blank';
     credit.rel = 'noopener noreferrer';
     credit.textContent = 'Ver foto de referencia ↗';
@@ -875,6 +964,33 @@ function renderRegionalFauna() {
       paragraph.append(strong, document.createTextNode(content));
       body.appendChild(paragraph);
     });
+    const battleMoves = document.createElement('div');
+    battleMoves.className = 'regional-fight-moves';
+    const movesTitle = document.createElement('strong');
+    movesTitle.textContent = 'Movimientos de combate';
+    battleMoves.appendChild(movesTitle);
+    const moveList = document.createElement('ul');
+    creatureData.moves.forEach(move => {
+      const moveItem = document.createElement('li');
+      moveItem.textContent = `${move.name} · ${move.dmg} daño · ${move.uses} usos`;
+      moveList.appendChild(moveItem);
+    });
+    battleMoves.appendChild(moveList);
+    body.appendChild(battleMoves);
+    const isUnlocked = AppState.unlockedCreatures.includes(creatureId);
+    const speciesCode = Object.entries(QR_CREATURE_CODES).find(([, id]) => id === creatureId)?.[0] || '';
+    const unlockHint = document.createElement('p');
+    unlockHint.className = 'regional-unlock-hint';
+    unlockHint.textContent = isUnlocked ? 'Ya está disponible para tu equipo de combate.' : `Código para añadirla a tu equipo: ${speciesCode}`;
+    body.appendChild(unlockHint);
+    if (!isUnlocked) {
+      const unlockButton = document.createElement('button');
+      unlockButton.type = 'button';
+      unlockButton.className = 'btn-figma btn-secondary regional-unlock-button';
+      unlockButton.textContent = 'Desbloquear para pelear';
+      unlockButton.onclick = () => openQRScanner(creatureId);
+      body.appendChild(unlockButton);
+    }
     card.append(figure, body);
     gallery.appendChild(card);
   }));
@@ -2191,9 +2307,35 @@ const DEFAULT_QR_CREATURE_CODES = {
   '100005': 'buho',
   '100006': 'zorro'
 };
+let nextRegionalQRCode = 100007;
+Object.keys(CREATURE_DATABASE).filter(id => CREATURE_DATABASE[id].isRegional).forEach(id => {
+  DEFAULT_QR_CREATURE_CODES[String(nextRegionalQRCode++)] = id;
+});
 let QR_CREATURE_CODES = { ...DEFAULT_QR_CREATURE_CODES };
 
+function renderSpeciesCodeSettings() {
+  const list = document.getElementById('species-code-settings-list');
+  if (!list || list.dataset.rendered === 'true') return;
+  list.replaceChildren();
+  Object.entries(CREATURE_DATABASE).filter(([id]) => id !== 'rey_bosque').forEach(([id, creature]) => {
+    const row = document.createElement('li');
+    const label = document.createElement('label');
+    label.htmlFor = `species-code-${id}`;
+    label.textContent = creature.name;
+    const input = document.createElement('input');
+    input.id = `species-code-${id}`;
+    input.className = 'species-code-input';
+    input.inputMode = 'numeric';
+    input.maxLength = 6;
+    input.value = Object.entries(DEFAULT_QR_CREATURE_CODES).find(([, target]) => target === id)?.[0] || '';
+    row.append(label, input);
+    list.appendChild(row);
+  });
+  list.dataset.rendered = 'true';
+}
+
 function restoreSpeciesCodes() {
+  renderSpeciesCodeSettings();
   try {
     const saved = JSON.parse(localStorage.getItem('species_qr_codes') || 'null');
     if (saved && typeof saved === 'object') {
