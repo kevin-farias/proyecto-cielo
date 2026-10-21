@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
   <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=park-registry-3">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.css">
   <script defer src="https://unpkg.com/maplibre-gl@5.12.0/dist/maplibre-gl.js"></script>
 </head>
@@ -128,6 +128,15 @@
                   </label>
                   <input type="range" id="slider-sfx" min="0" max="100" value="100" oninput="updateVolume('sfx', this.value)">
 
+                  <div class="theme-setting-row mt-4">
+                    <label for="app-theme-select">🎨 Tema de color</label>
+                    <select id="app-theme-select" onchange="setAppTheme(this.value)">
+                      <option value="green">Verde (original)</option>
+                      <option value="light">Claro</option>
+                      <option value="dark">Oscuro</option>
+                    </select>
+                  </div>
+
                   <div class="setting-row mt-4">
                     <span>🌐 Idioma</span>
                     <div class="lang-selector">
@@ -139,10 +148,10 @@
 
                   <div class="translate-status-box mt-3">
                     <div class="translate-badge">
-                      <span class="g-icon">🌐</span> Google Translate Activo
+                      <span class="g-icon">🌐</span> Idiomas del juego
                     </div>
                     <p class="translate-hint" id="translate-hint-text">
-                      Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.
+                      Cambia el idioma de los menús y textos desde este ajuste.
                     </p>
                   </div>
                 </div>
@@ -178,6 +187,19 @@
                     </div>
                     <span id="profile-greeting">Tu aventura comienza aquí</span>
                   </div>
+                  <div class="profile-progress-panel">
+                    <div class="profile-level-row">
+                      <strong id="profile-level-label">Nivel 1 · 0 EXP</strong>
+                      <span id="profile-xp-label">0 / 500 EXP para el próximo nivel</span>
+                    </div>
+                    <div class="profile-xp-track" role="progressbar" aria-label="Experiencia para el próximo nivel" aria-valuemin="0" aria-valuemax="500">
+                      <span id="profile-xp-fill"></span>
+                    </div>
+                    <strong class="profile-animals-title">Animales descubiertos</strong>
+                    <div id="profile-animal-list" class="profile-animal-list"></div>
+                    <button class="btn-figma btn-secondary profile-share-button" type="button" onclick="shareExplorerProfile()">↗ Compartir perfil</button>
+                    <span id="profile-share-status" class="profile-share-status" aria-live="polite"></span>
+                  </div>
                 </div>
                 <div class="home-music-card">
                   <div><strong>🎵 Música de inicio</strong><span>LOFI • Proyecto Cielo</span></div>
@@ -187,6 +209,21 @@
                 </div>
                 <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
                 <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
+                <audio id="secret-encounter-music" src="assets/musica_encuentro_secreto.mp3" preload="metadata"></audio>
+                <section class="park-presence-card" aria-labelledby="park-presence-title">
+                  <div class="park-presence-copy">
+                    <strong id="park-presence-title">📍 Entrada a la reserva</strong>
+                    <span id="park-entry-status" aria-live="polite">Escanea el código para registrar tu entrada.</span>
+                  </div>
+                  <div class="park-presence-actions">
+                    <button class="btn-figma btn-accent" type="button" onclick="openParkEntryScanner()">▦ Escanear entrada</button>
+                    <button class="btn-figma btn-secondary" id="park-players-button" type="button" onclick="openParkPlayers()" disabled>👥 Jugadores en la reserva</button>
+                  </div>
+                </section>
+                <section id="park-players-inline" class="park-players-inline" hidden aria-live="polite">
+                  <strong>👥 Jugadores presentes en la reserva</strong>
+                  <div id="park-players-inline-list" class="park-players-list"></div>
+                </section>
                 <!-- QR Box Simulation -->
                 <div class="qr-card mt-2" onclick="openQRScanner()">
                   <div class="qr-frame">
@@ -214,7 +251,7 @@
                     <span class="btn-icon">ℹ️</span> INFORMACIÓN
                   </button>
                   <button class="btn-figma btn-menu" onclick="navigateTo('mapa')">
-                    <span class="btn-icon">📍</span> MAPA DE LA RESERVA
+                    <span class="btn-icon">📍</span> MAPA INTEGRADO
                   </button>
 
                   <button class="btn-figma btn-menu btn-accent" onclick="navigateTo('pelea')">
@@ -231,6 +268,9 @@
                     <span class="btn-icon">↳</span> SALIR
                   </button>
                 </div>
+                <button class="btn-figma btn-secondary session-reset-button" type="button" onclick="restartCurrentSession()">
+                  <span class="btn-icon">↻</span> REINICIAR SESIÓN
+                </button>
 
                 <div class="footer-note">
                   <p>Conecta con la naturaleza y conserva las especies.</p>
@@ -245,7 +285,12 @@
               </div>
               <div class="screen-content scrollable">
                 <p class="map-caption">Reserva Natural Municipal Villa Cielo · Capilla del Monte, Córdoba</p>
+                <p class="map-location-note">Animales: hábitats orientativos. Jugadores: bots simulados y tu perfil al registrar la entrada; no es rastreo GPS real.</p>
                 <div id="reserve-map" role="application" aria-label="Mapa de la Reserva Villa Cielo"></div>
+                <h4 class="map-list-heading" id="map-players-heading" hidden>👥 Jugadores alrededor</h4>
+                <div class="map-player-list" id="map-player-list" aria-label="Jugadores simulados en la reserva" hidden></div>
+                <h4 class="map-list-heading">🐾 Animales y avistajes</h4>
+                <div class="map-animal-list" id="map-animal-list" aria-label="Especies y puntos de avistaje"></div>
                 <p class="map-attribution">Mapa © OpenStreetMap · Estilo de OpenFreeMap</p>
               </div>
             </section>
@@ -402,8 +447,8 @@
                     </div>
                   </div>
                   <div class="trophic-editor mt-4">
-                    <h4>🌱 Explora cambios en la red</h4>
-                    <p>Desactiva una especie para simular su desaparición y ver qué relaciones y efectos ecológicos podrían cambiar.</p>
+                    <h4>🌱 Red trófica interactiva</h4>
+                    <p>Toca cualquier icono para simular que esa especie desaparece. Mira cómo se interrumpen sus conexiones y qué cambios podría causar en el ecosistema.</p>
                     <div id="trophic-network" class="trophic-network"></div>
                     <div id="trophic-impact" class="trophic-impact" aria-live="polite">Selecciona una especie para analizar su ausencia.</div>
                   </div>
@@ -436,12 +481,16 @@
                     <p>Árbol nativo característico del estrato arbóreo del bosque serrano cordobés.</p>
                   </div>
 
-                  <h4 class="mt-4">Fauna Autóctona (Descubierta en tu Colección)</h4>
-                  <p class="select-hint-text">Fichas actualizadas de las criaturas que has descubierto:</p>
+                  <h4 class="mt-4">Fauna original de la colección</h4>
+                  <p class="select-hint-text">Se conservan las seis fichas del juego. Las etiquetas indican cuáles descubriste en esta cuenta:</p>
                   
                   <div id="flora-fauna-dynamic-container">
                     <!-- Populated dynamically from unlocked collection creatures! -->
                   </div>
+
+                  <h4 class="mt-4">Fauna nativa de la región</h4>
+                  <p class="select-hint-text">Una ficha individual por cada animal del listado, con hábitat, alimentación, función ecológica y qué podría pasar si desaparece. Las fotos representativas enlazan a su fuente.</p>
+                  <div id="regional-fauna-gallery" class="regional-fauna-gallery"></div>
                 </div>
               </div>
             </section>
@@ -583,13 +632,22 @@
                   </button>
                 </div>
 
+                <section id="secret-encounter-card" class="secret-encounter-card" hidden>
+                  <span class="secret-encounter-mark" aria-hidden="true">✦</span>
+                  <div>
+                    <strong>Hay algo extraño entre las sierras…</strong>
+                    <p>Tras tus dos victorias, encontraste huellas que no aparecen en el mapa.</p>
+                  </div>
+                  <button class="btn-figma btn-secondary" type="button" onclick="beginSecretEncounter()">Investigar el eco</button>
+                </section>
+
                 <div class="section-tag center mt-4">MULTIJUGADOR LOCAL</div>
                 <div class="mode-select-stack mt-2">
                   <button class="btn-mode-card" onclick="navigateTo('pelea_local')">
                     <div class="mode-icon-box">👥</div>
                     <div class="mode-text">
                       <strong>pelea contra amigo local</strong>
-                      <span>Duelo entre 2 entrenadores en el mismo teléfono</span>
+                      <span>Duelo en el mismo teléfono o por Wi‑Fi local</span>
                     </div>
                     <span class="mode-arrow">→</span>
                   </button>
@@ -611,31 +669,38 @@
               </div>
 
               <div class="screen-content scrollable">
-                <div class="section-tag">JUGADORES LOCALES</div>
+                <div class="section-tag">DUELO LOCAL ENTRE AMIGOS</div>
+                <p class="select-hint-text">Juega en el mismo teléfono o conecta dos computadoras a la misma red Wi‑Fi. Para jugar por Wi‑Fi, ambos deben abrir la dirección de red que muestra el servidor.</p>
 
-                <div class="players-list mt-3">
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona1')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 1</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
+                <div class="local-quick-match mt-2 mb-3">
+                  <label class="select-hint-text" for="lan-player-name">Tu nombre</label>
+                  <input id="lan-player-name" class="text-input" maxlength="20" placeholder="Entrenador" value="Entrenador">
+                  <button class="btn-figma btn-accent full-width mt-2" onclick="createLanRoom()">📡 Crear sala por Wi‑Fi</button>
+                  <div class="mt-2">
+                    <input id="lan-room-code" class="text-input" maxlength="5" placeholder="Código de sala" autocomplete="off">
+                    <button class="btn-figma full-width mt-2" onclick="joinLanRoom()">🔗 Unirme a una sala</button>
+                  </div>
+                  <p id="lan-room-status" class="select-hint-text mt-2" aria-live="polite"></p>
+                </div>
+
+                <div class="local-quick-match mt-2 mb-3">
+                  <button class="btn-figma full-width" onclick="startLocalMultiplayer('Jugador 1', 'Jugador 2')">
+                    ⚔️ INICIAR DUELO (JUGADOR 1 vs JUGADOR 2)
+                  </button>
+                </div>
+
+                <div class="section-tag mt-3">O ELIGE PERFILES RIVALES</div>
+                <div class="players-list mt-2">
+                  <button class="player-item-btn" onclick="startLocalMultiplayer('Persona 1', 'Persona 2')">
+                    <span class="player-avatar">👥</span>
+                    <span class="player-name">Persona 1 vs Persona 2</span>
+                    <span class="player-status">Duelo 1v1 ›</span>
                   </button>
 
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona2')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 2</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
-                  </button>
-
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona3')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 3</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
-                  </button>
-
-                  <button class="player-item-btn" onclick="selectLocalPlayerMode('persona4')">
-                    <span class="player-avatar">👤</span>
-                    <span class="player-name">persona 4</span>
-                    <span class="player-status">Elegir 3 Criaturas ›</span>
+                  <button class="player-item-btn" onclick="startLocalMultiplayer('Persona 3', 'Persona 4')">
+                    <span class="player-avatar">👥</span>
+                    <span class="player-name">Persona 3 vs Persona 4</span>
+                    <span class="player-status">Duelo 1v1 ›</span>
                   </button>
                 </div>
               </div>
@@ -646,12 +711,12 @@
                  ========================================== -->
             <section class="screen" id="screen-seleccionar_criatura">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('pelea')">←</button>
-                <h3>Elige 3 Criaturas</h3>
+                <button class="btn-back" onclick="handleTeamSelectionBack()">←</button>
+                <h3 id="select-team-title">Elige 3 Criaturas</h3>
               </div>
 
               <div class="screen-content scrollable">
-                <div class="section-tag">FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)</div>
+                <div class="section-tag" id="select-team-tag">FORMA TU EQUIPO DE BATALLA (3 REQUERIDAS)</div>
 
                 <!-- Team Slots Bar -->
                 <div class="team-slots-bar mt-2">
@@ -683,13 +748,13 @@
 
                 <!-- Floating/Fixed confirm button -->
                 <div class="team-confirm-wrapper mt-2">
-                  <button id="btn-confirm-team" class="btn-figma btn-accent full-width" onclick="confirmTeamAndLaunchBattle()" disabled>
+                  <button id="btn-confirm-team" class="btn-figma btn-accent full-width" onclick="handleTeamConfirm()" disabled>
                     ⚔️ SELECCIONA 3 CRIATURAS (0/3)
                   </button>
                 </div>
 
-                <div class="section-tag mt-3">TUS CRIATURAS DISPONIBLES</div>
-                <p class="select-hint-text">Toca una criatura para sumarla o quitarla de tu equipo:</p>
+                <div class="section-tag mt-3" id="select-available-tag">TUS CRIATURAS DISPONIBLES</div>
+                <p class="select-hint-text" id="select-hint-tag">Toca una criatura para sumarla o quitarla de tu equipo:</p>
 
                 <div class="creature-select-grid mt-2" id="creature-selection-container">
                   <!-- Dynamically populated from AppState.unlockedCreatures -->
@@ -775,7 +840,7 @@
                 <button class="btn-battle btn-skill" onclick="useSkill('refugio')">
                   ✨ Habilidad
                 </button>
-                <button class="btn-battle btn-item" onclick="useItem('pocion')">
+                <button class="btn-battle btn-item" onclick="showSubMenu('items')">
                   🎒 Mochila
                 </button>
                 <button class="btn-battle btn-switch" onclick="showSubMenu('switch')">
@@ -791,6 +856,18 @@
               <!-- Submenu Switch Creature Actions -->
               <div class="battle-controls hidden" id="battle-controls-switch">
                 <!-- Dynamically populated creature switch buttons from team -->
+              </div>
+
+              <div class="battle-controls hidden" id="battle-controls-items">
+                <!-- Baits and capture actions are populated for bot battles only. -->
+              </div>
+
+              <div class="battle-intro-overlay" id="battle-intro-overlay" aria-hidden="true">
+                <div class="battle-intro-content">
+                  <span>PROYECTO CIELO · ECO-COMBAT</span>
+                  <strong id="battle-intro-message">¡Un rival aparece!</strong>
+                  <small>¡Prepárate para combatir!</small>
+                </div>
               </div>
             </section>
 
@@ -867,11 +944,97 @@
           <div class="scan-target-box"></div>
           <div class="laser-beam"></div>
         </div>
-        <p class="mt-3">Apunta la cámara al código QR de la reserva natural...</p>
+        <p class="mt-3">Simula la lectura de un código QR de la reserva o ingrésalo manualmente:</p>
         <button class="btn-figma btn-accent mt-3" onclick="simulateQRDiscovery()">
           📷 ¡Simular Escaneo de QR!
         </button>
+        <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemQRFromInput();">
+          <label for="manual-qr-code">Código de especie</label>
+          <div class="manual-qr-row">
+            <input id="manual-qr-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="Escribe 6 números" aria-describedby="manual-qr-preview qr-code-help" oninput="previewQRCode(this.value)">
+            <button class="btn-figma btn-secondary" type="submit">Usar código</button>
+          </div>
+          <output id="manual-qr-preview" class="manual-qr-preview" aria-live="polite">Código ingresado: —</output>
+          <details class="qr-code-help" id="qr-code-help">
+            <summary>Ver y cambiar los códigos de especies</summary>
+            <ul>
+              <li><label for="species-code-picaflor">Picaflor</label><input id="species-code-picaflor" class="species-code-input" inputmode="numeric" maxlength="6" value="100001"></li>
+              <li><label for="species-code-yaguarete">Yaguareté</label><input id="species-code-yaguarete" class="species-code-input" inputmode="numeric" maxlength="6" value="100002"></li>
+              <li><label for="species-code-pecari">Pecarí</label><input id="species-code-pecari" class="species-code-input" inputmode="numeric" maxlength="6" value="100003"></li>
+              <li><label for="species-code-quebracho">Quebracho</label><input id="species-code-quebracho" class="species-code-input" inputmode="numeric" maxlength="6" value="100004"></li>
+              <li><label for="species-code-buho">Búho</label><input id="species-code-buho" class="species-code-input" inputmode="numeric" maxlength="6" value="100005"></li>
+              <li><label for="species-code-zorro">Zorro</label><input id="species-code-zorro" class="species-code-input" inputmode="numeric" maxlength="6" value="100006"></li>
+            </ul>
+            <button class="btn-figma btn-secondary" type="button" onclick="saveSpeciesCodes()">Guardar códigos de especies</button>
+            <p id="species-code-settings-status" class="qr-code-status" aria-live="polite"></p>
+          </details>
+          <p id="qr-code-status" class="qr-code-status" aria-live="polite"></p>
+        </form>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRO DE ENTRADA A LA RESERVA -->
+  <div class="modal-overlay hidden" id="modal-park-entry">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4>Registrar entrada al parque</h4>
+        <button class="modal-close" onclick="closeModal('modal-park-entry')" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="qr-camera-sim park-entry-camera" aria-hidden="true">
+          <div class="camera-grid"></div><div class="scan-target-box"></div><div class="laser-beam"></div>
+        </div>
+        <p class="mt-3">Usa este código para simular el acceso. También puedes escribir otro de seis números para cambiarlo.</p>
+        <p class="park-entry-code-display">Código de entrada: <output id="park-entry-current-code">600040</output></p>
+        <button class="btn-figma btn-accent mt-3" type="button" onclick="simulateParkEntryScan()">📷 Simular escaneo de entrada</button>
+        <form class="manual-qr-form" onsubmit="event.preventDefault(); redeemParkEntryCode();">
+          <label for="park-entry-code">Tu código de acceso</label>
+          <div class="manual-qr-row">
+            <input id="park-entry-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" placeholder="Escribe 6 números" aria-describedby="park-entry-preview park-entry-help" oninput="previewParkEntryCode(this.value)">
+            <button class="btn-figma btn-secondary" type="submit">Guardar código y entrar</button>
+          </div>
+          <output id="park-entry-preview" class="manual-qr-preview" aria-live="polite">Código ingresado: —</output>
+          <p class="qr-code-help" id="park-entry-help">El código que escribas quedará guardado. Para cambiarlo, escribe otro código de seis números.</p>
+          <p id="park-entry-feedback" class="qr-code-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: JUGADORES PRESENTES -->
+  <div class="modal-overlay hidden" id="modal-park-players">
+    <div class="modal-box park-players-modal">
+      <div class="modal-header">
+        <div><h4>Jugadores en la reserva</h4><span id="park-player-count" class="park-player-count"></span></div>
+        <button class="modal-close" onclick="closeModal('modal-park-players')" aria-label="Cerrar">✕</button>
+      </div>
+      <p class="park-player-note">Perfiles de prueba disponibles para visitar.</p>
+      <div id="park-players-list" class="park-players-list"></div>
+      <button class="btn-figma btn-secondary full-width mt-3" type="button" onclick="leavePark()">Salir de la reserva</button>
+    </div>
+  </div>
+
+  <!-- MODAL: PERFIL DE JUGADOR -->
+  <div class="modal-overlay hidden" id="modal-park-player-profile">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 id="park-player-profile-title">Perfil de jugador</h4>
+        <button class="modal-close" onclick="closeModal('modal-park-player-profile')" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="park-player-profile-content" class="park-player-profile-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: INTRODUCCIÓN DEL ENCUENTRO SECRETO -->
+  <div class="modal-overlay hidden" id="modal-secret-battle-intro">
+    <div class="modal-box secret-intro-modal">
+      <div class="secret-intro-sigil" aria-hidden="true">✧</div>
+      <p class="secret-intro-eyebrow">UNA PRESENCIA DESCONOCIDA</p>
+      <h3>Cynthia, guardiana de Villa Cielo</h3>
+      <p id="secret-intro-dialogue" class="secret-intro-dialogue"></p>
+      <div class="secret-intro-rivals" aria-label="Tres rivales poderosos">🌳 <span>vs</span> 🐆 <span>vs</span> 🐦</div>
+      <button class="btn-figma btn-accent full-width" type="button" onclick="finishSecretBattleIntro()">¡Estoy listo!</button>
     </div>
   </div>
 
@@ -883,22 +1046,26 @@
         <button class="modal-close" onclick="closeModal('modal-creature')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="creature-detail-header">
-          <div class="creature-detail-avatar" id="creature-modal-icon">🌸</div>
-          <div>
-            <h3 id="creature-modal-name">Picaflor Cometa</h3>
-            <span class="badge" id="creature-modal-badge">Polinizador Serrano</span>
+        <article class="species-card" id="species-card">
+          <div class="species-card-topline">
+            <span id="creature-modal-badge">Fauna serrana</span>
+            <strong><small>VIDA</small> <span id="c-hp">120</span></strong>
           </div>
-        </div>
-        <div class="creature-stats mt-3">
-          <div class="stat-row"><span>Vida (HP):</span> <strong id="c-hp">120 HP</strong></div>
-          <div class="stat-row"><span>Velocidad:</span> <strong id="c-spd">95 SPD</strong></div>
-          <div class="stat-row"><span>Ataque:</span> <strong id="c-atk">45 ATK</strong></div>
-          <div class="stat-row"><span>Hábitat:</span> <strong id="c-habitat">Sierras de Córdoba</strong></div>
-        </div>
-        <p class="creature-desc mt-3" id="creature-modal-desc">
-          Ave mítica de agilidad sorprendente que habita en las quebradas y bosques autóctonos.
-        </p>
+          <h3 id="creature-modal-name">Picaflor Cometa</h3>
+          <div class="species-art-frame" id="creature-modal-art-frame">
+            <img id="creature-modal-art" alt="Ilustración de la especie" hidden>
+            <span class="species-art-fallback" id="creature-modal-icon" aria-hidden="true">🌸</span>
+            <span class="species-art-caption">ESPECIE NATIVA • CÓRDOBA</span>
+          </div>
+          <div class="species-card-facts">
+            <div><small>HÁBITAT</small><strong id="c-habitat">Sierras de Córdoba</strong></div>
+            <div><small>VELOCIDAD</small><strong id="c-spd">95</strong></div>
+            <div><small>FUERZA</small><strong id="c-atk">45</strong></div>
+          </div>
+          <p class="creature-desc mt-3" id="creature-modal-desc"></p>
+          <div class="species-moves" id="creature-modal-moves"></div>
+          <p class="species-card-footnote">Ficha de campo • Proyecto Cielo</p>
+        </article>
         <button class="btn-figma btn-primary full-width mt-3" onclick="closeModal('modal-creature')">Entendido</button>
       </div>
     </div>
@@ -933,23 +1100,6 @@
     </div>
   </div>
 
-  <!-- GOOGLE TRANSLATE INTEGRATION -->
-  <div id="google_translate_element" style="display:none;"></div>
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      try {
-        new google.translate.TranslateElement({
-          pageLanguage: 'es',
-          includedLanguages: 'es,en,pt',
-          autoDisplay: false
-        }, 'google_translate_element');
-      } catch(e) {
-        console.log('Google Translate Init notice:', e);
-      }
-    }
-  </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <script src="script.js"></script>
+  <script src="script.js?v=fauna-fichas-park-registry-2"></script>
 </body>
 </html>

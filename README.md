@@ -20,6 +20,15 @@ Prototipo interactivo y navegable de alta fidelidad que simula una aplicación m
 3. Abre en tu navegador preferido:
    👉 **http://localhost:3000**
 
+### Jugar por Wi‑Fi en dos computadoras
+
+1. Conecta ambas computadoras a la misma red Wi‑Fi.
+2. Inicia `node server.js` en una de ellas. La consola muestra su dirección de red, por ejemplo `http://192.168.1.25:3000`.
+3. En ambas computadoras abre esa dirección. El creador de la sala comparte el código de 5 caracteres y el otro jugador lo ingresa.
+4. Cada jugador elige tres criaturas y juega sus turnos desde su propia computadora.
+
+La computadora que ejecuta el servidor debe permanecer encendida durante la partida. Si Windows pregunta si Node.js puede aceptar conexiones en la red privada, permite el acceso para que la otra computadora pueda conectarse.
+
 ---
 
 ## 🌟 Características Destacadas
@@ -45,6 +54,14 @@ Prototipo interactivo y navegable de alta fidelidad que simula una aplicación m
 La partida activa empieza desde cero en cada apertura o recarga; el progreso de colección y el perfil se guardan por cuenta en `.project-data/progress.json`. El campo **Cuenta de progreso** del perfil identifica cada guardado; usa un nombre distinto para cada cuenta. La red trófica también guarda por cuenta qué especies se están simulando como ausentes.
 
 En **Ajustes → Administración y respaldos** se puede crear y restaurar una copia de todas las cuentas. Para este prototipo local, el PIN predeterminado es `1234`; puedes definir `ADMIN_PIN` antes de iniciar `node server.js` para cambiarlo. No es un sistema de autenticación apropiado para publicar en internet.
+
+### Publicar en internet
+
+El archivo `render.yaml` prepara un servicio web de Node en Render, con almacenamiento persistente para las cuentas y una URL pública HTTPS. Para publicarlo, inicia sesión en [Render](https://dashboard.render.com/), crea un **Blueprint** desde este repositorio y confirma la creación del servicio. Render genera un `ADMIN_PIN` aleatorio para la publicación; consúltalo en la configuración del servicio para usar los respaldos de administrador.
+
+Esta configuración usa un plan pago de Render porque el plan gratuito se suspende tras inactividad y no permite disco persistente; ese plan no puede garantizar disponibilidad continua ni conservar el archivo de guardados tras reinicios. Revisa el costo que muestra Render y confirma el plan antes de crear el servicio.
+
+Los perfiles de esta app se identifican por nombre y no tienen inicio de sesión ni contraseña propia. Al publicarla, cualquiera que conozca el nombre de un perfil podría consultar o modificar su progreso; usa apodos y no guardes información personal.
 
 ---
 

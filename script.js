@@ -14,12 +14,13 @@ const CREATURE_DATABASE = {
     spd: 95,
     atk: 45,
     lvl: 12,
+    favoriteFood: { id: 'nectar', name: 'Néctar de flores', icon: '🌺' },
     habitat: 'Quebradas y Bosque Serrano',
     desc: 'Ave mítica de agilidad sorprendente que habita en las sierras cordobesas. Posee una cola iridiscente bífida y su polinización es indispensable para la flora autóctona.',
     moves: [
-      { name: 'Picotazo Veloz', dmg: 35, text: '¡Picotazo certero!' },
-      { name: 'Viento Serrano', dmg: 45, text: '¡Ráfaga de viento!' },
-      { name: 'Tormenta Hojas', dmg: 60, text: '¡CRÍTICO DE HOJAS!' }
+      { name: 'Picotazo Veloz', dmg: 35, uses: 5, maxUses: 5, text: '¡Picotazo certero!' },
+      { name: 'Viento Serrano', dmg: 45, uses: 4, maxUses: 4, text: '¡Ráfaga de viento!' },
+      { name: 'Tormenta Hojas', dmg: 60, uses: 2, maxUses: 2, text: '¡CRÍTICO DE HOJAS!' }
     ]
   },
   yaguarete: {
@@ -32,12 +33,13 @@ const CREATURE_DATABASE = {
     spd: 75,
     atk: 70,
     lvl: 15,
+    favoriteFood: { id: 'meat', name: 'Carne fresca', icon: '🥩' },
     habitat: 'Bosques Nativos de Córdoba',
     desc: 'El felino más grande de América. Es el apex predator de la red trófica local, vital para mantener el equilibrio poblacional de los herbívoros.',
     moves: [
-      { name: 'Zarpazo Feroz', dmg: 45, text: '¡Impacto salvaje!' },
-      { name: 'Mordisco Selvático', dmg: 55, text: '¡Mordisco devastador!' },
-      { name: 'Garra Esmeralda', dmg: 70, text: '¡ATAQUE CRÍTICO FELINO!' }
+      { name: 'Zarpazo Feroz', dmg: 45, uses: 5, maxUses: 5, text: '¡Impacto salvaje!' },
+      { name: 'Mordisco Selvático', dmg: 55, uses: 4, maxUses: 4, text: '¡Mordisco devastador!' },
+      { name: 'Garra Esmeralda', dmg: 70, uses: 2, maxUses: 2, text: '¡ATAQUE CRÍTICO FELINO!' }
     ]
   },
   pecari: {
@@ -50,12 +52,13 @@ const CREATURE_DATABASE = {
     spd: 60,
     atk: 50,
     lvl: 10,
+    favoriteFood: { id: 'carob', name: 'Frutos de algarrobo', icon: '🌰' },
     habitat: 'Monte y Matorrales',
     desc: 'Mamífero nativo gregario que vive en manadas. Se alimenta de frutos secos, raicillas y colabora dispersando semillas por el terreno.',
     moves: [
-      { name: 'Embestida Serrana', dmg: 35, text: '¡Embestida de monte!' },
-      { name: 'Pisotón Cobre', dmg: 45, text: '¡Pisotón contundente!' },
-      { name: 'Furia Terrestre', dmg: 60, text: '¡DEMOLICIÓN SERRANA!' }
+      { name: 'Embestida Serrana', dmg: 35, uses: 5, maxUses: 5, text: '¡Embestida de monte!' },
+      { name: 'Pisotón Cobre', dmg: 45, uses: 4, maxUses: 4, text: '¡Pisotón contundente!' },
+      { name: 'Furia Terrestre', dmg: 60, uses: 2, maxUses: 2, text: '¡DEMOLICIÓN SERRANA!' }
     ]
   },
   quebracho: {
@@ -68,12 +71,13 @@ const CREATURE_DATABASE = {
     spd: 20,
     atk: 30,
     lvl: 20,
+    favoriteFood: { id: 'compost', name: 'Humus serrano', icon: '🍂' },
     habitat: 'Bosque Serranos de Córdoba',
     desc: 'Especie vegetal insignia de la reserva natural con ejemplares milenarios de 100 a 400 años de edad que no forman bosques en ningún otro lugar.',
     moves: [
-      { name: 'Raíz Milenaria', dmg: 30, text: '¡Golpe de raíz ancestral!' },
-      { name: 'Látigo de Ramas', dmg: 40, text: '¡Azote de vegetación!' },
-      { name: 'Espina Serrana', dmg: 55, text: '¡DEFENSA ESPINOSA!' }
+      { name: 'Raíz Milenaria', dmg: 30, uses: 5, maxUses: 5, text: '¡Golpe de raíz ancestral!' },
+      { name: 'Látigo de Ramas', dmg: 40, uses: 4, maxUses: 4, text: '¡Azote de vegetación!' },
+      { name: 'Espina Serrana', dmg: 55, uses: 2, maxUses: 2, text: '¡DEFENSA ESPINOSA!' }
     ]
   },
   buho: {
@@ -86,12 +90,13 @@ const CREATURE_DATABASE = {
     spd: 85,
     atk: 55,
     lvl: 13,
+    favoriteFood: { id: 'mouse', name: 'Ratón de campo', icon: '🐁' },
     habitat: 'Algarrobales Nocturnos',
     desc: 'Depredador nocturno clave para el control biológico de roedores en las sierras. Gran visión térmica y vuelo silencioso.',
     moves: [
-      { name: 'Ataque Silencioso', dmg: 40, text: '¡Sorpresa nocturna!' },
-      { name: 'Garra Alada', dmg: 50, text: '¡Zarpazo aéreo!' },
-      { name: 'Mirada Hipnótica', dmg: 65, text: '¡GOLPE DE SOMBRAS!' }
+      { name: 'Ataque Silencioso', dmg: 40, uses: 5, maxUses: 5, text: '¡Sorpresa nocturna!' },
+      { name: 'Garra Alada', dmg: 50, uses: 4, maxUses: 4, text: '¡Zarpazo aéreo!' },
+      { name: 'Mirada Hipnótica', dmg: 65, uses: 2, maxUses: 2, text: '¡GOLPE DE SOMBRAS!' }
     ]
   },
   zorro: {
@@ -104,12 +109,33 @@ const CREATURE_DATABASE = {
     spd: 90,
     atk: 50,
     lvl: 11,
+    favoriteFood: { id: 'berries', name: 'Bayas silvestres', icon: '🫐' },
     habitat: 'Matorrales de Punilla',
     desc: 'Cánido nativo astuto y veloz adaptado a las lomas serranas. Desempeña un rol primordial en el ecosistema local.',
     moves: [
-      { name: 'Astucia Serrana', dmg: 35, text: '¡Movimiento veloz!' },
-      { name: 'Embestida Ágil', dmg: 45, text: '¡Ataque sorpresa!' },
-      { name: 'Colmillo Gris', dmg: 60, text: '¡IMPACTO ASTUTO!' }
+      { name: 'Astucia Serrana', dmg: 35, uses: 5, maxUses: 5, text: '¡Movimiento veloz!' },
+      { name: 'Embestida Ágil', dmg: 45, uses: 4, maxUses: 4, text: '¡Ataque sorpresa!' },
+      { name: 'Colmillo Gris', dmg: 60, uses: 2, maxUses: 2, text: '¡IMPACTO ASTUTO!' }
+    ]
+  },
+  rey_bosque: {
+    id: 'rey_bosque',
+    name: 'Rey del Bosque',
+    icon: '🐦',
+    image: 'assets/species/rey_bosque.jpeg',
+    badge: 'Ave guardiana serrana',
+    hp: 185,
+    maxHp: 185,
+    spd: 92,
+    atk: 78,
+    lvl: 19,
+    favoriteFood: { id: 'seeds', name: 'Semillas serranas', icon: '🌻' },
+    habitat: 'Bosques serranos y quebradas arboladas',
+    desc: 'Pheucticus aureoventris, ave de unos 20 cm. El macho tiene cabeza, garganta y pecho negros, vientre amarillo y manchas blancas en las alas. Habita ambientes serranos y captura insectos al vuelo. Es una especie protegida en Argentina.',
+    moves: [
+      { name: 'Canto del Monte', dmg: 48, uses: 5, maxUses: 5, text: '¡Su canto resuena en las sierras!' },
+      { name: 'Aleteo Dorado', dmg: 58, uses: 4, maxUses: 4, text: '¡Un destello amarillo cruza el bosque!' },
+      { name: 'Vuelo Guardián', dmg: 72, uses: 2, maxUses: 2, text: '¡EL REY DEL BOSQUE CONTRAATACA!' }
     ]
   }
 };
@@ -117,6 +143,7 @@ const CREATURE_DATABASE = {
 // STATE MANAGEMENT
 const AppState = {
   currentScreen: 'splash',
+  parkCheckedIn: false,
   soundEnabled: true,
   musicEnabled: true,
   musicVolume: 0.8,
@@ -125,6 +152,9 @@ const AppState = {
   isLandscape: false,
   unlockedCreatures: ['picaflor', 'yaguarete', 'pecari', 'quebracho'],
   recentlyUnlocked: [], // Tracks newly captured creatures in this session!
+  profileXP: 0,
+  creatureCopies: { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 },
+  inventory: { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3 },
   
   // Battle state
   battle: {
@@ -132,16 +162,257 @@ const AppState = {
     pendingMode: 'bot',
     botDifficulty: 'facil', // 'facil' | 'normal' | 'dificil'
     selectedTeam: [],       // Array of 3 creature keys chosen for combat
+    localPlayerOneTeam: [],
+    localPlayerOneName: 'Jugador 1',
+    localPlayerTwoName: 'Jugador 2',
+    localTurn: 1,
     playerTeam: [],         // Array of 3 creature objects
     activePlayerIndex: 0,   // Current fighting creature in playerTeam
     enemyTeam: [],          // Array of enemy creature objects
     activeEnemyIndex: 0,    // Current fighting creature in enemyTeam
     turn: 1,
     isPlayerTurn: true,
+    isSecretEncounter: false,
+    secretIntroFinished: true,
     player: null,           // Reference to active player creature
     enemy: null             // Reference to active enemy creature
   }
 };
+
+const LanMatch = { code: null, side: 0, version: 0, timer: null, syncing: false };
+const isLocalDuel = () => AppState.battle.mode === 'local' || AppState.battle.mode === 'network';
+
+let progressSaveQueue = Promise.resolve();
+function readLocalPersistentProgress() {
+  const readJson = (key, fallback) => {
+    try { return JSON.parse(localStorage.getItem(key) || 'null') || fallback; } catch (error) { return fallback; }
+  };
+  const readValue = (key, fallback = '') => {
+    try { return localStorage.getItem(key) ?? fallback; } catch (error) { return fallback; }
+  };
+  const speciesCodes = readJson('species_qr_codes', {});
+  const unlockedCreatures = readJson('explorer_unlocked_creatures', AppState.unlockedCreatures);
+  const creatureCopies = readJson('explorer_creature_copies', AppState.creatureCopies);
+  return {
+    unlockedCreatures: Array.isArray(unlockedCreatures) ? unlockedCreatures : AppState.unlockedCreatures,
+    creatureCopies: creatureCopies && typeof creatureCopies === 'object' ? creatureCopies : AppState.creatureCopies,
+    profileXP: Number(readValue('explorer_profile_xp')) || AppState.profileXP,
+    secretBattleWins: Number(readValue('secret_battle_bot_wins')) || 0,
+    secretRewardClaimed: readValue('secret_battle_reward_claimed') === 'true',
+    profileName: readValue('explorer_profile_name'),
+    speciesCodes,
+    parkCheckedIn: readValue('reserve_park_checked_in') === 'true',
+    parkEntryCode: readValue(RESERVE_ENTRY_CODE_KEY)
+  };
+}
+
+function writeLocalPersistentProgress(progress) {
+  try {
+    localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(progress.unlockedCreatures));
+    localStorage.setItem('explorer_creature_copies', JSON.stringify(progress.creatureCopies));
+    localStorage.setItem('explorer_profile_xp', String(progress.profileXP));
+    localStorage.setItem('secret_battle_bot_wins', String(progress.secretBattleWins));
+    localStorage.setItem('secret_battle_reward_claimed', String(progress.secretRewardClaimed));
+    if (progress.profileName) localStorage.setItem('explorer_profile_name', progress.profileName);
+    localStorage.setItem('species_qr_codes', JSON.stringify(progress.speciesCodes));
+    localStorage.setItem('reserve_park_checked_in', String(progress.parkCheckedIn));
+    if (progress.parkEntryCode) localStorage.setItem(RESERVE_ENTRY_CODE_KEY, progress.parkEntryCode);
+  } catch (error) {}
+}
+
+function savePersistentProgress() {
+  const progress = readLocalPersistentProgress();
+  progress.unlockedCreatures = [...new Set([...progress.unlockedCreatures, ...AppState.unlockedCreatures])];
+  progress.creatureCopies = { ...AppState.creatureCopies, ...progress.creatureCopies };
+  progress.profileXP = Math.max(progress.profileXP, AppState.profileXP);
+  progress.secretBattleWins = Math.max(progress.secretBattleWins, getSecretBattleWins());
+  progress.secretRewardClaimed = progress.secretRewardClaimed || hasClaimedSecretReward();
+  progress.parkCheckedIn = progress.parkCheckedIn || AppState.parkCheckedIn;
+  writeLocalPersistentProgress(progress);
+  currentProgress = { ...currentProgress, ...progress };
+  progressSaveQueue = progressSaveQueue.catch(() => {}).then(() => saveProgress()).catch(() => {});
+  return progressSaveQueue;
+}
+
+async function syncPersistentProgress() {
+  try {
+    const response = await fetch('/api/progress', { cache: 'no-store' });
+    if (!response.ok) return;
+    const remote = await response.json();
+    const local = readLocalPersistentProgress();
+    const unlockedCreatures = [...new Set([
+      ...(Array.isArray(remote.unlockedCreatures) ? remote.unlockedCreatures : []),
+      ...(Array.isArray(local.unlockedCreatures) ? local.unlockedCreatures : []),
+      ...AppState.unlockedCreatures
+    ])].filter(id => CREATURE_DATABASE[id]);
+    const copies = { ...(remote.creatureCopies || {}), ...(local.creatureCopies || {}) };
+    Object.entries(AppState.creatureCopies).forEach(([id, count]) => {
+      copies[id] = Math.max(Number(copies[id]) || 0, Number(count) || 0);
+    });
+    const progress = {
+      unlockedCreatures,
+      creatureCopies: copies,
+      profileXP: Math.max(0, Number(remote.profileXP) || 0, Number(local.profileXP) || 0, AppState.profileXP),
+      secretBattleWins: Math.max(0, Number(remote.secretBattleWins) || 0, Number(local.secretBattleWins) || 0),
+      secretRewardClaimed: Boolean(remote.secretRewardClaimed || local.secretRewardClaimed),
+      profileName: local.profileName || remote.profileName || 'Explorador',
+      speciesCodes: { ...(remote.speciesCodes || {}), ...(local.speciesCodes || {}) },
+      parkCheckedIn: Boolean(remote.parkCheckedIn || local.parkCheckedIn),
+      parkEntryCode: local.parkEntryCode || remote.parkEntryCode || ''
+    };
+    writeLocalPersistentProgress(progress);
+    AppState.parkCheckedIn = progress.parkCheckedIn;
+    restoreExplorerProgress();
+    renderCollectionGrid();
+    renderFloraFaunaInfo();
+    initializeProfile();
+    restoreSpeciesCodes();
+    renderSecretEncounterStatus();
+    renderParkEntryStatus();
+    if (reserveMap) { renderReserveAnimalMarkers(); renderReservePlayerMarkers(); }
+    await savePersistentProgress();
+  } catch (error) {
+    // localStorage remains the fallback when the prototype is opened without its Node server.
+  }
+}
+
+const RESERVE_ENTRY_CODE_KEY = 'reserve_park_entry_code';
+const DEFAULT_RESERVE_ENTRY_CODE = '600040';
+const RESERVE_BOT_PROFILES = [
+  { id: 'bot-luna', name: 'LunaSerrana', avatar: '🌙', level: 8, xp: 375, animals: ['picaflor', 'buho', 'zorro'], coordinates: [-64.5185, -30.8591] },
+  { id: 'bot-tomi', name: 'Tomi del Monte', avatar: '🧭', level: 12, xp: 580, animals: ['yaguarete', 'pecari', 'quebracho', 'zorro'], coordinates: [-64.5232, -30.8602] },
+  { id: 'bot-uma', name: 'UmaSilvestre', avatar: '🍃', level: 5, xp: 210, animals: ['picaflor', 'pecari'], coordinates: [-64.5202, -30.8641] },
+  { id: 'bot-nico', name: 'Nico Cóndor', avatar: '🦅', level: 16, xp: 805, animals: ['buho', 'yaguarete', 'quebracho', 'picaflor', 'zorro'], coordinates: [-64.5244, -30.8579] }
+];
+
+async function lanRequest(path, body) {
+  const response = await fetch(`/api/rooms${path}`, {
+    method: body ? 'POST' : 'GET',
+    headers: body ? { 'Content-Type': 'application/json' } : {},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'No se pudo conectar con la sala.');
+  return result;
+}
+
+function lanName() {
+  return (document.getElementById('lan-player-name')?.value || '').trim().slice(0, 20) || 'Entrenador';
+}
+
+async function createLanRoom() {
+  try {
+    const room = await lanRequest('', { name: lanName() });
+    LanMatch.code = room.code; LanMatch.side = room.player; LanMatch.version = 0;
+    AppState.battle.localPlayerOneName = lanName();
+    AppState.battle.localPlayerTwoName = 'Esperando rival';
+    AppState.battle.pendingMode = 'local';
+    AppState.battle.networkMatch = true;
+    setLanStatus(`Sala ${room.code}: comparte este código con tu amigo.`);
+    document.getElementById('lan-room-code').value = room.code;
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${lanName()}`;
+    openTeamSelection();
+  } catch (error) { setLanStatus(error.message); }
+}
+
+async function joinLanRoom() {
+  const code = (document.getElementById('lan-room-code')?.value || '').trim().toUpperCase();
+  if (!/^[A-Z0-9]{5}$/.test(code)) return setLanStatus('Escribe el código de 5 letras o números que te compartieron.');
+  try {
+    const room = await lanRequest(`/${code}`, { name: lanName() });
+    LanMatch.code = code; LanMatch.side = room.player; LanMatch.version = 0;
+    AppState.battle.localPlayerOneName = room.names[0];
+    AppState.battle.localPlayerTwoName = lanName();
+    AppState.battle.pendingMode = 'local';
+    AppState.battle.networkMatch = true;
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    setLanStatus(`Conectado a la sala ${code}. Elige tus tres criaturas.`);
+    document.getElementById('select-team-title').textContent = `Equipo de ${lanName()}`;
+    openTeamSelection();
+  } catch (error) { setLanStatus(error.message); }
+}
+
+function setLanStatus(message) {
+  const status = document.getElementById('lan-room-status');
+  if (status) status.textContent = message;
+}
+
+async function submitLanTeam() {
+  const side = LanMatch.side;
+  await lanRequest(`/${LanMatch.code}/team`, { player: side, team: AppState.battle.selectedTeam });
+  setLanStatus('Equipo enviado. Esperando que ambos entrenadores estén listos…');
+  let result;
+  while (true) {
+    result = await lanRequest(`/${LanMatch.code}/state`);
+    if (result.teams[0] && result.teams[1]) break;
+    await new Promise(resolve => setTimeout(resolve, 700));
+  }
+  AppState.battle.localPlayerOneName = result.names[0];
+  AppState.battle.localPlayerTwoName = result.names[1];
+  AppState.battle.localPlayerOneTeam = result.teams[0];
+  AppState.battle.selectedTeam = result.teams[1];
+  confirmTeamAndLaunchBattle();
+}
+
+function makeLanSnapshot() {
+  return {
+    playerTeam: AppState.battle.playerTeam, enemyTeam: AppState.battle.enemyTeam,
+    activePlayerIndex: AppState.battle.activePlayerIndex, activeEnemyIndex: AppState.battle.activeEnemyIndex,
+    localTurn: AppState.battle.localTurn, turn: AppState.battle.turn,
+    finished: Boolean(AppState.battle.finished),
+    log: document.getElementById('battle-log')?.textContent || ''
+  };
+}
+
+async function publishLanSnapshot() {
+  if (!AppState.battle.networkMatch || !LanMatch.code || LanMatch.syncing) return;
+  try {
+    const result = await lanRequest(`/${LanMatch.code}/state`, { state: makeLanSnapshot() });
+    LanMatch.version = result.version;
+  } catch (error) { const log = document.getElementById('battle-log'); if (log) log.textContent = error.message; }
+}
+
+function startLanPolling() {
+  clearInterval(LanMatch.timer);
+  LanMatch.timer = setInterval(async () => {
+    if (!AppState.battle.networkMatch || !LanMatch.code || LanMatch.syncing) return;
+    try {
+      const result = await lanRequest(`/${LanMatch.code}/state`);
+      if (!result.state || result.version <= LanMatch.version) return;
+      LanMatch.syncing = true;
+      const state = result.state;
+      AppState.battle.playerTeam = state.playerTeam;
+      AppState.battle.enemyTeam = state.enemyTeam;
+      AppState.battle.activePlayerIndex = state.activePlayerIndex;
+      AppState.battle.activeEnemyIndex = state.activeEnemyIndex;
+      AppState.battle.localTurn = state.localTurn;
+      AppState.battle.turn = state.turn;
+      AppState.battle.finished = Boolean(state.finished);
+      AppState.battle.player = state.playerTeam[state.activePlayerIndex];
+      AppState.battle.enemy = state.enemyTeam[state.activeEnemyIndex];
+      AppState.battle.localPlayerOneName = result.names[0];
+      AppState.battle.localPlayerTwoName = result.names[1];
+      document.getElementById('battle-log').textContent = state.log;
+      LanMatch.version = result.version;
+      populateAttackControls(); populateSwitchControls(); updateBattleUI(); updateBattleTeamsRosterUI();
+      showBattleControlsForTurn();
+      LanMatch.syncing = false;
+    } catch (_) { /* A brief polling failure is retried on the next cycle. */ }
+  }, 600);
+}
+
+function showBattleControlsForTurn() {
+  const mine = !AppState.battle.finished && (!AppState.battle.networkMatch || AppState.battle.localTurn === LanMatch.side);
+  document.getElementById('battle-controls-main').classList.toggle('hidden', !mine);
+  if (!mine) {
+    document.getElementById('battle-controls-attacks').classList.add('hidden');
+    document.getElementById('battle-controls-switch').classList.add('hidden');
+  }
+  return mine;
+}
 
 // WEBAUDIO SYNTHESIZER
 class SoundEngine {
@@ -236,30 +507,71 @@ class SoundEngine {
 
 const SFX = new SoundEngine();
 
+function showAppPopup(message, options = {}) {
+  const { variant = 'alert', title = 'Proyecto Cielo', placeholder = 'Escribe aquí' } = options;
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'app-popup-backdrop';
+    const dialog = document.createElement('section');
+    dialog.className = 'app-popup';
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    const heading = document.createElement('h3'); heading.textContent = title;
+    const content = document.createElement('p'); content.textContent = String(message ?? '');
+    dialog.append(heading, content);
+    let field = null;
+    if (variant === 'input') {
+      field = document.createElement('input');
+      field.type = 'password'; field.placeholder = placeholder; field.autocomplete = 'current-password';
+      dialog.appendChild(field);
+    }
+    const actions = document.createElement('div'); actions.className = 'app-popup-actions';
+    const finish = value => { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(value); };
+    const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'app-popup-cancel'; cancel.textContent = variant === 'alert' ? 'Cerrar' : 'Cancelar';
+    cancel.addEventListener('click', () => finish(variant === 'input' ? null : false));
+    if (variant !== 'alert') actions.appendChild(cancel);
+    const accept = document.createElement('button'); accept.type = 'button'; accept.className = 'app-popup-accept'; accept.textContent = variant === 'alert' ? 'Aceptar' : 'Continuar';
+    accept.addEventListener('click', () => finish(variant === 'input' ? field.value : true));
+    actions.appendChild(accept); dialog.appendChild(actions); overlay.appendChild(dialog); document.body.appendChild(overlay);
+    const onKey = event => { if (event.key === 'Escape') finish(variant === 'input' ? null : false); if (event.key === 'Enter' && variant === 'input') finish(field.value); };
+    document.addEventListener('keydown', onKey);
+    (field || accept).focus();
+  });
+}
+window.alert = message => { void showAppPopup(message); };
+
 // INITIALIZATION & CLOCK
 let currentAccount = 'explorador';
 let currentProgress = {};
 const TROPHIC_SPECIES = [
-  { id: 'quebracho', name: 'Horco quebracho', icon: '🌳', role: 'Productor', eats: [] },
-  { id: 'molle', name: 'Molle y frutos nativos', icon: '🌿', role: 'Productor', eats: [] },
-  { id: 'picaflor', name: 'Picaflor cometa', icon: '🌸', role: 'Polinizador', eats: ['molle', 'quebracho'] },
-  { id: 'pecari', name: 'Pecarí de collar', icon: '🐗', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
-  { id: 'roedores', name: 'Roedores e insectos', icon: '🐭', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
-  { id: 'buho', name: 'Búho serrano', icon: '🦉', role: 'Depredador', eats: ['roedores'] },
-  { id: 'zorro', name: 'Zorro gris', icon: '🦊', role: 'Depredador', eats: ['roedores', 'picaflor'] },
-  { id: 'yaguarete', name: 'Yaguareté', icon: '🐆', role: 'Depredador tope', eats: ['pecari', 'zorro'] },
-  { id: 'descomponedores', name: 'Hongos y bacterias', icon: '🍄', role: 'Descomponedores', eats: [] }
+  { id: 'yaguarete', name: 'Yaguareté', icon: '🐆', role: 'Depredador tope', level: 'apex', eats: ['pecari', 'zorro'] },
+  { id: 'buho', name: 'Búho serrano', icon: '🦉', role: 'Depredador', level: 'secondary', eats: ['roedores'] },
+  { id: 'zorro', name: 'Zorro gris', icon: '🦊', role: 'Depredador', level: 'secondary', eats: ['roedores', 'picaflor'] },
+  { id: 'picaflor', name: 'Picaflor cometa', icon: '🌸', role: 'Polinizador', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'pecari', name: 'Pecarí de collar', icon: '🐗', role: 'Consumidor primario', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'roedores', name: 'Roedores e insectos', icon: '🐭', role: 'Consumidor primario', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'quebracho', name: 'Horco quebracho', icon: '🌳', role: 'Productor', level: 'producer', eats: [] },
+  { id: 'molle', name: 'Molle y frutos nativos', icon: '🌿', role: 'Productor', level: 'producer', eats: [] },
+  { id: 'descomponedores', name: 'Hongos y bacterias', icon: '🍄', role: 'Descomponedores', level: 'decomposer', eats: [] }
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
+  let savedTheme = 'green';
+  try { savedTheme = localStorage.getItem('app_theme') || 'green'; } catch (_) {}
+  setAppTheme(savedTheme, false);
   await loadAccountProgress();
+  resetBattleSessionState();
   updateClock();
   setInterval(updateClock, 1000);
 
   // Render Initial Views
+  restoreExplorerProgress();
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  renderRegionalFauna();
   initializeProfile();
+  renderSecretEncounterStatus();
+  renderParkEntryStatus();
   renderTrophicNetwork();
   await saveProgress();
   const storedVolume = localStorage.getItem('music_volume');
@@ -288,13 +600,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function progressPayload() {
-  return { unlockedCreatures: AppState.unlockedCreatures, recentlyUnlocked: [], profileName: localStorage.getItem('explorer_profile_name') || 'Explorador', trophicAbsent: currentProgress.trophicAbsent || [], updatedAt: new Date().toISOString() };
+  const local = readLocalPersistentProgress();
+  return { ...currentProgress, ...local, unlockedCreatures: AppState.unlockedCreatures, creatureCopies: AppState.creatureCopies, profileXP: AppState.profileXP, recentlyUnlocked: [], profileName: localStorage.getItem('explorer_profile_name') || 'Explorador', trophicAbsent: currentProgress.trophicAbsent || [], parkCheckedIn: AppState.parkCheckedIn || local.parkCheckedIn, updatedAt: new Date().toISOString() };
 }
 async function saveProgress() {
   try { await fetch('/api/progress', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ account: currentAccount, progress: { ...currentProgress, ...progressPayload() } }) }); } catch (error) { console.warn('No se pudo guardar el progreso en el servidor.', error); }
 }
 async function loadAccountProgress() {
   try {
+    AppState.unlockedCreatures = ['picaflor', 'yaguarete', 'pecari', 'quebracho'];
+    AppState.creatureCopies = { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 };
+    AppState.profileXP = 0;
+    AppState.parkCheckedIn = false;
     const savedName = localStorage.getItem('explorer_profile_name') || 'Mateo';
     const accountName = localStorage.getItem('explorer_account_id') || savedName;
     currentAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
@@ -302,6 +619,21 @@ async function loadAccountProgress() {
     const response = await fetch(`/api/progress?account=${encodeURIComponent(currentAccount)}`);
     currentProgress = await response.json();
     if (Array.isArray(currentProgress.unlockedCreatures)) AppState.unlockedCreatures = currentProgress.unlockedCreatures.filter(id => CREATURE_DATABASE[id]);
+    if (currentProgress.creatureCopies && typeof currentProgress.creatureCopies === 'object') AppState.creatureCopies = { ...AppState.creatureCopies, ...currentProgress.creatureCopies };
+    if (Number.isFinite(Number(currentProgress.profileXP))) AppState.profileXP = Number(currentProgress.profileXP);
+    writeLocalPersistentProgress({
+      unlockedCreatures: AppState.unlockedCreatures,
+      creatureCopies: AppState.creatureCopies,
+      profileXP: AppState.profileXP,
+      secretBattleWins: Number(currentProgress.secretBattleWins) || 0,
+      secretRewardClaimed: Boolean(currentProgress.secretRewardClaimed),
+      profileName: currentProgress.profileName || localStorage.getItem('explorer_profile_name') || 'Explorador',
+      speciesCodes: currentProgress.speciesCodes || {},
+      parkCheckedIn: Boolean(currentProgress.parkCheckedIn),
+      parkEntryCode: currentProgress.parkEntryCode || ''
+    });
+    AppState.parkCheckedIn = Boolean(currentProgress.parkCheckedIn);
+    restoreSpeciesCodes();
     AppState.recentlyUnlocked = [];
   } catch (error) { currentProgress = {}; console.warn('El servidor no está disponible; se inicia una sesión nueva.', error); }
 }
@@ -314,6 +646,17 @@ function updateClock() {
   if (clockEl) clockEl.textContent = `${hrs}:${mins}`;
 }
 
+function setAppTheme(theme, persist = true) {
+  const allowedThemes = ['green', 'light', 'dark'];
+  const selectedTheme = allowedThemes.includes(theme) ? theme : 'green';
+  document.documentElement.dataset.theme = selectedTheme;
+  const selector = document.getElementById('app-theme-select');
+  if (selector) selector.value = selectedTheme;
+  if (persist) {
+    try { localStorage.setItem('app_theme', selectedTheme); } catch (_) {}
+  }
+}
+
 // RENDER COLLECTION GRID
 function renderCollectionGrid() {
   const container = document.getElementById('collection-grid-container');
@@ -321,7 +664,7 @@ function renderCollectionGrid() {
   if (!container) return;
 
   container.innerHTML = '';
-  const allKeys = ['picaflor', 'yaguarete', 'buho', 'pecari', 'zorro', 'quebracho'];
+  const allKeys = ['picaflor', 'yaguarete', 'buho', 'pecari', 'zorro', 'quebracho', 'rey_bosque'];
   const unlockedCount = AppState.unlockedCreatures.length;
 
   if (tag) {
@@ -344,12 +687,16 @@ function renderCollectionGrid() {
 
       card.innerHTML = `
         <div class="card-badge ${badgeClass}">${data.badge.toUpperCase()}</div>
-        <div class="card-img-placeholder">${data.icon}</div>
+        <div class="card-img-placeholder species-thumb"><img src="${data.image || `assets/species/${key}.png`}" alt="${data.name}" hidden><span>${data.icon}</span></div>
         <div class="card-info">
           <h4>${data.name}</h4>
           <p>Nivel ${data.lvl} • Serrano</p>
         </div>
       `;
+      const thumb = card.querySelector('.species-thumb img');
+      const thumbFallback = card.querySelector('.species-thumb span');
+      thumb.onload = () => { thumb.hidden = false; thumbFallback.hidden = true; };
+      thumb.onerror = () => { thumb.hidden = true; thumbFallback.hidden = false; };
     } else {
       card.className = 'creature-card locked';
       card.onclick = () => openQRScanner(key);
@@ -372,8 +719,8 @@ function renderFloraFaunaInfo() {
 
   container.innerHTML = '';
 
-  // Render a species card for every unlocked creature in collection!
-  AppState.unlockedCreatures.forEach(key => {
+  // Keep the original game species visible even when an account has no saved unlocks.
+  Object.keys(CREATURE_DATABASE).forEach(key => {
     const data = CREATURE_DATABASE[key];
     if (!data) return;
 
@@ -381,9 +728,10 @@ function renderFloraFaunaInfo() {
     card.className = 'species-card';
 
     const isRecentlyUnlocked = AppState.recentlyUnlocked.includes(key);
+    const isUnlocked = AppState.unlockedCreatures.includes(key);
     const newBadgeHtml = isRecentlyUnlocked 
       ? `<span class="badge-new-unlocked">✨ NUEVO DESCUBRIMIENTO</span>` 
-      : ``;
+      : `<span class="badge-new-unlocked" style="opacity:${isUnlocked ? '1' : '.65'}">${isUnlocked ? '✅ DESCUBIERTA' : '🔒 POR DESCUBRIR'}</span>`;
 
     card.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -403,62 +751,249 @@ function renderFloraFaunaInfo() {
   });
 }
 
+// Fichas regionales complementarias. Los nombres locales se conservan; cuando no
+// corresponden a una sola especie, la ficha lo indica para evitar falsas precisiones.
+const REGIONAL_FAUNA = [
+  { category:'Peces', icon:'🐟', members:['Mojarras y mojarrones (varias especies)','Percas (Percichthys spp.)','Costeritos (nombre local; especie por confirmar)'], memberImpacts:['Sin mojarras, perderían alimento peces mayores y aves pescadoras; también cambiaría el consumo de insectos y plancton acuático.','Sin percas, algunas presas acuáticas podrían aumentar y los depredadores que comen peces perderían una presa de mayor tamaño.','Sin los pequeños peces llamados costeritos en esa cuenca, aves y peces insectívoros perderían alimento; el efecto exacto depende de la especie local.'], name:'Peces de arroyos y ríos', taxa:'Nombres comunes de peces de agua dulce; las especies exactas dependen de la cuenca.', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20160822101945_sib_9_4_07.JPG&size=700', source:'https://sib.gob.ar/especies/odontostilbe-paraguayensis', habitat:'Arroyos, ríos, lagunas y embalses; cada especie ocupa ambientes y cuencas distintas.', diet:'Invertebrados acuáticos, algas, semillas y pequeños organismos; algunas percas también cazan peces.', role:'Conectan la producción acuática con aves, anfibios y peces mayores.', loss:'Bajarían las presas disponibles para martines pescadores, garzas y peces depredadores; algunas presas pequeñas podrían aumentar y cambiar la comunidad del agua.' },
+  { category:'Anfibios', icon:'🐸', members:['Sapo común (Rhinella arenarum)','Ranita del zarzal (Boana pulchella)','Escuerzo (Ceratophrys spp.; especie según localidad)'], memberImpacts:['Sin el sapo común, podrían aumentar insectos y otros invertebrados que consume; sus serpientes y aves depredadoras perderían una presa frecuente.','Sin la ranita del zarzal, habría menos consumo de insectos en la vegetación y menos alimento para aves, culebras y mamíferos pequeños.','Sin el escuerzo, disminuiría un depredador de insectos y pequeños vertebrados y sus propios depredadores perderían una presa de buen tamaño.'], name:'Anfibios de charcas y pastizales', taxa:'Los escuerzos y nombres de sapos y ranas pueden corresponder a especies distintas según la zona.', image:'https://sib.gob.ar/api/2.0.0/thumb?filename=20091207092535_Hypsiboas_pulchella.jpg&size=400', source:'https://sib.gob.ar/especies/boana-pulchella', habitat:'Humedales, charcas temporarias, pastizales húmedos y bordes de monte.', diet:'Principalmente insectos y otros invertebrados; los escuerzos grandes pueden capturar vertebrados pequeños.', role:'Regulan insectos y sirven de alimento a serpientes, aves y mamíferos.', loss:'Podrían aumentar algunos insectos; a la vez, serpientes, aves y otros depredadores perderían alimento. La disminución también advertiría sobre deterioro del agua y del hábitat.' },
+  { category:'Reptiles', icon:'🐍', members:['Lampalagua / boa de las vizcacheras (Boa constrictor occidentalis)','Víbora de la cruz / yarará grande (Bothrops alternatus)'], memberImpacts:['Si desaparece la lampalagua, podrían crecer algunos roedores y otros mamíferos que caza, y los refugios de vizcacheras perderían un depredador nativo.','Si desaparece la yarará, podrían cambiar las poblaciones de roedores y otras presas pequeñas; también se rompe un eslabón entre esos animales y sus propios depredadores.'], name:'Serpientes nativas', taxa:'Serpientes depredadoras autóctonas de la región.', image:'https://www.ecoregistros.org/site/images/dataimages/2014/08/06/58173/yarara.jpg', source:'https://sib.gob.ar/especies/bothrops-alternatus', habitat:'La lampalagua usa montes secos, pastizales y refugios; la yarará aparece en ambientes variados, incluidos pastizales y humedales.', diet:'La boa consume mamíferos y aves; la yarará caza sobre todo pequeños vertebrados.', role:'Son depredadores que ayudan a regular roedores y otras presas.', loss:'Sin ellas podrían crecer ciertas poblaciones de roedores y alterarse la competencia entre depredadores. La boa, amenazada por pérdida de hábitat y persecución, también es parte del patrimonio nativo.' },
+  { category:'Reptiles', icon:'🦎', members:['Iguana overa / teyú (Salvator merianae)','Lagartos serranos (varias especies; incluye Contomastix serrana)'], memberImpacts:['Sin el teyú, podrían aumentar algunos invertebrados y se reduciría el consumo de frutos que ayuda a mover semillas; zorros y aves perderían una presa.','Sin los lagartos serranos, habría menos control de insectos en roquedales y las serpientes y aves que los cazan perderían alimento.'], name:'Lagartos de bosques y sierras', taxa:'Reptiles diurnos; los lagartos serranos incluyen especies pequeñas propias de ambientes rocosos.', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181109145600_Tupinambis_merianae_de_Martin_Lepez.jpg&size=700', source:'https://sib.gob.ar/especies/salvator-merianae', habitat:'Bosques, matorrales, roquedales, claros soleados y bordes de ambientes rurales.', diet:'La iguana es omnívora; los lagartos serranos comen sobre todo insectos y otros invertebrados.', role:'Controlan invertebrados; la iguana también consume frutos y puede dispersar semillas.', loss:'Podrían aumentar algunos insectos y reducirse la dispersión de semillas. Aves y serpientes perderían presas, y se empobrecerían los ensambles de reptiles.' },
+  { category:'Mamíferos', icon:'🦇', members:['Murciélago cola de ratón (Tadarida brasiliensis)'], name:'Murciélagos insectívoros', taxa:'Murciélago de cola libre nativo, activo principalmente durante la noche.', image:'https://www.ecoregistros.org/site/images/dataimages/2021/03/23/438033/20210323_064258.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=438033', habitat:'Refugios en cuevas, grietas y construcciones; sale a cazar al anochecer.', diet:'Insectos voladores, incluidos numerosos insectos nocturnos.', role:'Consume grandes cantidades de insectos y aporta nutrientes en sus refugios.', loss:'Aumentarían algunos insectos nocturnos y se perdería un controlador natural de plagas; también disminuiría el guano que nutre comunidades de cuevas.' },
+  { category:'Mamíferos', icon:'🐹', members:['Cuis moro (nombre común variable; cuises del género Galea)'], name:'Cuises de los pastizales', taxa:'La identificación del nombre “cuis moro” depende de la localidad y debe verificarse en campo.', image:'https://2.bp.blogspot.com/-lXb3chmr5xU/ULzg_FPVOqI/AAAAAAAAJxk/jsg-mVq-GQQ/s1600/Galea%2Bmusteloides.jpg', source:'https://faunayfloradelargentinanativa.blogspot.com/2011/03/cuis-moro-galea-musteloides.html', habitat:'Pastizales, matorrales y bordes de monte, con refugio entre la vegetación.', diet:'Hierbas, brotes, hojas y semillas.', role:'Es presa de serpientes, aves rapaces y carnívoros; sus recorridos y excrementos mueven semillas y nutrientes.', loss:'Predadores pequeños perderían una presa frecuente y cambiaría el consumo de vegetación. El efecto dependería de qué especie local se llame “cuis moro”.' },
+  { category:'Mamíferos', icon:'🦔', members:['Mulita pampeana (Dasypus hybridus)'], name:'Armadillos de pastizales', taxa:'En registros locales “mulita” puede nombrar a más de una especie de armadillo.', image:'https://www.ecoregistros.org/site/images/albumes/32/1450/mulita.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=1450', habitat:'Pastizales y pampas; también bordes de bosques y zonas rurales.', diet:'Hormigas, termitas y otros invertebrados del suelo.', role:'Remueve y airea el suelo al buscar alimento; también forma parte de la dieta de grandes carnívoros.', loss:'Podrían cambiar las poblaciones de insectos y disminuir la remoción del suelo. Puma y otros carnívoros perderían una presa potencial.' },
+  { category:'Mamíferos', icon:'🐾', members:['Comadreja overa (Didelphis albiventris)','Comadrejita enana (Thylamys spp.; especie según región)'], name:'Marsupiales nativos', taxa:'La comadrejita enana es un nombre común regional para especies pequeñas del género Thylamys.', image:'https://www.ecoregistros.org/site/images/dataimages/2023/07/08/540887/DSCN5621.JPG', source:'https://www.ecoregistros.org/site/imagen.php?id=540887', habitat:'Bosques, matorrales, quebradas y ambientes periurbanos; las especies pequeñas usan pastizales y arbustos.', diet:'La overa es oportunista: frutos, insectos y pequeños animales; las comadrejitas consumen sobre todo insectos.', role:'Dispersan semillas y consumen insectos; son alimento para búhos, zorros y serpientes.', loss:'Podrían aumentar algunos insectos y reducirse la dispersión de semillas. Sus depredadores perderían alimento y se alteraría la red entre arbustos, frutos e insectos.' },
+  { category:'Mamíferos', icon:'🐈', members:['Gato montés (Leopardus geoffroyi)','Puma (Puma concolor)','Corzuela parda (Subulo gouazoubira)'], name:'Felinos y herbívoros del monte', taxa:'Incluye dos depredadores y un ciervo nativo; ocupan hábitats parcialmente compartidos.', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181108143926_Leopardus_de_Joaquin_Ghiorzo.jpg&size=700', source:'https://sib.gob.ar/especies/leopardus-geoffroyi', habitat:'Montes, bosques, matorrales y sierras; la corzuela usa cobertura vegetal y el puma grandes territorios.', diet:'Felinos cazan roedores, aves y otros mamíferos; el puma también puede cazar corzuelas. La corzuela come hojas, brotes y frutos.', role:'Los felinos regulan presas; la corzuela ramonea y dispersa semillas.', loss:'Sin felinos podrían aumentar algunas presas y cambiar el ramoneo; sin corzuelas, los depredadores perderían alimento y se modificaría el consumo de brotes y frutos.' },
+  { category:'Aves', icon:'🐦', members:['Martín pescador chico (Chloroceryle americana; nombre compartido por otras especies)','Caburé chico (Glaucidium brasilianum)'], name:'Aves cazadoras de agua y monte', taxa:'Aves depredadoras; el nombre martín pescador puede referirse a varias especies de la zona.', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20110617130509_Glaucidium_brasilianum_Cabure_Chico.jpg&size=700', source:'https://sib.gob.ar/especies/glaucidium-brasilianum', habitat:'El martín pescador vive junto a cursos de agua; el caburé habita montes y arboledas.', diet:'Peces pequeños para el martín pescador; insectos, reptiles, aves y roedores pequeños para el caburé.', role:'Regulan presas acuáticas y terrestres y conectan la cadena del agua con la del monte.', loss:'La desaparición del martín pescador puede señalar o causar cambios en las comunidades de peces; sin caburé podrían aumentar algunos roedores e insectos y sus presas perderían un controlador.' },
+  { category:'Aves', icon:'🪶', members:['Perdiz serrana (tinámido serrano; especie según localidad)','Martineta copetona (Eudromia elegans)'], name:'Aves de pastizales y sierras', taxa:'Aves terrestres de espacios abiertos; el nombre “perdiz serrana” requiere precisión local.', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181102143553_Eudromia_elegans_de_Martin_Lepez.JPG&size=700', source:'https://sib.gob.ar/especies/eudromia-elegans', habitat:'Pastizales, estepas arbustivas y ambientes abiertos serranos.', diet:'Semillas, brotes, frutos e insectos.', role:'Remueven semillas y consumen invertebrados; son presas de zorros y aves rapaces.', loss:'Se reduciría el movimiento de semillas y el consumo de insectos; depredadores perderían presas, y cambiaría la composición de pastizales y matorrales.' },
+  { category:'Aves', icon:'🦜', members:['Catita verde (especie local por confirmar)','Cotorra serrana (nombre común local; especie por confirmar)'], name:'Loros pequeños de las sierras', taxa:'Los nombres “catita verde” y “cotorra serrana” pueden designar distintas especies según la región.', image:'https://1.bp.blogspot.com/-sLq8ShqAWgk/ThrdRZheeYI/AAAAAAAAAoE/dfhK0biXI_g/s1600/RB01%2BJul.%2B10%2B15.29.jpg', source:'https://sib.gob.ar/especies', habitat:'Sierras, quebradas y montes; usan árboles para alimentarse, refugiarse y nidificar.', diet:'Semillas, frutos, brotes y flores.', role:'Pueden dispersar semillas y son parte de las cadenas de alimento del bosque serrano.', loss:'Bajaría la dispersión de algunas semillas y se perderían interacciones de nidificación y alimentación; sus depredadores tendrían menos presas.' },
+  { category:'Aves', icon:'🎶', members:['Calandria (Mimus spp.)','Jilguero serrano (Sicalis spp.; nombre según región)','Tordo (varias especies locales)'], name:'Aves de pastizales y arboledas', taxa:'Los nombres comunes pueden abarcar varias especies; se debe precisar con la localidad y el registro.', image:'https://www.ecoregistros.org/site/images/dataimages/2015/04/05/92867/Calandria-Grande-Mimus-saturninus-_MG_4728-1200.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=92867', habitat:'Pastizales, matorrales, arboledas abiertas y áreas rurales.', diet:'Combinan insectos, frutos y semillas; la dieta cambia entre especies y estaciones.', role:'Dispersan semillas, consumen insectos y sostienen a rapaces y otros depredadores.', loss:'Podrían aumentar ciertos insectos o semillas, según qué especie falte; disminuirían la dispersión y una fuente de alimento para depredadores.' },
+  { category:'Aves', icon:'🪶', members:['Jote cabeza negra (Coragyps atratus)','Jote cabeza colorada (Cathartes aura)'], name:'Aves carroñeras', taxa:'Dos especies nativas de jotes que localizan y consumen carroña.', image:'https://sib.gob.ar/api/2.0.0/thumb?filename=coraatra03.jpg&size=400', source:'https://sib.gob.ar/especies/coragyps-atratus', habitat:'Ambientes abiertos y serranos; planean sobre grandes áreas en busca de carroña.', diet:'Carroña.', role:'Eliminan restos animales y contribuyen al reciclaje de nutrientes.', loss:'La carroña tardaría más en desaparecer y cambiarían las comunidades de organismos que la consumen; se perdería un servicio clave de limpieza natural.' }
+];
+
+const REGIONAL_FAUNA_IMPACTS = {
+  'Murciélago cola de ratón (Tadarida brasiliensis)': 'Aumentarían algunos insectos nocturnos y se perdería control natural de plagas; los animales que usan sus colonias como fuente de guano perderían nutrientes.',
+  'Cuis moro (nombre común variable; cuises del género Galea)': 'Serpientes, búhos y carnívoros tendrían menos presas; también cambiaría el consumo de hierbas y semillas en el pastizal.',
+  'Mulita pampeana (Dasypus hybridus)': 'Disminuirían las excavaciones que airean el suelo, podrían cambiar las poblaciones de hormigas y termitas y algunos carnívoros perderían una presa.',
+  'Comadreja overa (Didelphis albiventris)': 'Se reduciría la dispersión de semillas y el consumo de insectos y pequeños animales; zorros, búhos y serpientes tendrían menos alimento.',
+  'Comadrejita enana (Thylamys spp.; especie según región)': 'Podrían aumentar insectos pequeños y sus depredadores perderían una presa; el efecto preciso depende de la especie local de Thylamys.',
+  'Gato montés (Leopardus geoffroyi)': 'Podrían aumentar roedores y aves pequeñas, y otros depredadores competirían por esas presas.',
+  'Puma (Puma concolor)': 'Podrían aumentar herbívoros en algunos lugares y ramonear más brotes; también cambiaría la disponibilidad de carroña para jotes y otros carroñeros.',
+  'Corzuela parda (Subulo gouazoubira)': 'Pumas y otros carnívoros perderían una presa; habría menos dispersión de semillas y cambiaría el consumo de hojas, frutos y brotes.',
+  'Martín pescador chico (Chloroceryle americana; nombre compartido por otras especies)': 'Sus peces presa podrían cambiar en número y conducta; además, búhos y otras rapaces perderían una presa ocasional.',
+  'Caburé chico (Glaucidium brasilianum)': 'Podrían aumentar algunos insectos, roedores y aves pequeñas; serpientes y mamíferos carnívoros perderían una presa.',
+  'Perdiz serrana (tinámido serrano; especie según localidad)': 'Se reduciría el movimiento de semillas en pastizales y zorros y rapaces tendrían menos alimento; el impacto exacto depende de la especie serrana local.',
+  'Martineta copetona (Eudromia elegans)': 'Cambiaría el consumo de semillas, brotes e insectos en ambientes abiertos y sus depredadores perderían una presa.',
+  'Catita verde (especie local por confirmar)': 'Se reduciría el consumo y movimiento de semillas y frutos; aves rapaces perderían presas y los sitios de nidificación quedarían menos ocupados.',
+  'Cotorra serrana (nombre común local; especie por confirmar)': 'Disminuiría el movimiento de semillas y la actividad de aves que usan los árboles; las especies exactas dependen del registro local.',
+  'Calandria (Mimus spp.)': 'Habría menos consumo de insectos y transporte de semillas; las rapaces perderían una presa en bordes de monte y pastizal.',
+  'Jilguero serrano (Sicalis spp.; nombre según región)': 'Podrían cambiar las poblaciones de semillas e insectos pequeños y las rapaces tendrían menos aves pequeñas para cazar.',
+  'Tordo (varias especies locales)': 'Se modificaría el consumo de insectos y semillas y algunas aves que dependen de los tordos para parasitar sus nidos perderían hospedadores.',
+  'Jote cabeza negra (Coragyps atratus)': 'Los restos animales permanecerían más tiempo y habría menos reciclaje rápido de nutrientes en espacios abiertos.',
+  'Jote cabeza colorada (Cathartes aura)': 'Habría menos búsqueda y consumo de carroña en áreas serranas; otros carroñeros recibirían más competencia por los restos disponibles.'
+};
+
+function renderRegionalFauna() {
+  const gallery = document.getElementById('regional-fauna-gallery');
+  if (!gallery) return;
+  gallery.innerHTML = '';
+  REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) => {
+    const card = document.createElement('article');
+    card.className = 'regional-fauna-card';
+    const figure = document.createElement('figure');
+    figure.className = 'regional-fauna-photo';
+    const image = document.createElement('img');
+    image.src = entry.image;
+    image.alt = `Foto representativa de ${entry.name}; ficha de ${member}`;
+    image.loading = 'lazy';
+    image.referrerPolicy = 'no-referrer';
+    image.onerror = () => { image.hidden = true; figure.classList.add('photo-unavailable'); figure.dataset.icon = entry.icon; };
+    figure.appendChild(image);
+    const credit = document.createElement('a');
+    credit.href = entry.source;
+    credit.target = '_blank';
+    credit.rel = 'noopener noreferrer';
+    credit.textContent = 'Ver foto de referencia ↗';
+    figure.appendChild(credit);
+    const body = document.createElement('div');
+    body.className = 'regional-fauna-body';
+    const label = document.createElement('span');
+    label.className = 'regional-fauna-category';
+    label.textContent = entry.category;
+    const heading = document.createElement('h5');
+    heading.textContent = `${entry.icon} ${member}`;
+    body.append(label, heading);
+    const group = document.createElement('p');
+    group.className = 'regional-fauna-group';
+    group.textContent = `Grupo: ${entry.name} · ${entry.taxa}`;
+    body.appendChild(group);
+    const disappearanceImpact = entry.memberImpacts?.[memberIndex] || REGIONAL_FAUNA_IMPACTS[member] || `${member.split('(')[0].trim()}: ${entry.loss}`;
+    [['Hábitat', entry.habitat], ['Alimentación', entry.diet], ['Función en la red', entry.role], ['Si desaparece', disappearanceImpact]].forEach(([title, content]) => {
+      const paragraph = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = `${title}: `;
+      paragraph.append(strong, document.createTextNode(content));
+      body.appendChild(paragraph);
+    });
+    card.append(figure, body);
+    gallery.appendChild(card);
+  }));
+}
+
 function renderTrophicNetwork() {
   const container = document.getElementById('trophic-network');
   if (!container) return;
   const absent = new Set(currentProgress.trophicAbsent || []);
   container.innerHTML = '';
-  TROPHIC_SPECIES.forEach(species => {
-    const item = document.createElement('label');
-    item.className = `trophic-species ${absent.has(species.id) ? 'is-absent' : ''}`;
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox'; checkbox.checked = !absent.has(species.id);
-    checkbox.setAttribute('aria-label', `${species.name}: presente en la simulación`);
-    checkbox.addEventListener('change', () => {
-      const next = new Set(currentProgress.trophicAbsent || []);
-      if (checkbox.checked) next.delete(species.id); else next.add(species.id);
-      currentProgress.trophicAbsent = [...next];
-      renderTrophicNetwork(); saveProgress();
+  const diagram = document.createElement('div');
+  diagram.className = 'trophic-diagram';
+  diagram.setAttribute('role', 'group');
+  diagram.setAttribute('aria-label', 'Red trófica interactiva. Selecciona una especie para simular su desaparición.');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('trophic-connections');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = '<defs><marker id="trophic-arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"></path></marker></defs>';
+  diagram.appendChild(svg);
+
+  const tiers = [
+    ['apex', 'Depredador tope'],
+    ['secondary', 'Consumidores secundarios'],
+    ['primary', 'Consumidores primarios'],
+    ['producer', 'Productores'],
+    ['decomposer', 'Descomponedores']
+  ];
+  tiers.forEach(([level, title]) => {
+    const row = document.createElement('div');
+    row.className = `trophic-level trophic-level-${level}`;
+    const label = document.createElement('div'); label.className = 'trophic-level-label'; label.textContent = title;
+    row.appendChild(label);
+    const nodes = document.createElement('div'); nodes.className = 'trophic-level-nodes';
+    TROPHIC_SPECIES.filter(species => species.level === level).forEach(species => {
+      const present = !absent.has(species.id);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `trophic-node ${present ? '' : 'is-absent'}`;
+      button.dataset.speciesId = species.id;
+      button.setAttribute('aria-pressed', String(present));
+      button.setAttribute('aria-label', `${species.name}, ${species.role}. ${present ? 'Presente. Toca para simular su desaparición.' : 'Ausente. Toca para recuperarla en la simulación.'}`);
+      const icon = document.createElement('span'); icon.className = 'trophic-node-icon'; icon.textContent = species.icon;
+      const name = document.createElement('span'); name.className = 'trophic-node-name'; name.textContent = species.name;
+      const role = document.createElement('span'); role.className = 'trophic-node-role'; role.textContent = present ? species.role : 'Ausente';
+      button.append(icon, name, role);
+      button.addEventListener('click', () => {
+        const next = new Set(currentProgress.trophicAbsent || []);
+        if (next.has(species.id)) next.delete(species.id); else next.add(species.id);
+        currentProgress.trophicAbsent = [...next];
+        renderTrophicNetwork();
+        saveProgress();
+      });
+      nodes.appendChild(button);
     });
-    const text = document.createElement('span');
-    text.textContent = `${species.icon} ${species.name} · ${species.role}`;
-    item.append(checkbox, text); container.appendChild(item);
+    row.appendChild(nodes); diagram.appendChild(row);
   });
-  const links = document.createElement('div');
-  links.className = 'trophic-links';
-  TROPHIC_SPECIES.filter(species => species.eats.length).forEach(consumer => {
-    consumer.eats.forEach(foodId => {
-      const food = TROPHIC_SPECIES.find(item => item.id === foodId);
-      if (!food) return;
-      const link = document.createElement('span');
-      link.className = `trophic-link ${absent.has(consumer.id) || absent.has(foodId) ? 'is-absent' : ''}`;
-      link.textContent = `${food.icon} ${food.name} → ${consumer.icon} ${consumer.name}`;
-      links.appendChild(link);
-    });
-  });
-  container.appendChild(links);
+  container.appendChild(diagram);
+  const legend = document.createElement('div');
+  legend.className = 'trophic-legend';
+  legend.textContent = 'Las flechas muestran el flujo de alimento y energía; las flechas punteadas señalan relaciones afectadas.';
+  container.appendChild(legend);
+  drawTrophicConnections(diagram, svg, absent);
   renderTrophicImpact();
 }
+
+function drawTrophicConnections(diagram, svg, absent) {
+  const bounds = diagram.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  svg.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`);
+  svg.setAttribute('width', String(bounds.width));
+  svg.setAttribute('height', String(bounds.height));
+  svg.querySelectorAll('path.trophic-edge').forEach(path => path.remove());
+  const byId = new Map([...diagram.querySelectorAll('.trophic-node')].map(node => [node.dataset.speciesId, node]));
+  const decomposerId = 'descomponedores';
+  const edges = [];
+  TROPHIC_SPECIES.forEach(consumer => {
+    consumer.eats.forEach(foodId => edges.push([foodId, consumer.id]));
+  });
+  TROPHIC_SPECIES.filter(species => species.id !== decomposerId).forEach(species => edges.push([species.id, decomposerId]));
+  edges.forEach(([foodId, consumerId]) => {
+    const food = byId.get(foodId), consumer = byId.get(consumerId);
+    if (!food || !consumer) return;
+    const source = food.getBoundingClientRect(), target = consumer.getBoundingClientRect();
+    const centerX1 = source.left + source.width / 2 - bounds.left;
+    const centerY1 = source.top + source.height / 2 - bounds.top;
+    const centerX2 = target.left + target.width / 2 - bounds.left;
+    const centerY2 = target.top + target.height / 2 - bounds.top;
+    const length = Math.max(1, Math.hypot(centerX2 - centerX1, centerY2 - centerY1));
+    const sourceOffset = Math.min(30, length * .22);
+    const targetOffset = Math.min(32, length * .24);
+    const x1 = centerX1 + (centerX2 - centerX1) / length * sourceOffset;
+    const y1 = centerY1 + (centerY2 - centerY1) / length * sourceOffset;
+    const x2 = centerX2 - (centerX2 - centerX1) / length * targetOffset;
+    const y2 = centerY2 - (centerY2 - centerY1) / length * targetOffset;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const bend = Math.max(22, Math.abs(y2 - y1) * .45);
+    const direction = y2 < y1 ? -1 : 1;
+    path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${y1 + bend * direction}, ${x2} ${y2 - bend * direction}, ${x2} ${y2}`);
+    path.setAttribute('class', `trophic-edge ${absent.has(foodId) || absent.has(consumerId) ? 'is-disrupted' : ''}`);
+    path.setAttribute('marker-end', 'url(#trophic-arrowhead)');
+    svg.appendChild(path);
+  });
+}
+function refreshTrophicConnections() {
+  const diagram = document.querySelector('#trophic-network .trophic-diagram');
+  const svg = diagram?.querySelector('.trophic-connections');
+  if (diagram && svg) drawTrophicConnections(diagram, svg, new Set(currentProgress.trophicAbsent || []));
+}
+window.addEventListener('resize', () => requestAnimationFrame(refreshTrophicConnections));
 function renderTrophicImpact() {
   const output = document.getElementById('trophic-impact');
   if (!output) return;
   const absent = new Set(currentProgress.trophicAbsent || []);
-  if (!absent.size) { output.textContent = 'La red está completa. Las flechas indican quién se alimenta de quién; cambiar una especie puede afectar varias poblaciones.'; return; }
-  const effects = [];
-  for (const id of absent) {
-    const gone = TROPHIC_SPECIES.find(item => item.id === id);
-    if (!gone) continue;
-    const consumers = TROPHIC_SPECIES.filter(item => item.eats.includes(id) && !absent.has(item.id));
-    if (gone.role === 'Productor') effects.push(`Sin ${gone.name}, disminuyen alimento y refugio para herbívoros, y puede bajar la polinización y regeneración del bosque.`);
-    else if (gone.role === 'Descomponedores') effects.push('Sin descomponedores, se acumula materia orgánica y se ralentiza el reciclaje de nutrientes del suelo.');
-    else if (gone.role.includes('Depredador')) effects.push(`Sin ${gone.name}, sus presas pueden aumentar y consumir más plantas; ${consumers.length ? `${consumers.map(x => x.name).join(' y ')} también pierde una fuente de alimento.` : 'otras especies pueden ocupar parte de su rol.'}`);
-    else effects.push(`Sin ${gone.name}, cambia la dispersión de semillas o la polinización y sus depredadores pierden alimento${consumers.length ? ` (${consumers.map(x => x.name).join(', ')})` : ''}.`);
+  if (!absent.size) {
+    output.textContent = 'La red está completa. Selecciona una especie para consultar qué efectos directos y en cadena podría provocar su desaparición.';
+    return;
   }
-  output.textContent = `Simulación hipotética: ${effects.join(' ')}`;
+
+  const scenarios = {
+    yaguarete: ['Podrían aumentar el pecarí y otros animales que hoy controla este depredador; el zorro también pierde una fuente posible de alimento.', 'Al haber más herbívoros, crecería la presión sobre frutos, brotes y plantas jóvenes. Menos vegetación puede reducir alimento y refugio para otras especies, y la competencia entre depredadores podría cambiar.'],
+    buho: ['Los roedores e insectos que consume perderían un depredador y podrían aumentar si hay suficiente alimento y refugio.', 'Más roedores pueden consumir más semillas y brotes, dificultando la regeneración de plantas. Zorros y otros depredadores podrían compensar parcialmente, pero también competirían por esas presas.'],
+    zorro: ['Los roedores e insectos y algunas aves pequeñas, como el picaflor, perderían uno de sus depredadores.', 'Si aumentan los roedores, podrían consumir más semillas y brotes. El búho podría encontrar más presas, aunque no reemplaza todos los vínculos del zorro; también habría menos competencia entre carnívoros.'],
+    picaflor: ['La polinización de algunas plantas disminuiría y el zorro perdería una posible presa.', 'Con menos flores polinizadas, algunas plantas podrían producir menos frutos y semillas. Eso reduce alimento para consumidores como el pecarí y puede afectar la renovación de la vegetación. Otras especies polinizadoras podrían compensar una parte.'],
+    pecari: ['El yaguareté perdería una presa importante; además habría menos consumo de frutos y menos dispersión de semillas por el pecarí.', 'Algunas plantas podrían producir más frutos maduros, pero sus semillas viajarían menos y se concentrarían cerca de la planta madre. El depredador podría buscar otras presas, aumentando la presión sobre ellas.'],
+    roedores: ['El búho y el zorro tendrían menos alimento disponible.', 'Disminuiría el consumo de semillas por roedores, lo que podría favorecer la germinación de algunas plantas. A la vez, búhos y zorros podrían cambiar de presa y elevar la presión sobre otras especies pequeñas.'],
+    quebracho: ['Se perderían alimento, sombra y refugio asociados a este árbol; los consumidores que aprovechan sus semillas y brotes tendrían menos recursos.', 'La menor cobertura vegetal puede aumentar la exposición del suelo al sol y a la erosión, reducir sitios de nidificación y dificultar la regeneración del bosque. Otras plantas podrían ocupar parte del espacio, pero no reemplazan de inmediato un árbol maduro.'],
+    molle: ['Disminuirían los frutos y el refugio que aporta el molle; el picaflor, el pecarí y otros consumidores conectados a sus recursos tendrían menos alimento.', 'Menos flores y frutos puede afectar la polinización y dispersión de semillas. Los animales podrían concentrarse en otras plantas, elevando su consumo y alterando la regeneración de la vegetación nativa.'],
+    descomponedores: ['Hojas, restos y organismos muertos tardarían más en descomponerse.', 'Se reciclarían menos nutrientes hacia el suelo, que podría perder fertilidad con el tiempo. Eso debilita el crecimiento de productores y, en consecuencia, reduce alimento y refugio para los consumidores de toda la red.']
+  };
+
+  output.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.className = 'trophic-impact-heading';
+  heading.textContent = absent.size === 1 ? 'Simulación hipotética: desaparición de una especie' : `Simulación hipotética: ${absent.size} especies ausentes`;
+  output.appendChild(heading);
+  absent.forEach(id => {
+    const species = TROPHIC_SPECIES.find(item => item.id === id);
+    const effect = scenarios[id];
+    if (!species || !effect) return;
+    const article = document.createElement('section');
+    article.className = 'trophic-impact-species';
+    const title = document.createElement('h5');
+    title.textContent = `${species.icon} Si desaparece ${species.name}`;
+    const direct = document.createElement('p');
+    const directLabel = document.createElement('strong'); directLabel.textContent = 'Efecto directo: ';
+    direct.append(directLabel, document.createTextNode(effect[0]));
+    const cascade = document.createElement('p');
+    const cascadeLabel = document.createElement('strong'); cascadeLabel.textContent = 'Efecto en cadena: ';
+    cascade.append(cascadeLabel, document.createTextNode(effect[1]));
+    article.append(title, direct, cascade);
+    output.appendChild(article);
+  });
+  const caveat = document.createElement('small');
+  caveat.className = 'trophic-impact-caveat';
+  caveat.textContent = 'Son consecuencias posibles, no una predicción exacta: dependen de la cantidad de individuos, la estación, el hábitat y de si otras especies pueden cubrir esos roles.';
+  output.appendChild(caveat);
 }
 
 async function openAdminPanel() {
-  const pin = window.prompt('PIN de administrador:');
+  const pin = await showAppPopup('Escribe el PIN de administrador.', { variant: 'input', title: 'Acceso administrador', placeholder: 'PIN' });
   if (pin === null) return;
   const panel = document.getElementById('admin-panel');
   panel.hidden = false;
@@ -483,7 +1018,7 @@ function renderAdminSaves(saves, pin) {
     const label = document.createElement('span'); label.textContent = `Respaldo ${index + 1} · ${new Date(save.createdAt).toLocaleString('es-AR')}`;
     const button = document.createElement('button'); button.className = 'btn-figma btn-secondary'; button.textContent = 'Restaurar';
     button.addEventListener('click', async () => {
-      if (!confirm('¿Restaurar todas las cuentas a este respaldo?')) return;
+      if (!await showAppPopup('¿Restaurar todas las cuentas a este respaldo?', { variant: 'confirm', title: 'Restaurar respaldo' })) return;
       try { await adminRequest({ pin, action: 'restore', index }); location.reload(); }
       catch (error) { document.getElementById('admin-status').textContent = error.message; }
     });
@@ -514,6 +1049,8 @@ function navigateTo(screenId) {
     renderFloraFaunaInfo();
   } else if (screenId === 'coleccion') {
     renderCollectionGrid();
+  } else if (screenId === 'pelea') {
+    renderSecretEncounterStatus();
   }
 
   // Hide all screens
@@ -526,13 +1063,15 @@ function navigateTo(screenId) {
     target.classList.add('active');
     AppState.currentScreen = screenId;
   }
+  if (screenId === 'info_red_trofica') requestAnimationFrame(refreshTrophicConnections);
 
-  setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home');
+  setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home', screenId === 'battle_arena');
   if (screenId === 'mapa') initializeReserveMap();
 
   // AUTOMATIC HORIZONTAL ORIENTATION FOR BATTLE SCREEN!
   if (screenId === 'battle_arena') {
     setLandscapeMode(true);
+    requestAnimationFrame(() => playBattleEntranceAnimation());
   } else {
     setLandscapeMode(false);
   }
@@ -548,6 +1087,23 @@ function navigateTo(screenId) {
   });
 }
 
+function playBattleEntranceAnimation() {
+  const arena = document.getElementById('screen-battle_arena');
+  const message = document.getElementById('battle-intro-message');
+  if (!arena || !message) return;
+
+  const battle = AppState.battle;
+  if (battle.isSecretEncounter) message.textContent = '¡Cynthia, guardiana de Villa Cielo, te desafía!';
+  else if (battle.networkMatch) message.textContent = '¡Comienza el duelo por Wi‑Fi!';
+  else if (battle.mode === 'local') message.textContent = `¡${battle.localPlayerTwoName} te desafía!`;
+  else message.textContent = `¡${battle.enemy?.name || 'Un rival'} te desafía!`;
+
+  arena.classList.remove('battle-entering');
+  void arena.offsetWidth;
+  arena.classList.add('battle-entering');
+  window.setTimeout(() => arena.classList.remove('battle-entering'), 1750);
+}
+
 function initializeProfile() {
   const input = document.getElementById('profile-name');
   if (!input) return;
@@ -557,6 +1113,119 @@ function initializeProfile() {
   if (accountInput) accountInput.value = currentAccount;
   input.value = name;
   renderProfileGreeting(name);
+  renderExplorerProgress();
+}
+
+function restoreExplorerProgress() {
+  try {
+    const savedCollection = Array.isArray(currentProgress.unlockedCreatures)
+      ? currentProgress.unlockedCreatures
+      : JSON.parse(localStorage.getItem('explorer_unlocked_creatures') || 'null');
+    if (Array.isArray(savedCollection)) {
+      AppState.unlockedCreatures = [...new Set(savedCollection.filter(id => CREATURE_DATABASE[id]))];
+    }
+    const savedCopies = currentProgress.creatureCopies || JSON.parse(localStorage.getItem('explorer_creature_copies') || 'null');
+    AppState.unlockedCreatures.forEach(id => {
+      const copies = Number(savedCopies?.[id]);
+      AppState.creatureCopies[id] = Number.isInteger(copies) && copies > 0 ? copies : 1;
+    });
+    const savedXP = Number(currentProgress.profileXP ?? localStorage.getItem('explorer_profile_xp'));
+    if (Number.isFinite(savedXP) && savedXP >= 0) AppState.profileXP = savedXP;
+  } catch (error) {
+    // Keep the default collection and progress when browser storage is unavailable.
+  }
+}
+
+function getExplorerLevel() {
+  const xpPerLevel = 500;
+  const xp = Math.max(0, AppState.profileXP);
+  return {
+    level: Math.floor(xp / xpPerLevel) + 1,
+    currentXP: xp % xpPerLevel,
+    xpPerLevel,
+    totalXP: xp
+  };
+}
+
+function renderExplorerProgress() {
+  const levelLabel = document.getElementById('profile-level-label');
+  const xpFill = document.getElementById('profile-xp-fill');
+  const xpLabel = document.getElementById('profile-xp-label');
+  const xpTrack = document.querySelector('.profile-xp-track');
+  const animalList = document.getElementById('profile-animal-list');
+  const level = getExplorerLevel();
+  if (levelLabel) levelLabel.textContent = `Nivel ${level.level} · ${level.totalXP} EXP`;
+  if (xpFill) xpFill.style.width = `${(level.currentXP / level.xpPerLevel) * 100}%`;
+  if (xpLabel) xpLabel.textContent = `${level.currentXP} / ${level.xpPerLevel} EXP para el próximo nivel`;
+  if (xpTrack) xpTrack.setAttribute('aria-valuenow', String(level.currentXP));
+  if (animalList) {
+    animalList.replaceChildren();
+    if (!AppState.unlockedCreatures.length) {
+      animalList.textContent = 'Aún no descubriste animales.';
+    } else {
+      AppState.unlockedCreatures.forEach(id => {
+        const creature = CREATURE_DATABASE[id];
+        if (!creature) return;
+        const chip = document.createElement('span');
+        chip.className = 'profile-animal-chip';
+        const copies = AppState.creatureCopies[id] || 1;
+        chip.textContent = `${creature.icon} ${creature.name}${copies > 1 ? ` ×${copies}` : ''}`;
+        animalList.append(chip);
+      });
+    }
+  }
+}
+
+function awardProfileXP(amount) {
+  const previousLevel = getExplorerLevel().level;
+  AppState.profileXP += amount;
+  try { localStorage.setItem('explorer_profile_xp', String(AppState.profileXP)); } catch (error) {}
+  savePersistentProgress();
+  renderExplorerProgress();
+  const nextLevel = getExplorerLevel().level;
+  if (nextLevel > previousLevel) {
+    const greeting = document.getElementById('profile-greeting');
+    if (greeting) greeting.textContent = `¡Subiste al nivel ${nextLevel}! Sigue explorando la reserva.`;
+  }
+}
+
+async function shareExplorerProfile() {
+  const name = document.getElementById('profile-name')?.value.trim() || 'Explorador';
+  const level = getExplorerLevel();
+  const animals = AppState.unlockedCreatures
+    .map(id => CREATURE_DATABASE[id])
+    .filter(Boolean)
+    .map(creature => `${creature.icon} ${creature.name}${AppState.creatureCopies[creature.id] > 1 ? ` ×${AppState.creatureCopies[creature.id]}` : ''}`);
+  const profileText = [
+    `🌿 Perfil de explorador · Proyecto Cielo`,
+    `Nombre: ${name}`,
+    `Nivel ${level.level} · ${level.totalXP} EXP`,
+    `Animales descubiertos (${animals.length}/${Object.keys(CREATURE_DATABASE).length}): ${animals.join(', ') || 'ninguno todavía'}`
+  ].join('\n');
+  const status = document.getElementById('profile-share-status');
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: `Perfil de ${name}`, text: profileText });
+      if (status) status.textContent = '¡Perfil compartido!';
+      return;
+    }
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(profileText);
+    } else {
+      const copyField = document.createElement('textarea');
+      copyField.value = profileText;
+      copyField.style.position = 'fixed';
+      copyField.style.opacity = '0';
+      document.body.append(copyField);
+      copyField.select();
+      const copied = document.execCommand('copy');
+      copyField.remove();
+      if (!copied) throw new Error('No se pudo copiar');
+    }
+    if (status) status.textContent = 'Perfil copiado. Ya puedes pegarlo y compartirlo.';
+  } catch (error) {
+    if (error.name !== 'AbortError' && status) status.textContent = 'No se pudo compartir. Inténtalo otra vez.';
+  }
 }
 
 function renderProfileGreeting(name) {
@@ -568,18 +1237,214 @@ function saveProfileName() {
   const input = document.getElementById('profile-name');
   const name = input?.value.trim().slice(0, 24) || 'Explorador';
   if (input) input.value = name;
-  localStorage.setItem('explorer_profile_name', name);
+  try { localStorage.setItem('explorer_profile_name', name); } catch (error) {}
   const accountName = document.getElementById('account-name')?.value.trim() || name;
   currentAccount = (accountName.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
   localStorage.setItem('explorer_account_id', currentAccount);
-  loadAccountProgress().then(() => { initializeProfile(); renderCollectionGrid(); renderFloraFaunaInfo(); renderTrophicNetwork(); saveProgress(); });
+  loadAccountProgress().then(() => { restoreExplorerProgress(); initializeProfile(); renderCollectionGrid(); renderFloraFaunaInfo(); renderTrophicNetwork(); renderSecretEncounterStatus(); renderParkEntryStatus(); saveProgress(); });
   renderProfileGreeting(name);
+  renderParkEntryStatus();
+  if (reserveMap) renderReservePlayerMarkers();
+}
+
+function isCheckedIntoPark() {
+  if (AppState.parkCheckedIn) return true;
+  try {
+    AppState.parkCheckedIn = localStorage.getItem('reserve_park_checked_in') === 'true';
+    return AppState.parkCheckedIn;
+  } catch (error) { return false; }
+}
+
+function renderParkEntryStatus() {
+  const checkedIn = isCheckedIntoPark();
+  const status = document.getElementById('park-entry-status');
+  const playersButton = document.getElementById('park-players-button');
+  const inlinePanel = document.getElementById('park-players-inline');
+  const inlineList = document.getElementById('park-players-inline-list');
+  if (status) status.textContent = checkedIn
+    ? '✅ Entrada registrada. Ya figuras entre quienes están en la reserva.'
+    : 'Escanea el código para registrar tu entrada.';
+  if (playersButton) playersButton.disabled = !checkedIn;
+  if (inlinePanel) inlinePanel.hidden = !checkedIn;
+  if (inlineList) {
+    if (checkedIn) renderParkPlayerCards(inlineList, getReserveVisitors());
+    else inlineList.replaceChildren();
+  }
+  renderReserveEntryCode();
+}
+
+function renderReserveEntryCode() {
+  const codeDisplay = document.getElementById('park-entry-current-code');
+  if (!codeDisplay) return;
+  let code = DEFAULT_RESERVE_ENTRY_CODE;
+  try { code = localStorage.getItem(RESERVE_ENTRY_CODE_KEY) || code; } catch (error) {}
+  codeDisplay.textContent = code;
+}
+
+function openParkEntryScanner() {
+  SFX.playClick();
+  const input = document.getElementById('park-entry-code');
+  const feedback = document.getElementById('park-entry-feedback');
+  if (input) input.value = '';
+  if (feedback) feedback.textContent = '';
+  previewParkEntryCode('');
+  renderReserveEntryCode();
+  openModal('modal-park-entry');
+}
+
+function previewParkEntryCode(value) {
+  const preview = document.getElementById('park-entry-preview');
+  if (preview) preview.textContent = `Código ingresado: ${value || '—'}`;
+}
+
+function simulateParkEntryScan() {
+  SFX.playQRScan();
+  let code = DEFAULT_RESERVE_ENTRY_CODE;
+  try { code = localStorage.getItem(RESERVE_ENTRY_CODE_KEY) || ''; } catch (error) {}
+  if (!code) {
+    code = String(Math.floor(100000 + Math.random() * 900000));
+    try { localStorage.setItem(RESERVE_ENTRY_CODE_KEY, code); } catch (error) {}
+  }
+  const input = document.getElementById('park-entry-code');
+  if (input) input.value = code;
+  previewParkEntryCode(code);
+  registerParkEntry(code, true);
+}
+
+function redeemParkEntryCode() {
+  const code = document.getElementById('park-entry-code')?.value.trim();
+  SFX.playQRScan();
+  if (!/^\d{6}$/.test(code || '')) {
+    const feedback = document.getElementById('park-entry-feedback');
+    if (feedback) feedback.textContent = 'Escribe exactamente 6 números para guardar tu código de acceso.';
+    return;
+  }
+  try { localStorage.setItem(RESERVE_ENTRY_CODE_KEY, code); } catch (error) {}
+  registerParkEntry(code, false);
+}
+
+function registerParkEntry(code, simulatedScan) {
+  if (!/^\d{6}$/.test(code || '')) return;
+  AppState.parkCheckedIn = true;
+  try {
+    localStorage.setItem(RESERVE_ENTRY_CODE_KEY, code);
+    localStorage.setItem('reserve_park_checked_in', 'true');
+  } catch (error) {}
+  savePersistentProgress();
+  const feedback = document.getElementById('park-entry-feedback');
+  if (feedback) feedback.textContent = simulatedScan
+    ? `Código ${code} escaneado. ¡Entrada registrada!`
+    : `Código ${code} guardado. ¡Entrada registrada!`;
+  renderParkEntryStatus();
+  if (reserveMap) renderReservePlayerMarkers();
+  closeModal('modal-park-entry');
+  requestAnimationFrame(() => openParkPlayers());
+}
+
+function getReserveVisitors() {
+  const visitors = RESERVE_BOT_PROFILES.map(profile => ({ ...profile, isBot: true }));
+  if (isCheckedIntoPark()) {
+    let name = 'Explorador';
+    try { name = localStorage.getItem('explorer_profile_name') || name; } catch (error) {}
+    visitors.unshift({
+      id: 'current-player', name, avatar: '🌿', level: getExplorerLevel().level,
+      xp: getExplorerLevel().totalXP, animals: [...AppState.unlockedCreatures], isBot: false
+    });
+  }
+  return visitors;
+}
+
+function openParkPlayers() {
+  if (!isCheckedIntoPark()) {
+    renderParkEntryStatus();
+    return;
+  }
+  const visitors = getReserveVisitors();
+  const list = document.getElementById('park-players-list');
+  const count = document.getElementById('park-player-count');
+  const modal = document.getElementById('modal-park-players');
+  const inlinePanel = document.getElementById('park-players-inline');
+  const inlineList = document.getElementById('park-players-inline-list');
+  if (inlinePanel) inlinePanel.hidden = false;
+  if (inlineList) renderParkPlayerCards(inlineList, visitors);
+  if (!modal || !list) return;
+  if (count) count.textContent = `${visitors.length} ${visitors.length === 1 ? 'jugador presente' : 'jugadores presentes'}`;
+  renderParkPlayerCards(list, visitors);
+  modal.classList.remove('hidden');
+  modal.style.zIndex = '1001';
+}
+
+function renderParkPlayerCards(list, visitors) {
+  if (!list) return;
+  list.replaceChildren();
+  visitors.forEach(profile => {
+    const card = document.createElement('article');
+    card.className = 'park-player-card';
+    const avatar = document.createElement('span');
+    avatar.className = 'park-player-avatar';
+    avatar.textContent = profile.avatar;
+    const details = document.createElement('span');
+    details.className = 'park-player-details';
+    const playerName = document.createElement('strong');
+    playerName.textContent = profile.name;
+    const playerMeta = document.createElement('small');
+    playerMeta.textContent = `Nivel ${profile.level} · ${profile.animals.length} animales`;
+    details.append(playerName, playerMeta);
+    const viewButton = document.createElement('button');
+    viewButton.type = 'button';
+    viewButton.className = 'btn-figma btn-secondary';
+    viewButton.textContent = 'Ver perfil';
+    viewButton.addEventListener('click', () => openReservePlayerProfile(profile.id));
+    card.append(avatar, details, viewButton);
+    list.append(card);
+  });
+}
+
+function openReservePlayerProfile(profileId) {
+  const profile = getReserveVisitors().find(visitor => visitor.id === profileId);
+  if (!profile) return;
+  document.getElementById('park-player-profile-title').textContent = `Perfil de ${profile.name}`;
+  const content = document.getElementById('park-player-profile-content');
+  if (!content) return;
+  content.replaceChildren();
+  const summary = document.createElement('div');
+  summary.className = 'reserve-profile-summary';
+  summary.innerHTML = `<span aria-hidden="true">${profile.avatar}</span><div><strong></strong><small>Nivel ${profile.level} · ${profile.xp} EXP</small></div>`;
+  summary.querySelector('strong').textContent = profile.name;
+  const animalsTitle = document.createElement('strong');
+  animalsTitle.className = 'reserve-profile-animals-title';
+  animalsTitle.textContent = `Animales (${profile.animals.length})`;
+  const animals = document.createElement('div');
+  animals.className = 'profile-animal-list reserve-profile-animals';
+  profile.animals.forEach(id => {
+    const creature = CREATURE_DATABASE[id];
+    if (!creature) return;
+    const chip = document.createElement('span');
+    chip.className = 'profile-animal-chip';
+    const copies = profile.isBot ? 1 : AppState.creatureCopies[id] || 1;
+    chip.textContent = `${creature.icon} ${creature.name}${copies > 1 ? ` ×${copies}` : ''}`;
+    animals.append(chip);
+  });
+  if (!profile.animals.length) animals.textContent = 'Todavía no tiene animales.';
+  content.append(summary, animalsTitle, animals);
+  openModal('modal-park-player-profile');
+}
+
+function leavePark() {
+  try { localStorage.removeItem('reserve_park_checked_in'); } catch (error) {}
+  AppState.parkCheckedIn = false;
+  closeModal('modal-park-players');
+  const inlinePanel = document.getElementById('park-players-inline');
+  if (inlinePanel) inlinePanel.hidden = true;
+  savePersistentProgress();
+  renderParkEntryStatus();
+  if (reserveMap) renderReservePlayerMarkers();
 }
 
 function setMusicVolume(value) {
   const volume = Math.max(0, Math.min(100, Number(value))) / 100;
   AppState.musicVolume = volume;
-  ['home-music', 'battle-music'].forEach(id => {
+  ['home-music', 'battle-music', 'secret-encounter-music'].forEach(id => {
     const audio = document.getElementById(id);
     if (audio) audio.volume = volume;
   });
@@ -594,13 +1459,20 @@ function setMusicVolume(value) {
   localStorage.setItem('music_volume', String(Math.round(volume * 100)));
 }
 
-function setActiveMusic(scene) {
+function setActiveMusic(scene, restart = false) {
   const home = document.getElementById('home-music');
   const battle = document.getElementById('battle-music');
+  const secretIntro = document.getElementById('secret-encounter-music');
   if (!home || !battle) return;
-  const current = scene === 'battle' ? battle : home;
-  const other = scene === 'battle' ? home : battle;
-  other.pause();
+  const current = scene === 'battle'
+    ? (AppState.battle.isSecretEncounter && !AppState.battle.secretIntroFinished ? secretIntro : battle)
+    : home;
+  [home, battle, secretIntro].filter(track => track && track !== current).forEach(track => track.pause());
+  if (!current) return;
+  if (restart) {
+    current.pause();
+    current.currentTime = 0;
+  }
   if (!AppState.soundEnabled || !AppState.musicEnabled) return;
   current.volume = AppState.musicVolume;
   current.play().then(() => {
@@ -612,14 +1484,18 @@ function setActiveMusic(scene) {
 function toggleMusicPlayback() {
   const home = document.getElementById('home-music');
   const battle = document.getElementById('battle-music');
+  const secretIntro = document.getElementById('secret-encounter-music');
   if (!home || !battle) return;
-  const current = AppState.currentScreen === 'battle_arena' ? battle : home;
+  const current = AppState.currentScreen === 'battle_arena'
+    ? (AppState.battle.isSecretEncounter && !AppState.battle.secretIntroFinished ? secretIntro : battle)
+    : home;
   if (current.paused) {
     AppState.musicEnabled = true;
     setActiveMusic(AppState.currentScreen === 'battle_arena' ? 'battle' : 'home');
   } else {
     home.pause();
     battle.pause();
+    secretIntro?.pause();
     AppState.musicEnabled = false;
     const toggle = document.getElementById('music-toggle');
     if (toggle) toggle.textContent = '▶ Reproducir';
@@ -627,6 +1503,17 @@ function toggleMusicPlayback() {
 }
 
 let reserveMap;
+const RESERVE_ANIMAL_SIGHTINGS = [
+  { id: 'picaflor', coordinates: [-64.5184, -30.8595], zone: 'Jardín de flores nativas' },
+  { id: 'yaguarete', coordinates: [-64.5248, -30.8620], zone: 'Corredor de bosque serrano' },
+  { id: 'pecari', coordinates: [-64.5199, -30.8636], zone: 'Matorral y sendero bajo' },
+  { id: 'quebracho', coordinates: [-64.5228, -30.8584], zone: 'Bosque de quebrachos' },
+  { id: 'buho', coordinates: [-64.5255, -30.8589], zone: 'Quebrada de sombra' },
+  { id: 'zorro', coordinates: [-64.5175, -30.8615], zone: 'Borde del monte' },
+  { id: 'rey_bosque', coordinates: [-64.5221, -30.8569], zone: 'Arboleda alta y borde de quebrada' }
+];
+const reserveAnimalMarkers = new Map();
+const reservePlayerMarkers = new Map();
 function initializeReserveMap() {
   const container = document.getElementById('reserve-map');
   if (!container || !window.maplibregl) return;
@@ -636,7 +1523,7 @@ function initializeReserveMap() {
       container,
       style: 'https://tiles.openfreemap.org/styles/liberty',
       center: villaCielo,
-      zoom: 14,
+      zoom: 15,
       attributionControl: true
     });
     reserveMap.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -644,8 +1531,164 @@ function initializeReserveMap() {
       .setLngLat(villaCielo)
       .setPopup(new maplibregl.Popup().setText('Reserva Natural Municipal Villa Cielo · Capilla del Monte'))
       .addTo(reserveMap);
+    renderReserveAnimalMarkers();
   }
+  renderReservePlayerMarkers();
   requestAnimationFrame(() => reserveMap.resize());
+}
+
+function renderReservePlayerMarkers() {
+  const list = document.getElementById('map-player-list');
+  const heading = document.getElementById('map-players-heading');
+  if (!reserveMap || !list || !window.maplibregl) return;
+  reservePlayerMarkers.forEach(marker => marker.remove());
+  reservePlayerMarkers.clear();
+  list.replaceChildren();
+  const checkedIn = isCheckedIntoPark();
+  if (heading) heading.hidden = !checkedIn;
+  list.hidden = !checkedIn;
+  if (!checkedIn) return;
+
+  getReserveVisitors().forEach(profile => {
+    const coordinates = profile.isBot ? profile.coordinates : [-64.5213, -30.8615];
+    if (!coordinates) return;
+
+    const markerElement = document.createElement('button');
+    markerElement.type = 'button';
+    markerElement.className = `map-player-marker${profile.isBot ? ' bot' : ' self'}`;
+    markerElement.textContent = profile.avatar;
+    markerElement.setAttribute('aria-label', `Ver perfil de ${profile.name}, nivel ${profile.level}`);
+    markerElement.title = `${profile.name} · Nivel ${profile.level}`;
+
+    const popupContent = document.createElement('div');
+    popupContent.className = 'animal-popup map-player-popup';
+    const title = document.createElement('strong');
+    title.textContent = `${profile.avatar} ${profile.name}`;
+    const meta = document.createElement('p');
+    meta.textContent = `${profile.isBot ? 'Bot simulado' : 'Tu perfil'} · Nivel ${profile.level} · ${profile.animals.length} animales`;
+    const viewButton = document.createElement('button');
+    viewButton.type = 'button';
+    viewButton.className = 'animal-qr-button';
+    viewButton.textContent = 'Ver perfil';
+    viewButton.addEventListener('click', () => openReservePlayerProfile(profile.id));
+    popupContent.append(title, meta, viewButton);
+
+    const marker = new maplibregl.Marker({ element: markerElement, anchor: 'bottom' })
+      .setLngLat(coordinates)
+      .setPopup(new maplibregl.Popup({ offset: 24 }).setDOMContent(popupContent))
+      .addTo(reserveMap);
+    reservePlayerMarkers.set(profile.id, marker);
+
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'map-player-item';
+    const avatar = document.createElement('span');
+    avatar.className = 'map-animal-icon';
+    avatar.textContent = profile.avatar;
+    const details = document.createElement('span');
+    details.className = 'map-animal-details';
+    const name = document.createElement('strong');
+    name.textContent = profile.name;
+    const subtitle = document.createElement('small');
+    subtitle.textContent = `${profile.isBot ? 'Bot simulado' : 'Estás en la reserva'} · Nivel ${profile.level}`;
+    const action = document.createElement('span');
+    action.className = 'map-player-view-label';
+    action.textContent = 'Ver perfil ›';
+    details.append(name, subtitle);
+    item.append(avatar, details, action);
+    item.addEventListener('click', () => focusReservePlayer(profile.id));
+    list.append(item);
+  });
+}
+
+function focusReservePlayer(profileId) {
+  const profile = getReserveVisitors().find(visitor => visitor.id === profileId);
+  const marker = reservePlayerMarkers.get(profileId);
+  const coordinates = profile?.isBot ? profile.coordinates : profile ? [-64.5213, -30.8615] : null;
+  if (!coordinates || !reserveMap || !marker) return;
+  reserveMap.flyTo({ center: coordinates, zoom: 16, duration: 700 });
+  if (!marker.getPopup().isOpen()) marker.togglePopup();
+}
+
+function renderReserveAnimalMarkers() {
+  const list = document.getElementById('map-animal-list');
+  if (!reserveMap || !list || !window.maplibregl) return;
+  reserveAnimalMarkers.forEach(marker => marker.remove());
+  reserveAnimalMarkers.clear();
+  list.replaceChildren();
+  RESERVE_ANIMAL_SIGHTINGS.forEach(sighting => {
+    const animal = CREATURE_DATABASE[sighting.id];
+    if (!animal) return;
+    const discovered = AppState.unlockedCreatures.includes(sighting.id);
+    const popupContent = document.createElement('div');
+    popupContent.className = 'animal-popup';
+    const title = document.createElement('strong');
+    title.textContent = `${animal.icon} ${animal.name}`;
+    const zone = document.createElement('p');
+    zone.textContent = `Zona orientativa: ${sighting.zone}`;
+    const habitat = document.createElement('p');
+    habitat.textContent = animal.habitat;
+    const status = document.createElement('span');
+    status.textContent = discovered ? 'En tu colección' : 'Aún por descubrir';
+    const qrButton = document.createElement('button');
+    qrButton.type = 'button';
+    qrButton.className = 'animal-qr-button';
+    qrButton.textContent = discovered ? 'Ver código de especie' : 'Ingresar código QR';
+    qrButton.addEventListener('click', () => openQRScanner(sighting.id));
+    popupContent.append(title, zone, habitat, status);
+    if (sighting.id !== 'rey_bosque') {
+      const qrButton = document.createElement('button');
+      qrButton.type = 'button';
+      qrButton.className = 'animal-qr-button';
+      qrButton.textContent = discovered ? 'Ver código de especie' : 'Ingresar código QR';
+      qrButton.addEventListener('click', () => openQRScanner(sighting.id));
+      popupContent.append(qrButton);
+    } else if (!discovered) {
+      const secretHint = document.createElement('span');
+      secretHint.textContent = 'Recompensa del encuentro secreto';
+      popupContent.append(secretHint);
+    }
+
+    const markerElement = document.createElement('button');
+    markerElement.type = 'button';
+    markerElement.className = `animal-map-marker${discovered ? ' discovered' : ''}`;
+    markerElement.textContent = animal.icon;
+    markerElement.setAttribute('aria-label', `Ver ubicación orientativa de ${animal.name}`);
+    markerElement.title = animal.name;
+    const popup = new maplibregl.Popup({ offset: 24 }).setDOMContent(popupContent);
+    const marker = new maplibregl.Marker({ element: markerElement, anchor: 'bottom' })
+      .setLngLat(sighting.coordinates)
+      .setPopup(popup)
+      .addTo(reserveMap);
+    reserveAnimalMarkers.set(sighting.id, marker);
+
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'map-animal-item';
+    const icon = document.createElement('span');
+    icon.className = 'map-animal-icon';
+    icon.textContent = animal.icon;
+    const details = document.createElement('span');
+    details.className = 'map-animal-details';
+    const name = document.createElement('strong');
+    name.textContent = animal.name;
+    const subtitle = document.createElement('small');
+    subtitle.textContent = `${sighting.zone} · ${discovered ? 'Descubierto' : 'Por descubrir'}`;
+    details.append(name, subtitle);
+    const arrow = document.createElement('span');
+    arrow.textContent = '›';
+    item.append(icon, details, arrow);
+    item.addEventListener('click', () => focusReserveAnimal(sighting.id));
+    list.append(item);
+  });
+}
+
+function focusReserveAnimal(animalId) {
+  const sighting = RESERVE_ANIMAL_SIGHTINGS.find(item => item.id === animalId);
+  const marker = reserveAnimalMarkers.get(animalId);
+  if (!sighting || !reserveMap || !marker) return;
+  reserveMap.flyTo({ center: sighting.coordinates, zoom: 16, duration: 700 });
+  if (!marker.getPopup().isOpen()) marker.togglePopup();
 }
 
 // PHONE ORIENTATION CONTROLLER
@@ -682,6 +1725,7 @@ function toggleGlobalSound() {
     if (btn) btn.querySelector('.lbl').textContent = 'Sonido: OFF';
     document.getElementById('home-music')?.pause();
     document.getElementById('battle-music')?.pause();
+    document.getElementById('secret-encounter-music')?.pause();
   }
   if (AppState.soundEnabled) setActiveMusic(AppState.currentScreen === 'battle_arena' ? 'battle' : 'home');
 }
@@ -697,14 +1741,9 @@ function updateVolume(type, val) {
 }
 
 // ==========================================
-// GOOGLE TRANSLATE & MULTI-LANGUAGE SYSTEM
+// BUILT-IN MULTI-LANGUAGE SYSTEM
 // ==========================================
 const languages = ['español', 'english', 'português'];
-const langCodes = {
-  'español': 'es',
-  'english': 'en',
-  'português': 'pt'
-};
 
 const TRANSLATIONS = {
   español: {
@@ -716,15 +1755,17 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Música Ambiental',
     soundEffects: '🔊 Efectos de Sonido',
     language: '🌐 Idioma',
-    googleActive: 'Google Translate Activo',
-    googleHint: 'Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.',
+    googleActive: 'Idiomas del juego',
+    googleHint: 'Cambia el idioma de los menús y textos desde este ajuste.',
     homeTitle: 'Inicio',
     scanQrTitle: 'Escanear criaturas de la naturaleza',
     btnCollection: 'COLECCIÓN',
     btnInfo: 'INFORMACIÓN',
+    btnMap: 'MAPA INTEGRADO',
     btnBattle: 'PELEA',
     btnSettings: 'AJUSTES',
     btnExit: 'SALIR',
+    btnResetSession: '↻ REINICIAR SESIÓN',
     footerNature: 'Conecta con la naturaleza y conserva las especies.',
     infoTitle: 'Información',
     infoFire: 'prevención contra incendios',
@@ -770,15 +1811,17 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Ambient Music',
     soundEffects: '🔊 Sound Effects',
     language: '🌐 Language',
-    googleActive: 'Google Translate Active',
-    googleHint: 'Connected to Google Translate API. The game adapts in real time to Spanish, English or Portuguese.',
+    googleActive: 'Game languages',
+    googleHint: 'Change the language of menus and text here.',
     homeTitle: 'Home',
     scanQrTitle: 'Scan wild nature creatures',
     btnCollection: 'COLLECTION',
     btnInfo: 'INFORMATION',
+    btnMap: 'INTEGRATED MAP',
     btnBattle: 'BATTLE',
     btnSettings: 'SETTINGS',
     btnExit: 'EXIT',
+    btnResetSession: '↻ RESTART SESSION',
     footerNature: 'Connect with nature and preserve local species.',
     infoTitle: 'Information',
     infoFire: 'forest fire prevention',
@@ -824,15 +1867,17 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Música Ambiente',
     soundEffects: '🔊 Efeitos Sonoros',
     language: '🌐 Idioma',
-    googleActive: 'Google Tradutor Ativo',
-    googleHint: 'Conectado à API do Google Tradutor. O jogo se adapta em tempo real para espanhol, inglês ou português.',
+    googleActive: 'Idiomas do jogo',
+    googleHint: 'Altere o idioma dos menus e textos neste ajuste.',
     homeTitle: 'Início',
     scanQrTitle: 'Escanear criaturas da natureza',
     btnCollection: 'COLEÇÃO',
     btnInfo: 'INFORMAÇÃO',
+    btnMap: 'MAPA INTEGRADO',
     btnBattle: 'BATALHA',
     btnSettings: 'AJUSTES',
     btnExit: 'SAIR',
+    btnResetSession: '↻ REINICIAR SESSÃO',
     footerNature: 'Conecte-se com a natureza e preserve as espécies.',
     infoTitle: 'Informação',
     infoFire: 'prevenção contra incêndios',
@@ -886,12 +1931,7 @@ function setLanguage(lang) {
   const currentLangEl = document.getElementById('current-lang');
   if (currentLangEl) currentLangEl.textContent = lang;
 
-  const code = langCodes[lang] || 'es';
-
-  // 1. Synchronize Google Translate Widget & Cookies
-  triggerGoogleTranslate(code);
-
-  // 2. Direct instant DOM UI translation
+  // Translate the app directly; no external translation widget is used.
   applyTranslationsToDOM(lang);
 
   // 3. Refresh dynamic views
@@ -904,33 +1944,6 @@ function setLanguage(lang) {
   try {
     localStorage.setItem('game_language', lang);
   } catch(e) {}
-}
-
-function triggerGoogleTranslate(langCode) {
-  try {
-    const host = window.location.hostname;
-    // Set cookies recognized by Google Translate script
-    if (langCode === 'es') {
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      document.cookie = `googtrans=/es/es; path=/;`;
-    } else {
-      document.cookie = `googtrans=/es/${langCode}; path=/;`;
-      document.cookie = `googtrans=/auto/${langCode}; path=/;`;
-      if (host) {
-        document.cookie = `googtrans=/es/${langCode}; domain=${host}; path=/;`;
-        document.cookie = `googtrans=/auto/${langCode}; domain=${host}; path=/;`;
-      }
-    }
-
-    // Trigger select change in Google Translate element if mounted
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo) {
-      combo.value = langCode;
-      combo.dispatchEvent(new Event('change'));
-    }
-  } catch (e) {
-    console.log('Google Translate trigger error:', e);
-  }
 }
 
 function applyTranslationsToDOM(lang) {
@@ -976,11 +1989,14 @@ function applyTranslationsToDOM(lang) {
   const menuBtns = document.querySelectorAll('#screen-inicio .dashboard-menu .btn-figma');
   if (menuBtns[0]) menuBtns[0].innerHTML = `<span class="btn-icon">🎴</span> ${t.btnCollection}`;
   if (menuBtns[1]) menuBtns[1].innerHTML = `<span class="btn-icon">ℹ️</span> ${t.btnInfo}`;
-  if (menuBtns[2]) menuBtns[2].innerHTML = `<span class="btn-icon">⚔️</span> ${t.btnBattle}`;
+  if (menuBtns[2]) menuBtns[2].innerHTML = `<span class="btn-icon">📍</span> ${t.btnMap}`;
+  if (menuBtns[3]) menuBtns[3].innerHTML = `<span class="btn-icon">⚔️</span> ${t.btnBattle}`;
 
   const secBtns = document.querySelectorAll('#screen-inicio .dashboard-secondary-grid .btn-figma');
   if (secBtns[0]) secBtns[0].innerHTML = `<span class="btn-icon">⚙</span> ${t.btnSettings}`;
   if (secBtns[1]) secBtns[1].innerHTML = `<span class="btn-icon">↳</span> ${t.btnExit}`;
+  const resetSessionBtn = document.querySelector('.session-reset-button');
+  if (resetSessionBtn) resetSessionBtn.innerHTML = `<span class="btn-icon">↻</span> ${t.btnResetSession.replace(/^↻\s*/, '')}`;
 
   const footerNature = document.querySelector('#screen-inicio .footer-note p');
   if (footerNature) footerNature.textContent = t.footerNature;
@@ -1087,38 +2103,177 @@ function applyTranslationsToDOM(lang) {
   if (btnBackBattle) btnBackBattle.textContent = t.btnSurrender;
 }
 
+function resetBattleSessionState() {
+  Object.assign(AppState.battle, {
+    mode: 'bot', pendingMode: 'bot', botDifficulty: 'facil', selectedTeam: [],
+    localPlayerOneTeam: [], localPlayerOneName: 'Jugador 1', localPlayerTwoName: 'Jugador 2', localTurn: 1,
+    playerTeam: [], activePlayerIndex: 0, enemyTeam: [], activeEnemyIndex: 0, turn: 1,
+    isPlayerTurn: true, player: null, enemy: null, networkMatch: false, finished: false,
+    isSecretEncounter: false, secretIntroFinished: false
+  });
+  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3 };
+  LanMatch.code = null;
+  LanMatch.side = 0;
+  LanMatch.version = 0;
+  LanMatch.syncing = false;
+  if (LanMatch.timer) clearInterval(LanMatch.timer);
+  LanMatch.timer = null;
+}
+
+function restartCurrentSession() {
+  SFX.playClick();
+  resetBattleSessionState();
+  AppState.recentlyUnlocked = [];
+  navigateTo('splash');
+  renderCollectionGrid();
+  renderFloraFaunaInfo();
+  renderExplorerProgress();
+  saveProgress();
+  void showAppPopup('Sesión reiniciada. Se conservan el progreso guardado de esta cuenta y las demás cuentas.');
+}
+
 function triggerExitApp() {
   SFX.playClick();
-  alert('Gracias por probar WAR IN HEAVEN (Proyecto Cielo). Presiona OK para reiniciar la experiencia.');
+  void showAppPopup('Gracias por probar WAR IN HEAVEN (Proyecto Cielo). Tu experiencia se reiniciará.');
   navigateTo('splash');
 }
 
 // QR SCANNER SIMULATOR
+let pendingQRTarget = null;
+const DEFAULT_QR_CREATURE_CODES = {
+  '100001': 'picaflor',
+  '100002': 'yaguarete',
+  '100003': 'pecari',
+  '100004': 'quebracho',
+  '100005': 'buho',
+  '100006': 'zorro'
+};
+let QR_CREATURE_CODES = { ...DEFAULT_QR_CREATURE_CODES };
+
+function restoreSpeciesCodes() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('species_qr_codes') || 'null');
+    if (saved && typeof saved === 'object') {
+      QR_CREATURE_CODES = {};
+      Object.entries(saved).forEach(([id, code]) => {
+        if (CREATURE_DATABASE[id] && id !== 'rey_bosque' && /^\d{6}$/.test(String(code))) QR_CREATURE_CODES[String(code)] = id;
+      });
+      Object.entries(DEFAULT_QR_CREATURE_CODES).forEach(([code, id]) => {
+        if (!Object.values(QR_CREATURE_CODES).includes(id) && !QR_CREATURE_CODES[code]) QR_CREATURE_CODES[code] = id;
+      });
+    }
+  } catch (error) { QR_CREATURE_CODES = { ...DEFAULT_QR_CREATURE_CODES }; }
+  Object.keys(QR_CREATURE_CODES).forEach(code => {
+    if (QR_CREATURE_CODES[code] === 'rey_bosque') delete QR_CREATURE_CODES[code];
+  });
+  Object.entries(CREATURE_DATABASE).filter(([id]) => id !== 'rey_bosque').forEach(([id], index) => {
+    const field = document.getElementById(`species-code-${id}`);
+    if (field) field.value = Object.entries(QR_CREATURE_CODES).find(([, target]) => target === id)?.[0] || Object.keys(DEFAULT_QR_CREATURE_CODES)[index];
+  });
+}
+
+function saveSpeciesCodes() {
+  const fields = Object.keys(CREATURE_DATABASE).filter(id => id !== 'rey_bosque').map(id => ({ id, field: document.getElementById(`species-code-${id}`) }));
+  const values = fields.map(({ field }) => field?.value.trim() || '');
+  const status = document.getElementById('species-code-settings-status');
+  if (values.some(code => !/^\d{6}$/.test(code))) {
+    if (status) status.textContent = 'Cada especie debe tener un código de exactamente 6 números.';
+    return;
+  }
+  if (new Set(values).size !== values.length) {
+    if (status) status.textContent = 'Cada especie necesita un código distinto.';
+    return;
+  }
+  QR_CREATURE_CODES = Object.fromEntries(fields.map(({ id }, index) => [values[index], id]));
+  const savedBySpecies = Object.fromEntries(fields.map(({ id }, index) => [id, values[index]]));
+  try { localStorage.setItem('species_qr_codes', JSON.stringify(savedBySpecies)); } catch (error) {}
+  savePersistentProgress();
+  if (status) status.textContent = 'Códigos guardados. Ya puedes usarlos para simular el escaneo.';
+}
+
 function openQRScanner(specificTarget = null) {
   SFX.playClick();
+  restoreSpeciesCodes();
+  pendingQRTarget = specificTarget;
+  const input = document.getElementById('manual-qr-code');
+  const status = document.getElementById('qr-code-status');
+  if (input) {
+    input.value = '';
+    previewQRCode(input.value);
+  }
+  if (status) status.textContent = '';
+  const settingsStatus = document.getElementById('species-code-settings-status');
+  if (settingsStatus) settingsStatus.textContent = '';
   openModal('modal-qr');
+}
+
+function previewQRCode(value) {
+  const preview = document.getElementById('manual-qr-preview');
+  if (preview) preview.textContent = `Código ingresado: ${value || '—'}`;
 }
 
 function simulateQRDiscovery() {
   SFX.playQRScan();
-  closeModal('modal-qr');
+  let targetId = pendingQRTarget;
+  if (!targetId) {
+    const lockedIds = Object.keys(CREATURE_DATABASE).filter(id => id !== 'rey_bosque' && !AppState.unlockedCreatures.includes(id));
+    if (lockedIds.length === 0) {
+      setQRStatus('¡Ya descubriste todas las especies! Prueba los códigos para volver a verlas.');
+      return;
+    }
+    targetId = lockedIds[Math.floor(Math.random() * lockedIds.length)];
+  }
+  completeQRDiscovery(targetId);
+}
 
-  // Unlock creature
-  const lockedIds = ['buho', 'zorro'];
-  const targetId = lockedIds[Math.floor(Math.random() * lockedIds.length)];
+function redeemQRFromInput() {
+  const code = document.getElementById('manual-qr-code')?.value.trim();
+  const targetId = QR_CREATURE_CODES[code];
+  if (!targetId) {
+    setQRStatus('Código no reconocido. Escribe los 6 números del código.');
+    return;
+  }
+  SFX.playQRScan();
+  completeQRDiscovery(targetId);
+}
+
+function setQRStatus(message) {
+  const status = document.getElementById('qr-code-status');
+  if (status) status.textContent = message;
+}
+
+function completeQRDiscovery(targetId) {
+  if (targetId === 'rey_bosque') {
+    setQRStatus('El Rey del Bosque solo se obtiene al ganar el encuentro secreto.');
+    return;
+  }
   const info = CREATURE_DATABASE[targetId];
-
-  if (!AppState.unlockedCreatures.includes(targetId)) {
+  if (!info) {
+    setQRStatus('No encontramos esa especie.');
+    return;
+  }
+  closeModal('modal-qr');
+  pendingQRTarget = null;
+  const isNew = !AppState.unlockedCreatures.includes(targetId);
+  if (isNew) {
     AppState.unlockedCreatures.push(targetId);
+    AppState.creatureCopies[targetId] = Math.max(1, AppState.creatureCopies[targetId] || 0);
   }
-  if (!AppState.recentlyUnlocked.includes(targetId)) {
-    AppState.recentlyUnlocked.push(targetId);
+  if (isNew && !AppState.recentlyUnlocked.includes(targetId)) AppState.recentlyUnlocked.push(targetId);
+  if (isNew) {
+    try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+    try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
+    awardProfileXP(100);
   }
 
-  alert(`🎉 ¡NUEVA CRIATURA CAPTURADA VÍA QR!\n\nHas descubierto a: ${info.name} ${info.icon}\n\n¡Su información completa se ha añadido tanto a tu COLECCIÓN como a INFORMACIÓN DE LA FLORA Y FAUNA!`);
+  alert(isNew
+    ? `🎉 ¡NUEVA CRIATURA DESCUBIERTA!\n\nEncontraste a: ${info.name} ${info.icon}\n\nSe añadió a tu colección y a la información de flora y fauna.`
+    : `${info.icon} ${info.name} ya está en tu colección.`);
 
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  renderExplorerProgress();
+  if (reserveMap) renderReserveAnimalMarkers();
   saveProgress();
   navigateTo('coleccion');
 }
@@ -1133,11 +2288,36 @@ function showCreatureDetail(id) {
   document.getElementById('creature-modal-name').textContent = data.name;
   document.getElementById('creature-modal-icon').textContent = data.icon;
   document.getElementById('creature-modal-badge').textContent = data.badge;
-  document.getElementById('c-hp').textContent = `${data.hp} HP`;
-  document.getElementById('c-spd').textContent = `${data.spd} SPD`;
-  document.getElementById('c-atk').textContent = `${data.atk} ATK`;
+  document.getElementById('c-hp').textContent = data.hp;
+  document.getElementById('c-spd').textContent = data.spd;
+  document.getElementById('c-atk').textContent = data.atk;
   document.getElementById('c-habitat').textContent = data.habitat;
   document.getElementById('creature-modal-desc').textContent = data.desc;
+
+  const art = document.getElementById('creature-modal-art');
+  const artFallback = document.getElementById('creature-modal-icon');
+  art.alt = `Ilustración de ${data.name} en su hábitat serrano`;
+  art.hidden = true;
+  art.onload = () => { art.hidden = false; artFallback.hidden = true; };
+  art.onerror = () => { art.hidden = true; artFallback.hidden = false; };
+  art.src = data.image || `assets/species/${id}.png`;
+
+  const moves = document.getElementById('creature-modal-moves');
+  moves.replaceChildren();
+  const movesTitle = document.createElement('strong');
+  movesTitle.className = 'species-moves-title';
+  movesTitle.textContent = 'MOVIMIENTOS DE LA ESPECIE';
+  moves.appendChild(movesTitle);
+  data.moves.forEach(move => {
+    const row = document.createElement('div');
+    row.className = 'species-move-row';
+    const name = document.createElement('span');
+    name.textContent = move.name;
+    const uses = document.createElement('small');
+    uses.textContent = `${move.maxUses} usos`;
+    row.append(name, uses);
+    moves.appendChild(row);
+  });
 
   openModal('modal-creature');
 }
@@ -1148,16 +2328,153 @@ function showCreatureDetail(id) {
 
 function startBotBattleWithDifficulty(diff) {
   SFX.playClick();
+  AppState.battle.networkMatch = false;
+  AppState.battle.isSecretEncounter = false;
+  AppState.battle.secretIntroFinished = true;
   AppState.battle.pendingMode = 'bot';
   AppState.battle.botDifficulty = diff;
+  document.getElementById('select-team-title').textContent = 'Elige 3 Criaturas';
   openTeamSelection();
+}
+
+function getSecretBattleWins() {
+  try {
+    const wins = Number(localStorage.getItem('secret_battle_bot_wins') || 0);
+    return Number.isFinite(wins) && wins > 0 ? Math.floor(wins) : 0;
+  } catch (error) { return 0; }
+}
+
+function hasClaimedSecretReward() {
+  try { return localStorage.getItem('secret_battle_reward_claimed') === 'true'; }
+  catch (error) { return false; }
+}
+
+function renderSecretEncounterStatus() {
+  const card = document.getElementById('secret-encounter-card');
+  if (card) card.hidden = getSecretBattleWins() < 2 || hasClaimedSecretReward();
+}
+
+function recordStandardBotVictory() {
+  const wins = getSecretBattleWins() + 1;
+  try { localStorage.setItem('secret_battle_bot_wins', String(wins)); } catch (error) {}
+  savePersistentProgress();
+  renderSecretEncounterStatus();
+  return wins;
+}
+
+function beginSecretEncounter() {
+  if (getSecretBattleWins() < 2 || hasClaimedSecretReward()) return;
+  SFX.playClick();
+  AppState.battle.isSecretEncounter = true;
+  AppState.battle.secretIntroFinished = false;
+  AppState.battle.networkMatch = false;
+  clearInterval(LanMatch.timer);
+  AppState.battle.pendingMode = 'bot';
+  AppState.battle.botDifficulty = 'secreto';
+  AppState.battle.selectedTeam = [];
+  document.getElementById('select-team-title').textContent = 'Elige tu equipo para el encuentro secreto';
+  openTeamSelection();
+}
+
+function createSecretRivalTeam() {
+  return [
+    { key: 'quebracho', name: 'Horco Quebracho Ancestral', icon: '🌳', lvl: 15, hp: 160, maxHp: 160, spd: 35, atk: 50, isFainted: false,
+      attacks: [{ name: 'Raíz de la Sierra', damage: 28 }, { name: 'Látigo Ancestral', damage: 32 }, { name: 'Terremoto Verde', damage: 36 }] },
+    { key: 'yaguarete', name: 'Yaguareté Guardián', icon: '🐆', lvl: 16, hp: 170, maxHp: 170, spd: 76, atk: 60, isFainted: false,
+      attacks: [{ name: 'Zarpazo del Guardián', damage: 31 }, { name: 'Rugido de Villa Cielo', damage: 35 }, { name: 'Furia del Monte', damage: 39 }] },
+    { key: 'rey_bosque', name: 'Rey del Bosque', icon: '🐦', lvl: 17, hp: 185, maxHp: 185, spd: 82, atk: 66, isFainted: false,
+      attacks: [{ name: 'Canto del Monte', damage: 34 }, { name: 'Aleteo Dorado', damage: 38 }, { name: 'Vuelo Guardián', damage: 42 }] }
+  ];
+}
+
+function openSecretBattleIntro() {
+  const dialogue = document.getElementById('secret-intro-dialogue');
+  if (dialogue) dialogue.textContent = '“Dos victorias te guiaron hasta mí. Soy Cynthia, guardiana de Villa Cielo. Si quieres conocer el secreto de estas sierras, primero tendrás que superar a mis tres compañeros.”';
+  openModal('modal-secret-battle-intro');
+}
+
+function finishSecretBattleIntro() {
+  closeModal('modal-secret-battle-intro');
+  AppState.battle.secretIntroFinished = true;
+  document.getElementById('battle-log').textContent = '¡Cynthia envía a sus tres animales más poderosos!';
+  setActiveMusic('battle', true);
+}
+
+function grantSecretBattleReward() {
+  const rewardKey = 'rey_bosque';
+  const isNew = !AppState.unlockedCreatures.includes(rewardKey);
+  if (isNew) {
+    AppState.unlockedCreatures.push(rewardKey);
+    AppState.creatureCopies[rewardKey] = 1;
+  } else {
+    AppState.creatureCopies[rewardKey] = (AppState.creatureCopies[rewardKey] || 1) + 1;
+  }
+  try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+  try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
+  try { localStorage.setItem('secret_battle_reward_claimed', 'true'); } catch (error) {}
+  savePersistentProgress();
+  awardProfileXP(700);
+  renderCollectionGrid();
+  renderFloraFaunaInfo();
+  renderExplorerProgress();
+  if (reserveMap) renderReserveAnimalMarkers();
+  renderSecretEncounterStatus();
+  return { creature: CREATURE_DATABASE[rewardKey], isNew, copies: AppState.creatureCopies[rewardKey] };
 }
 
 function selectLocalPlayerMode(playerMode) {
   SFX.playClick();
+  AppState.battle.networkMatch = false;
+  AppState.battle.isSecretEncounter = false;
+  AppState.battle.secretIntroFinished = true;
   AppState.battle.pendingMode = playerMode;
   AppState.battle.botDifficulty = 'normal';
   openTeamSelection();
+}
+
+function startLocalMultiplayer(playerOne = 'Jugador 1', playerTwo = 'Jugador 2') {
+  AppState.battle.isSecretEncounter = false;
+  AppState.battle.secretIntroFinished = true;
+  AppState.battle.networkMatch = false;
+  LanMatch.code = null; LanMatch.side = 0; clearInterval(LanMatch.timer);
+  AppState.battle.localPlayerOneName = playerOne;
+  AppState.battle.localPlayerTwoName = playerTwo;
+  AppState.battle.localPlayerOneTeam = [];
+  AppState.battle.localTurn = 1;
+  AppState.battle.pendingMode = 'local';
+  AppState.battle.selectedTeam = [];
+  document.getElementById('select-team-title').textContent = `Equipo de ${playerOne}`;
+  openTeamSelection();
+}
+
+function handleTeamSelectionBack() {
+  if (AppState.battle.pendingMode === 'local' && AppState.battle.localPlayerOneTeam.length) {
+    AppState.battle.localPlayerOneTeam = [];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${AppState.battle.localPlayerOneName}`;
+  }
+  if (AppState.battle.isSecretEncounter) {
+    AppState.battle.isSecretEncounter = false;
+    AppState.battle.secretIntroFinished = true;
+  }
+  navigateTo(AppState.battle.pendingMode === 'local' ? 'pelea_local' : 'pelea');
+}
+
+function handleTeamConfirm() {
+  if (AppState.battle.networkMatch && AppState.battle.pendingMode === 'local') {
+    if (AppState.battle.selectedTeam.length !== 3) return;
+    submitLanTeam().catch(error => setLanStatus(error.message));
+    return;
+  }
+  if (AppState.battle.pendingMode === 'local' && !AppState.battle.localPlayerOneTeam.length) {
+    if (AppState.battle.selectedTeam.length !== 3) return;
+    AppState.battle.localPlayerOneTeam = [...AppState.battle.selectedTeam];
+    AppState.battle.selectedTeam = [];
+    document.getElementById('select-team-title').textContent = `Equipo de ${AppState.battle.localPlayerTwoName}`;
+    renderTeamSelectionView();
+    return;
+  }
+  confirmTeamAndLaunchBattle();
 }
 
 function openTeamSelection() {
@@ -1299,7 +2616,8 @@ function confirmTeamAndLaunchBattle() {
   }
   SFX.playClick();
 
-  AppState.battle.mode = AppState.battle.pendingMode;
+  AppState.battle.mode = AppState.battle.networkMatch ? 'network' : AppState.battle.pendingMode;
+  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3 };
   const diff = AppState.battle.botDifficulty || 'facil';
 
   // Build Player Team (3 chosen creatures)
@@ -1319,8 +2637,16 @@ function confirmTeamAndLaunchBattle() {
     };
   });
 
+  if (AppState.battle.isSecretEncounter) {
+    AppState.battle.enemyTeam = createSecretRivalTeam();
+  } else if (isLocalDuel()) {
+    AppState.battle.playerTeam = AppState.battle.localPlayerOneTeam.map(key => createBattleCreature(key));
+    AppState.battle.enemyTeam = AppState.battle.selectedTeam.map(key => createBattleCreature(key));
+    AppState.battle.localTurn = 1;
+  }
+
   // Build Enemy Team based on chosen Bot Difficulty (or local player)
-  if (diff === 'facil') {
+  else if (diff === 'facil') {
     AppState.battle.enemyTeam = [
       {
         key: 'pecari',
@@ -1428,32 +2754,58 @@ function confirmTeamAndLaunchBattle() {
   AppState.battle.enemy = AppState.battle.enemyTeam[0];
   AppState.battle.turn = 1;
   AppState.battle.isPlayerTurn = true;
+  AppState.battle.finished = false;
 
   // Set difficulty badge
   const diffBadge = document.getElementById('battle-diff-badge');
   if (diffBadge) {
-    if (diff === 'facil') diffBadge.innerHTML = '🟢 Fácil (1 Rival)';
+    if (AppState.battle.isSecretEncounter) diffBadge.textContent = '🌑 Encuentro secreto · Cynthia';
+    else if (isLocalDuel()) diffBadge.textContent = AppState.battle.networkMatch ? '📶 Duelo por Wi‑Fi' : '👥 Duelo local';
+    else if (diff === 'facil') diffBadge.innerHTML = '🟢 Fácil (1 Rival)';
     else if (diff === 'normal') diffBadge.innerHTML = '🟡 Normal (2 Rivales)';
     else diffBadge.innerHTML = '🔴 Difícil (3 Rivales Alfa)';
   }
 
   const enemyRosterTitle = document.getElementById('enemy-roster-title');
   if (enemyRosterTitle) {
-    enemyRosterTitle.textContent = `Rival (${AppState.battle.enemyTeam.length}):`;
+    enemyRosterTitle.textContent = isLocalDuel()
+      ? `${AppState.battle.localPlayerTwoName} (3):`
+      : `Rival (${AppState.battle.enemyTeam.length}):`;
   }
+  const playerRosterTitle = document.querySelector('.player-roster .roster-label');
+  if (playerRosterTitle) playerRosterTitle.textContent = isLocalDuel()
+    ? `${AppState.battle.localPlayerOneName} (3):` : 'Tu Equipo (3):';
 
   populateAttackControls();
   populateSwitchControls();
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡Combate iniciado! Tu equipo de 3 criaturas vs BOT (${diff.toUpperCase()}). ¡Turno de ${AppState.battle.player.name}!`;
+  document.getElementById('battle-log').textContent = AppState.battle.isSecretEncounter
+    ? 'El guardián te espera. Escucha su historia antes de comenzar.'
+    : isLocalDuel()
+    ? (AppState.battle.networkMatch ? `¡Comienza el duelo por Wi‑Fi! Turno de ${AppState.battle.localPlayerOneName}.` : `¡Comienza el duelo! ${AppState.battle.localPlayerOneName}, es tu turno. Pasa el teléfono cuando termine tu jugada.`)
+    : `¡Combate iniciado! Tu equipo de 3 criaturas vs BOT (${diff.toUpperCase()}). ¡Turno de ${AppState.battle.player.name}!`;
 
   navigateTo('battle_arena');
+  if (AppState.battle.isSecretEncounter) openSecretBattleIntro();
+  if (AppState.battle.networkMatch) { LanMatch.version = 0; publishLanSnapshot(); startLanPolling(); }
+  if (AppState.battle.networkMatch) showBattleControlsForTurn();
+}
+
+function createBattleCreature(key) {
+  const data = CREATURE_DATABASE[key];
+  return { key, name: data.name, icon: data.icon, lvl: data.lvl, hp: data.hp,
+    maxHp: data.maxHp, spd: data.spd, atk: data.atk,
+    moves: JSON.parse(JSON.stringify(data.moves)), isFainted: false };
 }
 
 function populateAttackControls() {
-  const p = AppState.battle.player;
+  const p = isLocalDuel()
+    ? (AppState.battle.localTurn === 1
+      ? AppState.battle.playerTeam[AppState.battle.activePlayerIndex]
+      : AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex])
+    : AppState.battle.player;
   const attackControls = document.getElementById('battle-controls-attacks');
   if (!attackControls || !p) return;
 
@@ -1461,8 +2813,10 @@ function populateAttackControls() {
   p.moves.forEach(m => {
     const btn = document.createElement('button');
     btn.className = 'btn-battle btn-sub';
-    btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text);
-    btn.innerHTML = `⚡ ${m.name} (${m.dmg} DMG)`;
+    btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text, m);
+    btn.disabled = m.uses <= 0;
+    if (btn.disabled) btn.classList.add('exhausted');
+    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})`;
     attackControls.appendChild(btn);
   });
 
@@ -1478,8 +2832,12 @@ function populateSwitchControls() {
   if (!switchControls) return;
 
   switchControls.innerHTML = '';
-  AppState.battle.playerTeam.forEach((creature, idx) => {
-    const isCurrent = idx === AppState.battle.activePlayerIndex;
+  const team = isLocalDuel() && AppState.battle.localTurn === 2
+    ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+  const activeIndex = isLocalDuel() && AppState.battle.localTurn === 2
+    ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+  team.forEach((creature, idx) => {
+    const isCurrent = idx === activeIndex;
     const isFainted = creature.hp <= 0;
 
     const btn = document.createElement('button');
@@ -1504,16 +2862,83 @@ function populateSwitchControls() {
   switchControls.appendChild(backBtn);
 }
 
+function populateBackpackControls() {
+  const controls = document.getElementById('battle-controls-items');
+  if (!controls) return;
+  controls.replaceChildren();
+  const hint = document.createElement('p');
+  hint.className = 'bag-hint';
+  if (isLocalDuel()) {
+    hint.textContent = 'La captura con comida está desactivada en los duelos contra amigos.';
+    controls.append(hint, createBagBackButton());
+    return;
+  }
+
+  if (AppState.battle.isSecretEncounter) {
+    hint.textContent = 'El guardián protege a sus compañeros: no se pueden capturar. Véncelos para recibir tu recompensa.';
+    controls.append(hint, createBagBackButton());
+    return;
+  }
+
+  const enemy = AppState.battle.enemy;
+  const species = CREATURE_DATABASE[enemy?.key];
+  if (!enemy || !species) {
+    hint.textContent = 'No hay una criatura disponible para capturar.';
+    controls.append(hint, createBagBackButton());
+    return;
+  }
+  hint.textContent = `Elige un cebo para ${species.name}. Su favorito es ${species.favoriteFood.icon} ${species.favoriteFood.name}. Menos HP aumenta la probabilidad.`;
+  controls.appendChild(hint);
+
+  Object.values(CREATURE_DATABASE).forEach(creature => {
+    const food = creature.favoriteFood;
+    const quantity = AppState.inventory[food.id] || 0;
+    const chance = Math.round(getCaptureChance(enemy, food.id) * 100);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn-battle btn-sub bag-item-button';
+    button.disabled = quantity <= 0;
+    button.innerHTML = `<span>${food.icon} ${food.name}</span><small>${quantity} · captura ${chance}%${food.id === species.favoriteFood.id ? ' · favorito' : ''}</small>`;
+    button.addEventListener('click', () => useItem(food.id));
+    controls.appendChild(button);
+  });
+  controls.appendChild(createBagBackButton());
+}
+
+function createBagBackButton() {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'btn-battle btn-back-sub';
+  button.textContent = '↩ Volver';
+  button.addEventListener('click', hideSubMenu);
+  return button;
+}
+
+function getCaptureChance(enemy, foodId) {
+  const healthRatio = Math.max(0, Math.min(1, enemy.hp / enemy.maxHp));
+  const favoriteBonus = CREATURE_DATABASE[enemy.key]?.favoriteFood.id === foodId ? 0.18 : -0.08;
+  return Math.max(0.03, Math.min(0.92, 0.08 + (1 - healthRatio) * 0.72 + favoriteBonus));
+}
+
 function switchActivePlayerCreature(newIndex) {
-  if (newIndex === AppState.battle.activePlayerIndex) return;
-  const target = AppState.battle.playerTeam[newIndex];
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  const localPlayerTwo = isLocalDuel() && AppState.battle.localTurn === 2;
+  const team = localPlayerTwo ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+  const currentIndex = localPlayerTwo ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+  if (newIndex === currentIndex) return;
+  const target = team[newIndex];
   if (!target || target.hp <= 0) return;
 
   SFX.playClick();
   hideSubMenu();
 
-  AppState.battle.activePlayerIndex = newIndex;
-  AppState.battle.player = target;
+  if (localPlayerTwo) {
+    AppState.battle.activeEnemyIndex = newIndex;
+    AppState.battle.enemy = target;
+  } else {
+    AppState.battle.activePlayerIndex = newIndex;
+    AppState.battle.player = target;
+  }
 
   populateAttackControls();
   populateSwitchControls();
@@ -1522,14 +2947,26 @@ function switchActivePlayerCreature(newIndex) {
 
   document.getElementById('battle-log').textContent = `🔄 ¡Cambiaste a ${target.name}! Entra al combate listo para luchar.`;
 
+  if (isLocalDuel()) {
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    populateAttackControls();
+    populateSwitchControls();
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = `¡${target.name} entra al combate! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    return;
+  }
+
   // Turn passes to enemy
   AppState.battle.isPlayerTurn = false;
   setTimeout(executeEnemyTurn, 1400);
 }
 
 function updateBattleUI() {
-  const p = AppState.battle.player;
-  const e = AppState.battle.enemy;
+  let p = AppState.battle.player;
+  let e = AppState.battle.enemy;
+  if (isLocalDuel() && AppState.battle.localTurn === 2) [p, e] = [e, p];
   if (!p || !e) return;
 
   // HP Bar Width percentages
@@ -1550,7 +2987,9 @@ function updateBattleUI() {
   document.getElementById('enemy-lvl').textContent = `Niv. ${e.lvl}`;
   document.getElementById('enemy-sprite').textContent = e.icon;
 
-  document.getElementById('turn-indicator').textContent = `TURNO ${AppState.battle.turn}: ${AppState.battle.isPlayerTurn ? p.name : e.name}`;
+  document.getElementById('turn-indicator').textContent = isLocalDuel()
+    ? `TURNO ${AppState.battle.turn}: ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}`
+    : `TURNO ${AppState.battle.turn}: ${AppState.battle.isPlayerTurn ? p.name : e.name}`;
 }
 
 function updateBattleTeamsRosterUI() {
@@ -1589,10 +3028,12 @@ function updateBattleTeamsRosterUI() {
 }
 
 function showSubMenu(menuId) {
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   SFX.playClick();
   document.getElementById('battle-controls-main').classList.add('hidden');
   document.getElementById('battle-controls-attacks').classList.add('hidden');
   document.getElementById('battle-controls-switch').classList.add('hidden');
+  document.getElementById('battle-controls-items').classList.add('hidden');
 
   if (menuId === 'attacks') {
     populateAttackControls();
@@ -1600,6 +3041,9 @@ function showSubMenu(menuId) {
   } else if (menuId === 'switch') {
     populateSwitchControls();
     document.getElementById('battle-controls-switch').classList.remove('hidden');
+  } else if (menuId === 'items') {
+    populateBackpackControls();
+    document.getElementById('battle-controls-items').classList.remove('hidden');
   }
 }
 
@@ -1607,31 +3051,74 @@ function hideSubMenu() {
   SFX.playClick();
   document.getElementById('battle-controls-attacks').classList.add('hidden');
   document.getElementById('battle-controls-switch').classList.add('hidden');
+  document.getElementById('battle-controls-items').classList.add('hidden');
   document.getElementById('battle-controls-main').classList.remove('hidden');
 }
 
 function executePlayerAttack(moveName, damage, msgText) {
   if (!AppState.battle.isPlayerTurn) return;
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  if (isLocalDuel()) {
+    const actorTeam = AppState.battle.localTurn === 1 ? AppState.battle.playerTeam : AppState.battle.enemyTeam;
+    const targetTeam = AppState.battle.localTurn === 1 ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
+    const actorIndex = AppState.battle.localTurn === 1 ? AppState.battle.activePlayerIndex : AppState.battle.activeEnemyIndex;
+    const targetIndex = AppState.battle.localTurn === 1 ? AppState.battle.activeEnemyIndex : AppState.battle.activePlayerIndex;
+    const actor = actorTeam[actorIndex];
+    const target = targetTeam[targetIndex];
+    const move = actor.moves.find(m => m.name === moveName);
+    if (!move || move.uses <= 0) return;
+    move.uses -= 1;
+    SFX.playAttack();
+    hideSubMenu();
+    playBattleAnimation(AppState.battle.localTurn === 1 ? 'player-sprite' : 'enemy-sprite');
+    target.hp = Math.max(0, target.hp - damage);
+    if (target.hp <= 0) {
+      target.isFainted = true;
+      const next = targetTeam.findIndex(c => c.hp > 0);
+      if (next >= 0) {
+        if (AppState.battle.localTurn === 1) AppState.battle.activeEnemyIndex = next;
+        else AppState.battle.activePlayerIndex = next;
+      } else {
+        document.getElementById('battle-log').textContent = `¡${target.name} quedó fuera de combate! ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName} gana el duelo.`;
+        AppState.battle.finished = true;
+        updateBattleUI();
+        updateBattleTeamsRosterUI();
+        document.getElementById('battle-controls-main').classList.add('hidden');
+        if (AppState.battle.networkMatch) { publishLanSnapshot(); clearInterval(LanMatch.timer); }
+        alert(`🏆 ¡${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName} ganó el duelo!`);
+        return;
+      }
+    }
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
+    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
+    populateAttackControls();
+    populateSwitchControls();
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = AppState.battle.networkMatch
+      ? `¡${actor.name} usó ${moveName}! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`
+      : `¡${actor.name} usó ${moveName}! ${msgText} Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    return;
+  }
   SFX.playAttack();
 
   hideSubMenu();
   const p = AppState.battle.player;
   const e = AppState.battle.enemy;
+  const currentMove = p.moves?.find(move => move.name === moveName);
+  if (!currentMove || currentMove.uses <= 0) return;
+  currentMove.uses -= 1;
 
-  // Animate sprite hit
-  const eSprite = document.getElementById('enemy-sprite');
-  eSprite.classList.remove('attack-hit');
-  void eSprite.offsetWidth;
-  eSprite.classList.add('attack-hit');
-  setTimeout(() => eSprite.classList.remove('attack-hit'), 650);
-  document.getElementById('player-sprite').classList.add('attack-lunge');
-  setTimeout(() => document.getElementById('player-sprite').classList.remove('attack-lunge'), 420);
+  playBattleAnimation('player-sprite');
 
   e.hp = Math.max(0, e.hp - damage);
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡${p.name} usó ${moveName}! ${msgText} (-${damage} HP)`;
+  document.getElementById('battle-log').textContent = `¡${p.name} usó ${moveName}! ${msgText}`;
 
   // Check if current enemy fainted
   if (e.hp <= 0) {
@@ -1658,8 +3145,17 @@ function executePlayerAttack(moveName, damage, msgText) {
     } else {
       // All enemies defeated -> Complete Victory!
       setTimeout(() => {
-        const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
-        alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Tu equipo ha ganado +350 EXP y protegido la Reserva Natural Serrana!`);
+        if (AppState.battle.isSecretEncounter) {
+          const reward = grantSecretBattleReward();
+          AppState.battle.isSecretEncounter = false;
+          AppState.battle.secretIntroFinished = true;
+          alert(`🌟 ¡EL GUARDIÁN TE RECONOCE!\n\nVenciste a los tres animales más poderosos y ganaste +700 EXP.\n\n🎁 ${reward.creature.icon} ${reward.creature.name} ${reward.isNew ? 'se unió a tu colección' : `se sumó a tus compañeros (ahora tienes ${reward.copies})`}.`);
+        } else {
+          const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
+          const wins = AppState.battle.mode === 'bot' ? recordStandardBotVictory() : getSecretBattleWins();
+          awardProfileXP(350);
+          alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Tu equipo ha ganado +350 EXP y protegido la Reserva Natural Serrana!${wins === 2 ? '\n\n🌑 Algo extraño responde desde las sierras… Quizás debas volver donde comenzaron tus desafíos.' : ''}`);
+        }
         navigateTo('pelea');
       }, 600);
       return;
@@ -1688,22 +3184,13 @@ function executeEnemyTurn() {
 
   const atk = attacks[Math.floor(Math.random() * attacks.length)];
 
-  // Animate player sprite hit
-  const pSprite = document.getElementById('player-sprite');
-  pSprite.classList.remove('attack-hit');
-  void pSprite.offsetWidth;
-  pSprite.classList.add('attack-hit');
-  document.getElementById('enemy-sprite').classList.add('enemy-lunge');
-  setTimeout(() => {
-    pSprite.classList.remove('attack-hit');
-    document.getElementById('enemy-sprite').classList.remove('enemy-lunge');
-  }, 650);
+  playBattleAnimation('enemy-sprite');
 
   p.hp = Math.max(0, p.hp - atk.damage);
   updateBattleUI();
   updateBattleTeamsRosterUI();
 
-  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}! (-${atk.damage} HP a ${p.name})`;
+  document.getElementById('battle-log').textContent = `¡${e.name} usó ${atk.name}!`;
   
   // Check if active player creature fainted
   if (p.hp <= 0) {
@@ -1731,8 +3218,13 @@ function executeEnemyTurn() {
     } else {
       // All 3 player creatures fainted -> Defeat
       setTimeout(() => {
+        const wasSecretEncounter = AppState.battle.isSecretEncounter;
         const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
-        alert(`💔 Derrota en combate.\nTus 3 criaturas se han debilitado ante el bot en nivel ${diffText}.\n¡Entrena en la reserva y vuelve a intentarlo!`);
+        AppState.battle.isSecretEncounter = false;
+        AppState.battle.secretIntroFinished = true;
+        alert(wasSecretEncounter
+          ? '💔 El guardián venció esta vez. Reúne fuerzas y vuelve a investigar el eco desde la pantalla de pelea.'
+          : `💔 Derrota en combate.\nTus 3 criaturas se han debilitado ante el bot en nivel ${diffText}.\n¡Entrena en la reserva y vuelve a intentarlo!`);
         navigateTo('pelea');
       }, 600);
       return;
@@ -1744,8 +3236,33 @@ function executeEnemyTurn() {
   updateBattleUI();
 }
 
+function playBattleAnimation(attackerId) {
+  const attacker = document.getElementById(attackerId);
+  const defenderId = attackerId === 'player-sprite' ? 'enemy-sprite' : 'player-sprite';
+  const defender = document.getElementById(defenderId);
+  const stage = document.querySelector('.battle-stage');
+  if (!attacker || !defender || !stage) return;
+
+  const lungeClass = attackerId === 'player-sprite' ? 'attack-lunge' : 'enemy-lunge';
+  attacker.classList.remove(lungeClass);
+  defender.classList.remove('attack-hit');
+  stage.classList.remove('battle-impact');
+  void stage.offsetWidth;
+  attacker.classList.add(lungeClass);
+  window.setTimeout(() => {
+    defender.classList.add('attack-hit');
+    stage.classList.add('battle-impact');
+  }, 180);
+  window.setTimeout(() => {
+    attacker.classList.remove(lungeClass);
+    defender.classList.remove('attack-hit');
+    stage.classList.remove('battle-impact');
+  }, 900);
+}
+
 function useSkill(skillType) {
   if (!AppState.battle.isPlayerTurn) return;
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   SFX.playHeal();
 
   const p = AppState.battle.player;
@@ -1756,29 +3273,86 @@ function useSkill(skillType) {
 
   document.getElementById('battle-log').textContent = `¡${p.name} usó Habilidad Refugio Natural! Regeneraste +${healAmount} HP.`;
 
+  if (isLocalDuel()) {
+    AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
+    AppState.battle.turn += 1;
+    AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
+    AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
+    updateBattleUI();
+    updateBattleTeamsRosterUI();
+    document.getElementById('battle-log').textContent = AppState.battle.networkMatch ? `¡${p.name} usó Habilidad Refugio Natural! Turno de ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.` : `¡${p.name} usó Habilidad Refugio Natural! Pasa el teléfono a ${AppState.battle.localTurn === 1 ? AppState.battle.localPlayerOneName : AppState.battle.localPlayerTwoName}.`;
+    if (AppState.battle.networkMatch) { publishLanSnapshot(); showBattleControlsForTurn(); }
+    return;
+  }
+
   AppState.battle.isPlayerTurn = false;
   setTimeout(executeEnemyTurn, 1500);
 }
 
 function useItem(itemType) {
   if (!AppState.battle.isPlayerTurn) return;
-  SFX.playHeal();
+  if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  if (isLocalDuel()) {
+    hideSubMenu();
+    document.getElementById('battle-log').textContent = 'La captura con comida está desactivada en los duelos contra amigos.';
+    return;
+  }
+  if (AppState.battle.isSecretEncounter) {
+    document.getElementById('battle-log').textContent = 'El guardián protege a sus tres compañeros. Tendrás que vencerlos para obtener la recompensa.';
+    hideSubMenu();
+    return;
+  }
 
-  const p = AppState.battle.player;
-  const healAmount = 45;
-  p.hp = Math.min(p.maxHp, p.hp + healAmount);
-  updateBattleUI();
-  updateBattleTeamsRosterUI();
+  const enemy = AppState.battle.enemy;
+  const species = CREATURE_DATABASE[enemy?.key];
+  const food = Object.values(CREATURE_DATABASE).map(creature => creature.favoriteFood).find(item => item.id === itemType);
+  if (!enemy || !species || !food) return;
+  if ((AppState.inventory[itemType] || 0) <= 0) {
+    document.getElementById('battle-log').textContent = `No te quedan ${food.name.toLowerCase()}.`;
+    populateBackpackControls();
+    return;
+  }
 
-  document.getElementById('battle-log').textContent = `¡Usaste Poción Ecológica de la Mochila en ${p.name}! Restauraste +${healAmount} HP.`;
+  SFX.playQRScan();
+  AppState.inventory[itemType] -= 1;
+  hideSubMenu();
+  const chance = getCaptureChance(enemy, itemType);
+  if (Math.random() < chance) {
+    const isNew = !AppState.unlockedCreatures.includes(species.id);
+    if (isNew) {
+      AppState.unlockedCreatures.push(species.id);
+      AppState.creatureCopies[species.id] = 1;
+      if (!AppState.recentlyUnlocked.includes(species.id)) AppState.recentlyUnlocked.push(species.id);
+    } else {
+      AppState.creatureCopies[species.id] = (AppState.creatureCopies[species.id] || 1) + 1;
+    }
+    try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
+    try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
+    awardProfileXP(isNew ? 100 : 50);
+    AppState.battle.finished = true;
+    document.getElementById('battle-controls-main').classList.add('hidden');
+    document.getElementById('battle-log').textContent = `¡${species.name} se acercó a ${food.name} y fue capturado!`;
+    renderCollectionGrid();
+    renderFloraFaunaInfo();
+    renderExplorerProgress();
+    if (reserveMap) renderReserveAnimalMarkers();
+    alert(isNew
+      ? `🎉 ¡Capturaste a ${species.name} ${species.icon}! Se sumó a tu colección y ganaste 100 EXP.`
+      : `🎉 ¡Capturaste otro ${species.name} ${species.icon}! Ahora tienes ${AppState.creatureCopies[species.id]} y ganaste 50 EXP.`);
+    navigateTo('coleccion');
+    return;
+  }
 
+  document.getElementById('battle-log').textContent = `¡${enemy.name} rechazó ${food.name}! Probabilidad: ${Math.round(chance * 100)}%. La criatura contraataca.`;
   AppState.battle.isPlayerTurn = false;
-  setTimeout(executeEnemyTurn, 1500);
+  setTimeout(executeEnemyTurn, 1300);
 }
 
-function confirmExitBattle() {
+async function confirmExitBattle() {
   SFX.playClick();
-  if (confirm('¿Deseas rendirte y salir de la arena de batalla?')) {
+  if (await showAppPopup('¿Deseas rendirte y salir de la arena de batalla?', { variant: 'confirm', title: 'Salir de batalla' })) {
+    AppState.battle.isSecretEncounter = false;
+    AppState.battle.secretIntroFinished = true;
     navigateTo('pelea');
   }
 }
