@@ -1,6 +1,6 @@
-# 📱 WAR IN HEAVEN - Prototipo Navegable Móvil (Proyecto Cielo)
+# 📱 Aventuras en Villa Cielo - Prototipo Navegable Móvil
 
-Prototipo interactivo y navegable de alta fidelidad que simula una aplicación móvil para la propuesta **WAR IN HEAVEN / Proyecto Cielo (Eco-Combat Córdoba)**. El proyecto combina el diseño gráfico de **Alta Fidelidad de Figma** con la preservación de diagramas e ilustraciones de **Excalidraw**.
+Prototipo interactivo y navegable de alta fidelidad que simula una aplicación móvil para la propuesta **Aventuras en Villa Cielo (Proyecto Cielo / Eco-Combat Córdoba)**. El proyecto combina el diseño gráfico de **Alta Fidelidad de Figma** con la preservación de diagramas e ilustraciones de **Excalidraw**.
 
 ---
 
@@ -66,4 +66,4 @@ También se conserva `.github/workflows/pages.yml` para GitHub Pages. Esa opció
 ---
 
 ## 📜 Licencia y Proyecto
-Desarrollado para la presentación del prototipo de la propuesta **Proyecto Cielo / WAR IN HEAVEN**.
+Desarrollado para la presentación del prototipo de la propuesta **Aventuras en Villa Cielo / Proyecto Cielo**.

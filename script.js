@@ -1,5 +1,5 @@
 /* ==========================================================================
-   WAR IN HEAVEN / PROYECTO CIELO - INTERACTIVE PROTOTYPE JAVASCRIPT ENGINE
+   AVENTURAS EN VILLA CIELO / PROYECTO CIELO - INTERACTIVE PROTOTYPE JAVASCRIPT ENGINE
    ========================================================================== */
 
 // CREATURE DATABASE (Stats, moves, and descriptions)
@@ -2246,7 +2246,7 @@ function applyTranslationsToDOM(lang) {
   if (btnBackInfoTop) btnBackInfoTop.textContent = t.backToInfo;
 
   const guideHeaderTitle = document.querySelector('#screen-info_como_pelear .guide-header-text');
-  if (guideHeaderTitle) guideHeaderTitle.textContent = `⚔️ ${t.howToFightTitle.toUpperCase()} • WAR IN HEAVEN`;
+  if (guideHeaderTitle) guideHeaderTitle.textContent = `⚔️ ${t.howToFightTitle.toUpperCase()} • AVENTURAS EN VILLA CIELO`;
 
   const guideBtns = document.querySelectorAll('#screen-info_como_pelear .guide-actions-row .btn-figma');
   if (guideBtns[0]) guideBtns[0].textContent = t.backToInfo;
@@ -2349,7 +2349,7 @@ function restartCurrentSession() {
 
 function triggerExitApp() {
   SFX.playClick();
-  void showAppPopup('Gracias por probar WAR IN HEAVEN (Proyecto Cielo). Tu experiencia se reiniciará.');
+  void showAppPopup('Gracias por probar Aventuras en Villa Cielo (Proyecto Cielo). Tu experiencia se reiniciará.');
   navigateTo('splash');
 }
 

@@ -722,7 +722,7 @@ body {
 }
 
 /* ==========================================
-   SCREEN 0: SPLASH (WAR IN HEAVEN)
+   SCREEN 0: SPLASH (AVENTURAS EN VILLA CIELO)
    ========================================== */
 #screen-splash {
   justify-content: space-between;
@@ -749,11 +749,11 @@ body {
 }
 
 .app-title {
-  font-size: 26px;
+  font-size: 21px;
   font-weight: 800;
   color: #ffffff;
   line-height: 1.2;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   text-shadow: 0 0 12px rgba(118, 200, 147, 0.4);
 }
