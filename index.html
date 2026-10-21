@@ -100,7 +100,7 @@
                  ========================================== -->
             <section class="screen" id="screen-ajustes">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('inicio')" title="Regresar a Inicio">←</button>
+                <button class="btn-back" onclick="navigateTo('explorar')" title="Regresar a Inicio">←</button>
                 <h3>Ajustes</h3>
               </div>
 
@@ -115,6 +115,11 @@
                       <div id="admin-save-list" class="admin-save-list"></div>
                       <p id="admin-status" role="status"></p>
                     </div>
+                  </div>
+                  <div class="settings-music-control">
+                    <strong>🎵 Música ambiental</strong>
+                    <span>Controla la música durante la aventura.</span>
+                    <button class="btn-figma btn-secondary" type="button" onclick="toggleMusicPlayback()" id="music-toggle">▶ Reproducir</button>
                   </div>
                   <label class="setting-label">
                     <span>🎵 Música Ambiental</span>
@@ -201,15 +206,6 @@
                     <span id="profile-share-status" class="profile-share-status" aria-live="polite"></span>
                   </div>
                 </div>
-                <div class="home-music-card">
-                  <div><strong>🎵 Música de inicio</strong><span>LOFI • Proyecto Cielo</span></div>
-                  <button class="btn-figma btn-secondary" type="button" onclick="toggleMusicPlayback()" id="music-toggle">▶ Reproducir</button>
-                  <label for="home-music-volume">Volumen <span id="home-music-volume-label">35%</span></label>
-                  <input type="range" id="home-music-volume" min="0" max="100" value="35" oninput="setMusicVolume(this.value)">
-                </div>
-                <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
-                <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
-                <audio id="secret-encounter-music" src="assets/musica_encuentro_secreto.mp3" preload="metadata"></audio>
                 <section class="park-presence-card" aria-labelledby="park-presence-title">
                   <div class="park-presence-copy">
                     <strong id="park-presence-title">📍 Entrada a la reserva</strong>
@@ -224,6 +220,19 @@
                   <strong>👥 Jugadores presentes en la reserva</strong>
                   <div id="park-players-inline-list" class="park-players-list"></div>
                 </section>
+                <button class="btn-figma btn-accent profile-continue-button" type="button" onclick="navigateTo('explorar')">Continuar →</button>
+              </div>
+            </section>
+
+            <section class="screen" id="screen-explorar">
+              <div class="screen-header">
+                <button class="btn-back" onclick="navigateTo('inicio')" title="Volver al perfil">←</button>
+                <h3>Explorar</h3>
+              </div>
+              <div class="screen-content scrollable">
+                <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
+                <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
+                <audio id="secret-encounter-music" src="assets/musica_encuentro_secreto.mp3" preload="metadata"></audio>
                 <!-- QR Box Simulation -->
                 <div class="qr-card mt-2" onclick="openQRScanner()">
                   <div class="qr-frame">
@@ -259,7 +268,7 @@
                   </button>
                 </div>
 
-                <!-- Botones trasladados desde la pantalla principal a inicio -->
+                <!-- Acciones generales -->
                 <div class="dashboard-secondary-grid mt-3">
                   <button class="btn-figma btn-secondary" onclick="navigateTo('ajustes')">
                     <span class="btn-icon">⚙</span> AJUSTES
@@ -280,7 +289,7 @@
 
             <section class="screen" id="screen-mapa">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <button class="btn-back" onclick="navigateTo('explorar')">←</button>
                 <h3>Reserva Villa Cielo</h3>
               </div>
               <div class="screen-content scrollable">
@@ -300,7 +309,7 @@
                  ========================================== -->
             <section class="screen" id="screen-coleccion">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <button class="btn-back" onclick="navigateTo('explorar')">←</button>
                 <h3>Colección</h3>
               </div>
 
@@ -323,7 +332,7 @@
                  ========================================== -->
             <section class="screen" id="screen-informacion">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <button class="btn-back" onclick="navigateTo('explorar')">←</button>
                 <h3>Información</h3>
               </div>
 
@@ -581,7 +590,7 @@
                  ========================================== -->
             <section class="screen" id="screen-pelea">
               <div class="screen-header">
-                <button class="btn-back" onclick="navigateTo('inicio')">←</button>
+                <button class="btn-back" onclick="navigateTo('explorar')">←</button>
                 <h3>Pelea</h3>
               </div>
 
@@ -598,7 +607,7 @@
                       <strong>Nivel Inicial (1 Criatura)</strong>
                       <p>Rival de nivel 10 con estadísticas estándar. Ideal para aprender el combate por turnos.</p>
                     </div>
-                    <span class="diff-action">Elegir Equipo de 3 ›</span>
+                    <span class="diff-action">Ganar +200 EXP · Elegir equipo ›</span>
                   </button>
 
                   <button class="diff-card diff-medium" onclick="startBotBattleWithDifficulty('normal')">
@@ -610,7 +619,7 @@
                       <strong>Nivel Intermedio (2 Criaturas)</strong>
                       <p>Dúo de fauna silvestre de nivel 13. Requiere coordinar turnos y habilidades.</p>
                     </div>
-                    <span class="diff-action">Elegir Equipo de 3 ›</span>
+                    <span class="diff-action">Ganar +350 EXP · Elegir equipo ›</span>
                   </button>
 
                   <button class="diff-card diff-hard" onclick="startBotBattleWithDifficulty('dificil')">
@@ -622,7 +631,7 @@
                       <strong>Nivel Experto (3 Criaturas)</strong>
                       <p>Trío de depredadores alfa de nivel 16 con alto daño y gran resistencia de vida.</p>
                     </div>
-                    <span class="diff-action">Elegir Equipo de 3 ›</span>
+                    <span class="diff-action">Ganar +500 EXP · Elegir equipo ›</span>
                   </button>
                 </div>
 
@@ -868,7 +877,7 @@
           </div> <!-- /app-viewport -->
 
           <!-- Home Indicator Bar at Phone Bottom -->
-          <div class="home-indicator" onclick="navigateTo('inicio')" title="Ir a Inicio"></div>
+          <div class="home-indicator" onclick="navigateTo('explorar')" title="Ir a Explorar"></div>
 
         </div> <!-- /phone-screen -->
 

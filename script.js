@@ -28,18 +28,18 @@ const CREATURE_DATABASE = {
     name: 'Yaguareté',
     icon: '🐆',
     badge: 'Depredador Terciario',
-    hp: 150,
-    maxHp: 150,
-    spd: 75,
-    atk: 70,
+    hp: 130,
+    maxHp: 130,
+    spd: 64,
+    atk: 56,
     lvl: 15,
     favoriteFood: { id: 'meat', name: 'Carne fresca', icon: '🥩' },
     habitat: 'Bosques Nativos de Córdoba',
     desc: 'El felino más grande de América. Es el apex predator de la red trófica local, vital para mantener el equilibrio poblacional de los herbívoros.',
     moves: [
-      { name: 'Zarpazo Feroz', dmg: 45, uses: 5, maxUses: 5, text: '¡Impacto salvaje!' },
-      { name: 'Mordisco Selvático', dmg: 55, uses: 4, maxUses: 4, text: '¡Mordisco devastador!' },
-      { name: 'Garra Esmeralda', dmg: 70, uses: 2, maxUses: 2, text: '¡ATAQUE CRÍTICO FELINO!' }
+      { name: 'Zarpazo Feroz', dmg: 34, uses: 5, maxUses: 5, text: '¡Impacto salvaje!' },
+      { name: 'Mordisco Selvático', dmg: 42, uses: 4, maxUses: 4, text: '¡Mordisco devastador!' },
+      { name: 'Garra Esmeralda', dmg: 54, uses: 2, maxUses: 2, text: '¡ATAQUE CRÍTICO FELINO!' }
     ]
   },
   pecari: {
@@ -172,6 +172,7 @@ const AppState = {
     activeEnemyIndex: 0,    // Current fighting creature in enemyTeam
     turn: 1,
     isPlayerTurn: true,
+    actionLocked: false,
     isSecretEncounter: false,
     secretIntroFinished: true,
     player: null,           // Reference to active player creature
@@ -949,6 +950,14 @@ REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) =>
     moves: moves.map((name, moveIndex) => ({ name, dmg: [32, 44, 58][moveIndex], uses: [5, 4, 2][moveIndex], maxUses: [5, 4, 2][moveIndex], text: `¡${name}!` }))
   };
 }));
+
+const regionalPuma = CREATURE_DATABASE[regionalCreatureId('Puma (Puma concolor)')];
+if (regionalPuma) {
+  regionalPuma.hp = regionalPuma.maxHp = 95;
+  regionalPuma.spd = 48;
+  regionalPuma.atk = 34;
+  regionalPuma.moves.forEach((move, index) => { move.dmg = [24, 34, 46][index]; });
+}
 
 function renderRegionalFauna() {
   const gallery = document.getElementById('regional-fauna-gallery');
@@ -2198,22 +2207,22 @@ function applyTranslationsToDOM(lang) {
   const inicioTitle = document.querySelector('#screen-inicio .screen-header h3');
   if (inicioTitle) inicioTitle.textContent = t.homeTitle;
 
-  const qrSub = document.querySelector('#screen-inicio .qr-label span');
+  const qrSub = document.querySelector('#screen-explorar .qr-label span');
   if (qrSub) qrSub.textContent = t.scanQrTitle;
 
-  const menuBtns = document.querySelectorAll('#screen-inicio .dashboard-menu .btn-figma');
+  const menuBtns = document.querySelectorAll('#screen-explorar .dashboard-menu .btn-figma');
   if (menuBtns[0]) menuBtns[0].innerHTML = `<span class="btn-icon">🎴</span> ${t.btnCollection}`;
   if (menuBtns[1]) menuBtns[1].innerHTML = `<span class="btn-icon">ℹ️</span> ${t.btnInfo}`;
   if (menuBtns[2]) menuBtns[2].innerHTML = `<span class="btn-icon">📍</span> ${t.btnMap}`;
   if (menuBtns[3]) menuBtns[3].innerHTML = `<span class="btn-icon">⚔️</span> ${t.btnBattle}`;
 
-  const secBtns = document.querySelectorAll('#screen-inicio .dashboard-secondary-grid .btn-figma');
+  const secBtns = document.querySelectorAll('#screen-explorar .dashboard-secondary-grid .btn-figma');
   if (secBtns[0]) secBtns[0].innerHTML = `<span class="btn-icon">⚙</span> ${t.btnSettings}`;
   if (secBtns[1]) secBtns[1].innerHTML = `<span class="btn-icon">↳</span> ${t.btnExit}`;
   const resetSessionBtn = document.querySelector('.session-reset-button');
   if (resetSessionBtn) resetSessionBtn.innerHTML = `<span class="btn-icon">↻</span> ${t.btnResetSession.replace(/^↻\s*/, '')}`;
 
-  const footerNature = document.querySelector('#screen-inicio .footer-note p');
+  const footerNature = document.querySelector('#screen-explorar .footer-note p');
   if (footerNature) footerNature.textContent = t.footerNature;
 
   // 4. Información Screen
@@ -2323,7 +2332,7 @@ function resetBattleSessionState() {
     mode: 'bot', pendingMode: 'bot', botDifficulty: 'facil', selectedTeam: [],
     localPlayerOneTeam: [], localPlayerOneName: 'Jugador 1', localPlayerTwoName: 'Jugador 2', localTurn: 1,
     playerTeam: [], activePlayerIndex: 0, enemyTeam: [], activeEnemyIndex: 0, turn: 1,
-    isPlayerTurn: true, player: null, enemy: null, networkMatch: false, finished: false,
+    isPlayerTurn: true, actionLocked: false, player: null, enemy: null, networkMatch: false, finished: false,
     isSecretEncounter: false, secretIntroFinished: false
   });
   AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3 };
@@ -2603,6 +2612,10 @@ function recordStandardBotVictory() {
   return wins;
 }
 
+function getBotVictoryXP(difficulty = AppState.battle.botDifficulty) {
+  return ({ facil: 200, normal: 350, dificil: 500 })[difficulty] || 350;
+}
+
 function beginSecretEncounter() {
   if (getSecretBattleWins() < 2 || hasClaimedSecretReward()) return;
   SFX.playClick();
@@ -2621,8 +2634,8 @@ function createSecretRivalTeam() {
   return [
     { key: 'quebracho', name: 'Horco Quebracho Ancestral', icon: '🌳', lvl: 15, hp: 160, maxHp: 160, spd: 35, atk: 50, isFainted: false,
       attacks: [{ name: 'Raíz de la Sierra', damage: 28 }, { name: 'Látigo Ancestral', damage: 32 }, { name: 'Terremoto Verde', damage: 36 }] },
-    { key: 'yaguarete', name: 'Yaguareté Guardián', icon: '🐆', lvl: 16, hp: 170, maxHp: 170, spd: 76, atk: 60, isFainted: false,
-      attacks: [{ name: 'Zarpazo del Guardián', damage: 31 }, { name: 'Rugido de Villa Cielo', damage: 35 }, { name: 'Furia del Monte', damage: 39 }] },
+    { key: 'yaguarete', name: 'Yaguareté Guardián', icon: '🐆', lvl: 16, hp: 150, maxHp: 150, spd: 66, atk: 48, isFainted: false,
+      attacks: [{ name: 'Zarpazo del Guardián', damage: 24 }, { name: 'Rugido de Villa Cielo', damage: 28 }, { name: 'Furia del Monte', damage: 32 }] },
     { key: 'rey_bosque', name: 'Rey del Bosque', icon: '🐦', lvl: 17, hp: 185, maxHp: 185, spd: 82, atk: 66, isFainted: false,
       attacks: [{ name: 'Canto del Monte', damage: 34 }, { name: 'Aleteo Dorado', damage: 38 }, { name: 'Vuelo Guardián', damage: 42 }] }
   ];
@@ -2862,21 +2875,7 @@ function confirmTeamAndLaunchBattle() {
   const diff = AppState.battle.botDifficulty || 'facil';
 
   // Build Player Team (3 chosen creatures)
-  AppState.battle.playerTeam = AppState.battle.selectedTeam.map(key => {
-    const data = CREATURE_DATABASE[key];
-    return {
-      key: key,
-      name: data.name,
-      icon: data.icon,
-      lvl: data.lvl,
-      hp: data.hp,
-      maxHp: data.maxHp,
-      spd: data.spd,
-      atk: data.atk,
-      moves: JSON.parse(JSON.stringify(data.moves)),
-      isFainted: false
-    };
-  });
+  AppState.battle.playerTeam = AppState.battle.selectedTeam.map(key => createBattleCreature(key));
 
   if (AppState.battle.isSecretEncounter) {
     AppState.battle.enemyTeam = createSecretRivalTeam();
@@ -2975,14 +2974,14 @@ function confirmTeamAndLaunchBattle() {
         name: 'Yaguareté Rey Alfa (BOT)',
         icon: '🐆',
         lvl: 17,
-        hp: 190,
-        maxHp: 190,
-        atk: 55,
+        hp: 160,
+        maxHp: 160,
+        atk: 44,
         isFainted: false,
         attacks: [
-          { name: 'Zarpazo Mortal', damage: 42 },
-          { name: 'Mordisco Devastador', damage: 48 },
-          { name: 'Furia de Apex Predator', damage: 52 }
+          { name: 'Zarpazo Mortal', damage: 30 },
+          { name: 'Mordisco Devastador', damage: 36 },
+          { name: 'Furia de Apex Predator', damage: 40 }
         ]
       }
     ];
@@ -2995,6 +2994,7 @@ function confirmTeamAndLaunchBattle() {
   AppState.battle.enemy = AppState.battle.enemyTeam[0];
   AppState.battle.turn = 1;
   AppState.battle.isPlayerTurn = true;
+  AppState.battle.actionLocked = false;
   AppState.battle.finished = false;
 
   // Set difficulty badge
@@ -3036,9 +3036,14 @@ function confirmTeamAndLaunchBattle() {
 
 function createBattleCreature(key) {
   const data = CREATURE_DATABASE[key];
+  const moves = JSON.parse(JSON.stringify(data.moves)).map((move, index) => ({
+    ...move,
+    cooldownTurns: index === data.moves.length - 1 ? 2 : 1,
+    cooldownUntilTurn: 0
+  }));
   return { key, name: data.name, icon: data.icon, lvl: data.lvl, hp: data.hp,
     maxHp: data.maxHp, spd: data.spd, atk: data.atk,
-    moves: JSON.parse(JSON.stringify(data.moves)), isFainted: false };
+    moves, isFainted: false };
 }
 
 function populateAttackControls() {
@@ -3052,12 +3057,15 @@ function populateAttackControls() {
 
   attackControls.innerHTML = '';
   p.moves.forEach(m => {
+    const cooldownLeft = Math.max(0, (m.cooldownUntilTurn || 0) - AppState.battle.turn);
     const btn = document.createElement('button');
     btn.className = 'btn-battle btn-sub';
     btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text, m);
-    btn.disabled = m.uses <= 0;
-    if (btn.disabled) btn.classList.add('exhausted');
-    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})`;
+    btn.disabled = m.uses <= 0 || cooldownLeft > 0 || AppState.battle.actionLocked;
+    if (m.uses <= 0 || cooldownLeft > 0) btn.classList.add('exhausted');
+    const cooldownTurnsLeft = Math.ceil(cooldownLeft / 2);
+    const cooldownText = cooldownLeft > 0 ? ` · Recarga ${cooldownTurnsLeft} ${cooldownTurnsLeft === 1 ? 'turno' : 'turnos'}` : '';
+    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})${cooldownText}`;
     attackControls.appendChild(btn);
   });
 
@@ -3162,6 +3170,7 @@ function getCaptureChance(enemy, foodId) {
 }
 
 function switchActivePlayerCreature(newIndex) {
+  if (!AppState.battle.isPlayerTurn || AppState.battle.actionLocked) return;
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   const localPlayerTwo = isLocalDuel() && AppState.battle.localTurn === 2;
   const team = localPlayerTwo ? AppState.battle.enemyTeam : AppState.battle.playerTeam;
@@ -3171,6 +3180,7 @@ function switchActivePlayerCreature(newIndex) {
   if (!target || target.hp <= 0) return;
 
   SFX.playClick();
+  AppState.battle.actionLocked = true;
   hideSubMenu();
 
   if (localPlayerTwo) {
@@ -3191,6 +3201,7 @@ function switchActivePlayerCreature(newIndex) {
   if (isLocalDuel()) {
     AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
     AppState.battle.turn += 1;
+    AppState.battle.actionLocked = false;
     populateAttackControls();
     populateSwitchControls();
     updateBattleUI();
@@ -3297,7 +3308,7 @@ function hideSubMenu() {
 }
 
 function executePlayerAttack(moveName, damage, msgText) {
-  if (!AppState.battle.isPlayerTurn) return;
+  if (!AppState.battle.isPlayerTurn || AppState.battle.actionLocked) return;
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   if (isLocalDuel()) {
     const actorTeam = AppState.battle.localTurn === 1 ? AppState.battle.playerTeam : AppState.battle.enemyTeam;
@@ -3307,8 +3318,10 @@ function executePlayerAttack(moveName, damage, msgText) {
     const actor = actorTeam[actorIndex];
     const target = targetTeam[targetIndex];
     const move = actor.moves.find(m => m.name === moveName);
-    if (!move || move.uses <= 0) return;
+    if (!move || move.uses <= 0 || (move.cooldownUntilTurn || 0) > AppState.battle.turn) return;
+    AppState.battle.actionLocked = true;
     move.uses -= 1;
+    move.cooldownUntilTurn = AppState.battle.turn + (move.cooldownTurns || 1) * 2;
     SFX.playAttack();
     hideSubMenu();
     playBattleAnimation(AppState.battle.localTurn === 1 ? 'player-sprite' : 'enemy-sprite');
@@ -3332,6 +3345,7 @@ function executePlayerAttack(moveName, damage, msgText) {
     }
     AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
     AppState.battle.turn += 1;
+    AppState.battle.actionLocked = false;
     AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
     AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
     populateAttackControls();
@@ -3350,8 +3364,10 @@ function executePlayerAttack(moveName, damage, msgText) {
   const p = AppState.battle.player;
   const e = AppState.battle.enemy;
   const currentMove = p.moves?.find(move => move.name === moveName);
-  if (!currentMove || currentMove.uses <= 0) return;
+  if (!currentMove || currentMove.uses <= 0 || (currentMove.cooldownUntilTurn || 0) > AppState.battle.turn) return;
+  AppState.battle.actionLocked = true;
   currentMove.uses -= 1;
+  currentMove.cooldownUntilTurn = AppState.battle.turn + (currentMove.cooldownTurns || 1) * 2;
 
   playBattleAnimation('player-sprite');
 
@@ -3394,8 +3410,9 @@ function executePlayerAttack(moveName, damage, msgText) {
         } else {
           const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
           const wins = AppState.battle.mode === 'bot' ? recordStandardBotVictory() : getSecretBattleWins();
-          awardProfileXP(350);
-          alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Tu equipo ha ganado +350 EXP y protegido la Reserva Natural Serrana!${wins === 2 ? '\n\n🌑 Algo extraño responde desde las sierras… Quizás debas volver donde comenzaron tus desafíos.' : ''}`);
+          const xpReward = AppState.battle.mode === 'bot' ? getBotVictoryXP() : 350;
+          awardProfileXP(xpReward);
+          alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Ganaste +${xpReward} EXP y protegiste la Reserva Natural Serrana!${wins === 2 ? '\n\n🌑 Algo extraño responde desde las sierras… Quizás debas volver donde comenzaron tus desafíos.' : ''}`);
         }
         navigateTo('pelea');
       }, 600);
@@ -3453,6 +3470,9 @@ function executeEnemyTurn() {
         document.getElementById('battle-log').textContent = `¡${p.name} se ha debilitado! ¡Entra ${AppState.battle.player.name} a defender el equipo!`;
         AppState.battle.turn += 1;
         AppState.battle.isPlayerTurn = true;
+        AppState.battle.actionLocked = false;
+        populateAttackControls();
+        populateSwitchControls();
         updateBattleUI();
       }, 1000);
       return;
@@ -3474,6 +3494,9 @@ function executeEnemyTurn() {
 
   AppState.battle.turn += 1;
   AppState.battle.isPlayerTurn = true;
+  AppState.battle.actionLocked = false;
+  populateAttackControls();
+  populateSwitchControls();
   updateBattleUI();
 }
 
@@ -3502,8 +3525,9 @@ function playBattleAnimation(attackerId) {
 }
 
 function useSkill(skillType) {
-  if (!AppState.battle.isPlayerTurn) return;
+  if (!AppState.battle.isPlayerTurn || AppState.battle.actionLocked) return;
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
+  AppState.battle.actionLocked = true;
   SFX.playHeal();
 
   const p = AppState.battle.player;
@@ -3517,6 +3541,7 @@ function useSkill(skillType) {
   if (isLocalDuel()) {
     AppState.battle.localTurn = AppState.battle.localTurn === 1 ? 2 : 1;
     AppState.battle.turn += 1;
+    AppState.battle.actionLocked = false;
     AppState.battle.player = AppState.battle.playerTeam[AppState.battle.activePlayerIndex];
     AppState.battle.enemy = AppState.battle.enemyTeam[AppState.battle.activeEnemyIndex];
     updateBattleUI();
@@ -3531,7 +3556,7 @@ function useSkill(skillType) {
 }
 
 function useItem(itemType) {
-  if (!AppState.battle.isPlayerTurn) return;
+  if (!AppState.battle.isPlayerTurn || AppState.battle.actionLocked) return;
   if (AppState.battle.networkMatch && !showBattleControlsForTurn()) return;
   if (isLocalDuel()) {
     hideSubMenu();
@@ -3555,6 +3580,7 @@ function useItem(itemType) {
   }
 
   SFX.playQRScan();
+  AppState.battle.actionLocked = true;
   AppState.inventory[itemType] -= 1;
   hideSubMenu();
   const chance = getCaptureChance(enemy, itemType);
