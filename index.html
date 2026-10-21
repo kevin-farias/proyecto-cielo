@@ -128,6 +128,15 @@
                   </label>
                   <input type="range" id="slider-sfx" min="0" max="100" value="100" oninput="updateVolume('sfx', this.value)">
 
+                  <div class="theme-setting-row mt-4">
+                    <label for="app-theme-select">🎨 Tema de color</label>
+                    <select id="app-theme-select" onchange="setAppTheme(this.value)">
+                      <option value="green">Verde (original)</option>
+                      <option value="light">Claro</option>
+                      <option value="dark">Oscuro</option>
+                    </select>
+                  </div>
+
                   <div class="setting-row mt-4">
                     <span>🌐 Idioma</span>
                     <div class="lang-selector">
