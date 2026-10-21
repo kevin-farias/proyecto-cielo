@@ -2424,6 +2424,108 @@ input[type="range"] {
 .text-center { text-align: center; }
 .justify-center { justify-content: center; }
 
+/* Responsive layout for the whole app on real phone screens. */
+@media (max-width: 700px) {
+  .screen {
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .screen-content { min-width: 0; min-height: 0; }
+  .screen-content.scrollable {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 2px max(12px, env(safe-area-inset-bottom, 0px)) 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .screen-header { gap: 9px; padding-bottom: 10px; margin-bottom: 10px; }
+  .screen-header h3 { min-width: 0; font-size: clamp(14px, 4vw, 16px); overflow-wrap: anywhere; }
+  .header-home-badge { max-width: 42%; padding: 5px 8px; font-size: 10px; line-height: 1.25; }
+  .btn-back { flex: 0 0 36px; width: 36px; height: 36px; }
+
+  .btn-figma,
+  .btn-tool,
+  .btn-select-creature,
+  .btn-battle,
+  .info-cat-btn,
+  .team-slot,
+  .trophic-node,
+  .map-player-item,
+  .map-animal-item { touch-action: manipulation; }
+  .btn-figma { min-height: 44px; padding: 11px 13px; font-size: 12px; line-height: 1.3; }
+  .dashboard-secondary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .dashboard-secondary-grid .btn-figma { min-width: 0; min-height: 48px; padding: 9px 7px; font-size: 10px; overflow-wrap: anywhere; }
+
+  .collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .creature-card { min-width: 0; padding: 8px; }
+  .card-info, .select-card-info { min-width: 0; }
+  .card-info h4, .select-card-info h4 { overflow-wrap: anywhere; }
+  .settings-card, .admin-card, .trophic-editor, .battle-guide-box,
+  .excalidraw-asset-container, .emergency-box, .regional-fauna-card { min-width: 0; }
+
+  .modal-overlay { padding: max(10px, env(safe-area-inset-top, 0px)) 10px max(10px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
+  .modal-box,
+  .modal-large { width: 100%; max-width: 560px; max-height: calc(100dvh - 20px); min-width: 0; padding: clamp(12px, 4vw, 20px); overflow-x: hidden; overflow-y: auto; }
+  .modal-header { gap: 8px; }
+  .modal-header h3 { min-width: 0; overflow-wrap: anywhere; }
+  #modal-creature .modal-box { max-height: calc(100dvh - 20px); }
+  .species-card-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  #screen-battle_arena { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .battle-header-bar { gap: 6px; flex-wrap: wrap; }
+  .battle-teams-bar { align-items: flex-start; flex-wrap: wrap; gap: 6px; }
+  .team-roster-group { min-width: 0; max-width: 100%; flex-wrap: wrap; }
+  .roster-slots { min-width: 0; flex-wrap: wrap; }
+  .roster-slot-pill { min-height: 30px; }
+  .battle-stage { height: clamp(170px, 46vw, 230px); min-height: 160px; }
+  .hp-box { width: min(140px, 46%); padding: 6px 8px; }
+  .opponent-sprite { left: 10%; }
+  .player-sprite { right: 10%; }
+  .battle-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .btn-battle { min-width: 0; min-height: 42px; padding: 9px 6px; overflow-wrap: anywhere; }
+
+  .trophic-level-nodes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 68px), 1fr)); gap: 5px; }
+  .trophic-node { width: 100%; max-width: none; min-height: 74px; padding: 7px 4px; }
+  .trophic-node-name { font-size: 9px; }
+  .trophic-node-role { font-size: 8px; }
+
+  #reserve-map { height: clamp(300px, 65dvh, 440px); min-height: 280px; }
+  .app-popup-backdrop { padding: 12px; }
+  .app-popup { width: 100%; max-width: 420px; max-height: calc(100dvh - 24px); overflow-y: auto; padding: 18px; }
+  .app-popup-actions { flex-wrap: wrap; }
+  .app-popup-actions button { min-height: 42px; }
+}
+
+@media (max-width: 380px) {
+  .screen { padding: 12px; }
+  .screen-header { gap: 7px; }
+  .header-home-badge { max-width: 38%; padding: 5px 6px; font-size: 9px; }
+  .dashboard-secondary-grid .btn-figma { font-size: 9px; }
+  .collection-grid { gap: 6px; }
+  .creature-card { padding: 7px 5px; }
+  .card-info h4 { font-size: 11px; }
+  .qr-code-help ul { grid-template-columns: minmax(0, 1fr); }
+  .species-card-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .species-card-facts > div:first-child { grid-column: 1 / -1; }
+  .battle-header-bar .btn-back-battle { min-height: 38px; padding: 6px 8px; }
+  .battle-diff-tag { font-size: 9px; }
+  .battle-log-banner { font-size: 14px; overflow-wrap: anywhere; }
+}
+
+@media (max-height: 620px) and (max-width: 900px) {
+  .phone-wrapper.landscape .screen { padding-top: 8px; padding-bottom: 8px; }
+  .phone-wrapper.landscape .screen-header { padding-bottom: 6px; margin-bottom: 6px; }
+  .phone-wrapper.landscape #screen-battle_arena { justify-content: flex-start; gap: 4px; }
+  .phone-wrapper.landscape .battle-stage { height: 150px; min-height: 130px; }
+  .phone-wrapper.landscape .modal-overlay { align-items: flex-start; }
+}
+
 .theme-setting-row { display: grid; gap: 7px; color: var(--text-main); font-size: 13px; font-weight: 600; }
 .theme-setting-row select {
   width: 100%; min-height: 42px; padding: 9px 12px; border: 1px solid var(--card-border); border-radius: 9px;
