@@ -842,18 +842,49 @@ function renderTrophicImpact() {
   const output = document.getElementById('trophic-impact');
   if (!output) return;
   const absent = new Set(currentProgress.trophicAbsent || []);
-  if (!absent.size) { output.textContent = 'La red está completa. Las flechas indican quién se alimenta de quién; cambiar una especie puede afectar varias poblaciones.'; return; }
-  const effects = [];
-  for (const id of absent) {
-    const gone = TROPHIC_SPECIES.find(item => item.id === id);
-    if (!gone) continue;
-    const consumers = TROPHIC_SPECIES.filter(item => item.eats.includes(id) && !absent.has(item.id));
-    if (gone.role === 'Productor') effects.push(`Sin ${gone.name}, disminuyen alimento y refugio para herbívoros, y puede bajar la polinización y regeneración del bosque.`);
-    else if (gone.role === 'Descomponedores') effects.push('Sin descomponedores, se acumula materia orgánica y se ralentiza el reciclaje de nutrientes del suelo.');
-    else if (gone.role.includes('Depredador')) effects.push(`Sin ${gone.name}, sus presas pueden aumentar y consumir más plantas; ${consumers.length ? `${consumers.map(x => x.name).join(' y ')} también pierde una fuente de alimento.` : 'otras especies pueden ocupar parte de su rol.'}`);
-    else effects.push(`Sin ${gone.name}, cambia la dispersión de semillas o la polinización y sus depredadores pierden alimento${consumers.length ? ` (${consumers.map(x => x.name).join(', ')})` : ''}.`);
+  if (!absent.size) {
+    output.textContent = 'La red está completa. Selecciona una especie para consultar qué efectos directos y en cadena podría provocar su desaparición.';
+    return;
   }
-  output.textContent = `Simulación hipotética: ${effects.join(' ')}`;
+
+  const scenarios = {
+    yaguarete: ['Podrían aumentar el pecarí y otros animales que hoy controla este depredador; el zorro también pierde una fuente posible de alimento.', 'Al haber más herbívoros, crecería la presión sobre frutos, brotes y plantas jóvenes. Menos vegetación puede reducir alimento y refugio para otras especies, y la competencia entre depredadores podría cambiar.'],
+    buho: ['Los roedores e insectos que consume perderían un depredador y podrían aumentar si hay suficiente alimento y refugio.', 'Más roedores pueden consumir más semillas y brotes, dificultando la regeneración de plantas. Zorros y otros depredadores podrían compensar parcialmente, pero también competirían por esas presas.'],
+    zorro: ['Los roedores e insectos y algunas aves pequeñas, como el picaflor, perderían uno de sus depredadores.', 'Si aumentan los roedores, podrían consumir más semillas y brotes. El búho podría encontrar más presas, aunque no reemplaza todos los vínculos del zorro; también habría menos competencia entre carnívoros.'],
+    picaflor: ['La polinización de algunas plantas disminuiría y el zorro perdería una posible presa.', 'Con menos flores polinizadas, algunas plantas podrían producir menos frutos y semillas. Eso reduce alimento para consumidores como el pecarí y puede afectar la renovación de la vegetación. Otras especies polinizadoras podrían compensar una parte.'],
+    pecari: ['El yaguareté perdería una presa importante; además habría menos consumo de frutos y menos dispersión de semillas por el pecarí.', 'Algunas plantas podrían producir más frutos maduros, pero sus semillas viajarían menos y se concentrarían cerca de la planta madre. El depredador podría buscar otras presas, aumentando la presión sobre ellas.'],
+    roedores: ['El búho y el zorro tendrían menos alimento disponible.', 'Disminuiría el consumo de semillas por roedores, lo que podría favorecer la germinación de algunas plantas. A la vez, búhos y zorros podrían cambiar de presa y elevar la presión sobre otras especies pequeñas.'],
+    quebracho: ['Se perderían alimento, sombra y refugio asociados a este árbol; los consumidores que aprovechan sus semillas y brotes tendrían menos recursos.', 'La menor cobertura vegetal puede aumentar la exposición del suelo al sol y a la erosión, reducir sitios de nidificación y dificultar la regeneración del bosque. Otras plantas podrían ocupar parte del espacio, pero no reemplazan de inmediato un árbol maduro.'],
+    molle: ['Disminuirían los frutos y el refugio que aporta el molle; el picaflor, el pecarí y otros consumidores conectados a sus recursos tendrían menos alimento.', 'Menos flores y frutos puede afectar la polinización y dispersión de semillas. Los animales podrían concentrarse en otras plantas, elevando su consumo y alterando la regeneración de la vegetación nativa.'],
+    descomponedores: ['Hojas, restos y organismos muertos tardarían más en descomponerse.', 'Se reciclarían menos nutrientes hacia el suelo, que podría perder fertilidad con el tiempo. Eso debilita el crecimiento de productores y, en consecuencia, reduce alimento y refugio para los consumidores de toda la red.']
+  };
+
+  output.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.className = 'trophic-impact-heading';
+  heading.textContent = absent.size === 1 ? 'Simulación hipotética: desaparición de una especie' : `Simulación hipotética: ${absent.size} especies ausentes`;
+  output.appendChild(heading);
+  absent.forEach(id => {
+    const species = TROPHIC_SPECIES.find(item => item.id === id);
+    const effect = scenarios[id];
+    if (!species || !effect) return;
+    const article = document.createElement('section');
+    article.className = 'trophic-impact-species';
+    const title = document.createElement('h5');
+    title.textContent = `${species.icon} Si desaparece ${species.name}`;
+    const direct = document.createElement('p');
+    const directLabel = document.createElement('strong'); directLabel.textContent = 'Efecto directo: ';
+    direct.append(directLabel, document.createTextNode(effect[0]));
+    const cascade = document.createElement('p');
+    const cascadeLabel = document.createElement('strong'); cascadeLabel.textContent = 'Efecto en cadena: ';
+    cascade.append(cascadeLabel, document.createTextNode(effect[1]));
+    article.append(title, direct, cascade);
+    output.appendChild(article);
+  });
+  const caveat = document.createElement('small');
+  caveat.className = 'trophic-impact-caveat';
+  caveat.textContent = 'Son consecuencias posibles, no una predicción exacta: dependen de la cantidad de individuos, la estación, el hábitat y de si otras especies pueden cubrir esos roles.';
+  output.appendChild(caveat);
 }
 
 async function openAdminPanel() {
