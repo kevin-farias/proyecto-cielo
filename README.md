@@ -55,6 +55,14 @@ La partida activa empieza desde cero en cada apertura o recarga; el progreso de 
 
 En **Ajustes → Administración y respaldos** se puede crear y restaurar una copia de todas las cuentas. Para este prototipo local, el PIN predeterminado es `1234`; puedes definir `ADMIN_PIN` antes de iniciar `node server.js` para cambiarlo. No es un sistema de autenticación apropiado para publicar en internet.
 
+### Publicar en internet
+
+El archivo `render.yaml` prepara un servicio web de Node en Render, con almacenamiento persistente para las cuentas y una URL pública HTTPS. Para publicarlo, inicia sesión en [Render](https://dashboard.render.com/), crea un **Blueprint** desde este repositorio y confirma la creación del servicio. Render genera un `ADMIN_PIN` aleatorio para la publicación; consúltalo en la configuración del servicio para usar los respaldos de administrador.
+
+Esta configuración usa un plan pago de Render porque el plan gratuito se suspende tras inactividad y no permite disco persistente; ese plan no puede garantizar disponibilidad continua ni conservar el archivo de guardados tras reinicios. Revisa el costo que muestra Render y confirma el plan antes de crear el servicio.
+
+Los perfiles de esta app se identifican por nombre y no tienen inicio de sesión ni contraseña propia. Al publicarla, cualquiera que conozca el nombre de un perfil podría consultar o modificar su progreso; usa apodos y no guardes información personal.
+
 ---
 
 ## 📜 Licencia y Proyecto

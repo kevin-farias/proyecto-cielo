@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const PUBLIC_DIR = __dirname;
-const DATA_FILE = path.join(__dirname, '.project-data', 'progress.json');
+const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, '.project-data', 'progress.json');
 const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
 
 function readData() {
