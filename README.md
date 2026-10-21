@@ -49,6 +49,12 @@ La computadora que ejecuta el servidor debe permanecer encendida durante la part
 * `server.js` - Servidor HTTP liviano en Node.js.
 * `assets/` - Galería de imágenes e ilustraciones Excalidraw / Figma.
 
+### Guardado de cuentas y administración
+
+La partida activa empieza desde cero en cada apertura o recarga; el progreso de colección y el perfil se guardan por cuenta en `.project-data/progress.json`. El campo **Cuenta de progreso** del perfil identifica cada guardado; usa un nombre distinto para cada cuenta. La red trófica también guarda por cuenta qué especies se están simulando como ausentes.
+
+En **Ajustes → Administración y respaldos** se puede crear y restaurar una copia de todas las cuentas. Para este prototipo local, el PIN predeterminado es `1234`; puedes definir `ADMIN_PIN` antes de iniciar `node server.js` para cambiarlo. No es un sistema de autenticación apropiado para publicar en internet.
+
 ---
 
 ## 📜 Licencia y Proyecto

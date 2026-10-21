@@ -382,7 +382,22 @@ class SoundEngine {
 const SFX = new SoundEngine();
 
 // INITIALIZATION & CLOCK
-document.addEventListener('DOMContentLoaded', () => {
+let currentAccount = 'explorador';
+let currentProgress = {};
+const TROPHIC_SPECIES = [
+  { id: 'quebracho', name: 'Horco quebracho', icon: '🌳', role: 'Productor', eats: [] },
+  { id: 'molle', name: 'Molle y frutos nativos', icon: '🌿', role: 'Productor', eats: [] },
+  { id: 'picaflor', name: 'Picaflor cometa', icon: '🌸', role: 'Polinizador', eats: ['molle', 'quebracho'] },
+  { id: 'pecari', name: 'Pecarí de collar', icon: '🐗', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
+  { id: 'roedores', name: 'Roedores e insectos', icon: '🐭', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
+  { id: 'buho', name: 'Búho serrano', icon: '🦉', role: 'Depredador', eats: ['roedores'] },
+  { id: 'zorro', name: 'Zorro gris', icon: '🦊', role: 'Depredador', eats: ['roedores', 'picaflor'] },
+  { id: 'yaguarete', name: 'Yaguareté', icon: '🐆', role: 'Depredador tope', eats: ['pecari', 'zorro'] },
+  { id: 'descomponedores', name: 'Hongos y bacterias', icon: '🍄', role: 'Descomponedores', eats: [] }
+];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadAccountProgress();
   updateClock();
   setInterval(updateClock, 1000);
 
@@ -391,6 +406,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCollectionGrid();
   renderFloraFaunaInfo();
   initializeProfile();
+  renderTrophicNetwork();
+  await saveProgress();
   const storedVolume = localStorage.getItem('music_volume');
   const savedVolume = storedVolume === null ? NaN : Number(storedVolume);
   if (Number.isFinite(savedVolume)) setMusicVolume(savedVolume);
@@ -415,6 +432,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { once: true });
 });
+
+function progressPayload() {
+  return { unlockedCreatures: AppState.unlockedCreatures, creatureCopies: AppState.creatureCopies, profileXP: AppState.profileXP, recentlyUnlocked: [], profileName: localStorage.getItem('explorer_profile_name') || 'Explorador', trophicAbsent: currentProgress.trophicAbsent || [], updatedAt: new Date().toISOString() };
+}
+async function saveProgress() {
+  try { await fetch('/api/progress', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ account: currentAccount, progress: { ...currentProgress, ...progressPayload() } }) }); } catch (error) { console.warn('No se pudo guardar el progreso en el servidor.', error); }
+}
+async function loadAccountProgress() {
+  try {
+    const savedName = localStorage.getItem('explorer_profile_name') || 'Mateo';
+    const accountName = localStorage.getItem('explorer_account_id') || savedName;
+    currentAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
+    localStorage.setItem('explorer_account_id', currentAccount);
+    const response = await fetch(`/api/progress?account=${encodeURIComponent(currentAccount)}`);
+    currentProgress = await response.json();
+    if (Array.isArray(currentProgress.unlockedCreatures)) AppState.unlockedCreatures = currentProgress.unlockedCreatures.filter(id => CREATURE_DATABASE[id]);
+    if (currentProgress.creatureCopies && typeof currentProgress.creatureCopies === 'object') AppState.creatureCopies = { ...AppState.creatureCopies, ...currentProgress.creatureCopies };
+    if (Number.isFinite(Number(currentProgress.profileXP))) AppState.profileXP = Number(currentProgress.profileXP);
+    AppState.recentlyUnlocked = [];
+  } catch (error) { currentProgress = {}; console.warn('El servidor no está disponible; se inicia una sesión nueva.', error); }
+}
 
 function updateClock() {
   const now = new Date();
@@ -517,6 +555,103 @@ function renderFloraFaunaInfo() {
   });
 }
 
+function renderTrophicNetwork() {
+  const container = document.getElementById('trophic-network');
+  if (!container) return;
+  const absent = new Set(currentProgress.trophicAbsent || []);
+  container.innerHTML = '';
+  TROPHIC_SPECIES.forEach(species => {
+    const item = document.createElement('label');
+    item.className = `trophic-species ${absent.has(species.id) ? 'is-absent' : ''}`;
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox'; checkbox.checked = !absent.has(species.id);
+    checkbox.setAttribute('aria-label', `${species.name}: presente en la simulación`);
+    checkbox.addEventListener('change', () => {
+      const next = new Set(currentProgress.trophicAbsent || []);
+      if (checkbox.checked) next.delete(species.id); else next.add(species.id);
+      currentProgress.trophicAbsent = [...next];
+      renderTrophicNetwork(); saveProgress();
+    });
+    const text = document.createElement('span');
+    text.textContent = `${species.icon} ${species.name} · ${species.role}`;
+    item.append(checkbox, text); container.appendChild(item);
+  });
+  const links = document.createElement('div');
+  links.className = 'trophic-links';
+  TROPHIC_SPECIES.filter(species => species.eats.length).forEach(consumer => {
+    consumer.eats.forEach(foodId => {
+      const food = TROPHIC_SPECIES.find(item => item.id === foodId);
+      if (!food) return;
+      const link = document.createElement('span');
+      link.className = `trophic-link ${absent.has(consumer.id) || absent.has(foodId) ? 'is-absent' : ''}`;
+      link.textContent = `${food.icon} ${food.name} → ${consumer.icon} ${consumer.name}`;
+      links.appendChild(link);
+    });
+  });
+  container.appendChild(links);
+  renderTrophicImpact();
+}
+function renderTrophicImpact() {
+  const output = document.getElementById('trophic-impact');
+  if (!output) return;
+  const absent = new Set(currentProgress.trophicAbsent || []);
+  if (!absent.size) { output.textContent = 'La red está completa. Las flechas indican quién se alimenta de quién; cambiar una especie puede afectar varias poblaciones.'; return; }
+  const effects = [];
+  for (const id of absent) {
+    const gone = TROPHIC_SPECIES.find(item => item.id === id);
+    if (!gone) continue;
+    const consumers = TROPHIC_SPECIES.filter(item => item.eats.includes(id) && !absent.has(item.id));
+    if (gone.role === 'Productor') effects.push(`Sin ${gone.name}, disminuyen alimento y refugio para herbívoros, y puede bajar la polinización y regeneración del bosque.`);
+    else if (gone.role === 'Descomponedores') effects.push('Sin descomponedores, se acumula materia orgánica y se ralentiza el reciclaje de nutrientes del suelo.');
+    else if (gone.role.includes('Depredador')) effects.push(`Sin ${gone.name}, sus presas pueden aumentar y consumir más plantas; ${consumers.length ? `${consumers.map(x => x.name).join(' y ')} también pierde una fuente de alimento.` : 'otras especies pueden ocupar parte de su rol.'}`);
+    else effects.push(`Sin ${gone.name}, cambia la dispersión de semillas o la polinización y sus depredadores pierden alimento${consumers.length ? ` (${consumers.map(x => x.name).join(', ')})` : ''}.`);
+  }
+  output.textContent = `Simulación hipotética: ${effects.join(' ')}`;
+}
+
+async function openAdminPanel() {
+  const pin = window.prompt('PIN de administrador:');
+  if (pin === null) return;
+  const panel = document.getElementById('admin-panel');
+  panel.hidden = false;
+  try {
+    const result = await adminRequest({ pin, action: 'list' });
+    renderAdminSaves(result.saves || [], pin);
+    document.getElementById('admin-status').textContent = `Acceso de administrador habilitado. Cuentas guardadas: ${Object.keys(result.accounts || {}).length}.`;
+    panel.dataset.pin = pin;
+  } catch (error) { panel.hidden = true; alert(error.message); }
+}
+async function adminRequest(payload) {
+  const response = await fetch('/api/admin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'No se pudo completar la acción.');
+  return result;
+}
+function renderAdminSaves(saves, pin) {
+  const list = document.getElementById('admin-save-list'); list.innerHTML = '';
+  if (!saves.length) { list.textContent = 'Todavía no hay guardados de administrador.'; return; }
+  saves.forEach((save, index) => {
+    const row = document.createElement('div'); row.className = 'admin-save-row';
+    const label = document.createElement('span'); label.textContent = `Respaldo ${index + 1} · ${new Date(save.createdAt).toLocaleString('es-AR')}`;
+    const button = document.createElement('button'); button.className = 'btn-figma btn-secondary'; button.textContent = 'Restaurar';
+    button.addEventListener('click', async () => {
+      if (!confirm('¿Restaurar todas las cuentas a este respaldo?')) return;
+      try { await adminRequest({ pin, action: 'restore', index }); location.reload(); }
+      catch (error) { document.getElementById('admin-status').textContent = error.message; }
+    });
+    row.append(label, button); list.appendChild(row);
+  });
+}
+async function adminSaveAll() {
+  const pin = document.getElementById('admin-panel').dataset.pin;
+  try {
+    await saveProgress();
+    const result = await adminRequest({ pin, action: 'save' });
+    renderAdminSaves(result.saves || [], pin);
+    document.getElementById('admin-status').textContent = 'Guardado administrador creado para todas las cuentas.';
+  } catch (error) { document.getElementById('admin-status').textContent = error.message; }
+}
+
 // SCREEN ROUTER WITH AUTOMATIC ORIENTATION SWITCHING
 function navigateTo(screenId) {
   SFX.playClick();
@@ -585,7 +720,10 @@ function playBattleEntranceAnimation() {
 function initializeProfile() {
   const input = document.getElementById('profile-name');
   if (!input) return;
-  const name = localStorage.getItem('explorer_profile_name') || 'Explorador';
+  const name = currentProgress.profileName || localStorage.getItem('explorer_profile_name') || 'Explorador';
+  localStorage.setItem('explorer_profile_name', name);
+  const accountInput = document.getElementById('account-name');
+  if (accountInput) accountInput.value = currentAccount;
   input.value = name;
   renderProfileGreeting(name);
   renderExplorerProgress();
@@ -593,16 +731,18 @@ function initializeProfile() {
 
 function restoreExplorerProgress() {
   try {
-    const savedCollection = JSON.parse(localStorage.getItem('explorer_unlocked_creatures') || 'null');
+    const savedCollection = Array.isArray(currentProgress.unlockedCreatures)
+      ? currentProgress.unlockedCreatures
+      : JSON.parse(localStorage.getItem('explorer_unlocked_creatures') || 'null');
     if (Array.isArray(savedCollection)) {
       AppState.unlockedCreatures = [...new Set(savedCollection.filter(id => CREATURE_DATABASE[id]))];
     }
-    const savedCopies = JSON.parse(localStorage.getItem('explorer_creature_copies') || 'null');
+    const savedCopies = currentProgress.creatureCopies || JSON.parse(localStorage.getItem('explorer_creature_copies') || 'null');
     AppState.unlockedCreatures.forEach(id => {
       const copies = Number(savedCopies?.[id]);
       AppState.creatureCopies[id] = Number.isInteger(copies) && copies > 0 ? copies : 1;
     });
-    const savedXP = Number(localStorage.getItem('explorer_profile_xp'));
+    const savedXP = Number(currentProgress.profileXP ?? localStorage.getItem('explorer_profile_xp'));
     if (Number.isFinite(savedXP) && savedXP >= 0) AppState.profileXP = savedXP;
   } catch (error) {
     // Keep the default collection and progress when browser storage is unavailable.
@@ -710,6 +850,10 @@ function saveProfileName() {
   const name = input?.value.trim().slice(0, 24) || 'Explorador';
   if (input) input.value = name;
   try { localStorage.setItem('explorer_profile_name', name); } catch (error) {}
+  const accountName = document.getElementById('account-name')?.value.trim() || name;
+  currentAccount = (accountName.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
+  localStorage.setItem('explorer_account_id', currentAccount);
+  loadAccountProgress().then(() => { restoreExplorerProgress(); initializeProfile(); renderCollectionGrid(); renderFloraFaunaInfo(); renderTrophicNetwork(); saveProgress(); });
   renderProfileGreeting(name);
 }
 
@@ -1402,6 +1546,7 @@ function completeQRDiscovery(targetId) {
   renderFloraFaunaInfo();
   renderExplorerProgress();
   if (reserveMap) renderReserveAnimalMarkers();
+  saveProgress();
   navigateTo('coleccion');
 }
 
