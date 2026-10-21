@@ -544,15 +544,15 @@ window.alert = message => { void showAppPopup(message); };
 let currentAccount = 'explorador';
 let currentProgress = {};
 const TROPHIC_SPECIES = [
-  { id: 'quebracho', name: 'Horco quebracho', icon: '🌳', role: 'Productor', eats: [] },
-  { id: 'molle', name: 'Molle y frutos nativos', icon: '🌿', role: 'Productor', eats: [] },
-  { id: 'picaflor', name: 'Picaflor cometa', icon: '🌸', role: 'Polinizador', eats: ['molle', 'quebracho'] },
-  { id: 'pecari', name: 'Pecarí de collar', icon: '🐗', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
-  { id: 'roedores', name: 'Roedores e insectos', icon: '🐭', role: 'Consumidor primario', eats: ['molle', 'quebracho'] },
-  { id: 'buho', name: 'Búho serrano', icon: '🦉', role: 'Depredador', eats: ['roedores'] },
-  { id: 'zorro', name: 'Zorro gris', icon: '🦊', role: 'Depredador', eats: ['roedores', 'picaflor'] },
-  { id: 'yaguarete', name: 'Yaguareté', icon: '🐆', role: 'Depredador tope', eats: ['pecari', 'zorro'] },
-  { id: 'descomponedores', name: 'Hongos y bacterias', icon: '🍄', role: 'Descomponedores', eats: [] }
+  { id: 'yaguarete', name: 'Yaguareté', icon: '🐆', role: 'Depredador tope', level: 'apex', eats: ['pecari', 'zorro'] },
+  { id: 'buho', name: 'Búho serrano', icon: '🦉', role: 'Depredador', level: 'secondary', eats: ['roedores'] },
+  { id: 'zorro', name: 'Zorro gris', icon: '🦊', role: 'Depredador', level: 'secondary', eats: ['roedores', 'picaflor'] },
+  { id: 'picaflor', name: 'Picaflor cometa', icon: '🌸', role: 'Polinizador', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'pecari', name: 'Pecarí de collar', icon: '🐗', role: 'Consumidor primario', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'roedores', name: 'Roedores e insectos', icon: '🐭', role: 'Consumidor primario', level: 'primary', eats: ['molle', 'quebracho'] },
+  { id: 'quebracho', name: 'Horco quebracho', icon: '🌳', role: 'Productor', level: 'producer', eats: [] },
+  { id: 'molle', name: 'Molle y frutos nativos', icon: '🌿', role: 'Productor', level: 'producer', eats: [] },
+  { id: 'descomponedores', name: 'Hongos y bacterias', icon: '🍄', role: 'Descomponedores', level: 'decomposer', eats: [] }
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -739,37 +739,105 @@ function renderTrophicNetwork() {
   if (!container) return;
   const absent = new Set(currentProgress.trophicAbsent || []);
   container.innerHTML = '';
-  TROPHIC_SPECIES.forEach(species => {
-    const item = document.createElement('label');
-    item.className = `trophic-species ${absent.has(species.id) ? 'is-absent' : ''}`;
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox'; checkbox.checked = !absent.has(species.id);
-    checkbox.setAttribute('aria-label', `${species.name}: presente en la simulación`);
-    checkbox.addEventListener('change', () => {
-      const next = new Set(currentProgress.trophicAbsent || []);
-      if (checkbox.checked) next.delete(species.id); else next.add(species.id);
-      currentProgress.trophicAbsent = [...next];
-      renderTrophicNetwork(); saveProgress();
+  const diagram = document.createElement('div');
+  diagram.className = 'trophic-diagram';
+  diagram.setAttribute('role', 'group');
+  diagram.setAttribute('aria-label', 'Red trófica interactiva. Selecciona una especie para simular su desaparición.');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('trophic-connections');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = '<defs><marker id="trophic-arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="currentColor"></path></marker></defs>';
+  diagram.appendChild(svg);
+
+  const tiers = [
+    ['apex', 'Depredador tope'],
+    ['secondary', 'Consumidores secundarios'],
+    ['primary', 'Consumidores primarios'],
+    ['producer', 'Productores'],
+    ['decomposer', 'Descomponedores']
+  ];
+  tiers.forEach(([level, title]) => {
+    const row = document.createElement('div');
+    row.className = `trophic-level trophic-level-${level}`;
+    const label = document.createElement('div'); label.className = 'trophic-level-label'; label.textContent = title;
+    row.appendChild(label);
+    const nodes = document.createElement('div'); nodes.className = 'trophic-level-nodes';
+    TROPHIC_SPECIES.filter(species => species.level === level).forEach(species => {
+      const present = !absent.has(species.id);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `trophic-node ${present ? '' : 'is-absent'}`;
+      button.dataset.speciesId = species.id;
+      button.setAttribute('aria-pressed', String(present));
+      button.setAttribute('aria-label', `${species.name}, ${species.role}. ${present ? 'Presente. Toca para simular su desaparición.' : 'Ausente. Toca para recuperarla en la simulación.'}`);
+      const icon = document.createElement('span'); icon.className = 'trophic-node-icon'; icon.textContent = species.icon;
+      const name = document.createElement('span'); name.className = 'trophic-node-name'; name.textContent = species.name;
+      const role = document.createElement('span'); role.className = 'trophic-node-role'; role.textContent = present ? species.role : 'Ausente';
+      button.append(icon, name, role);
+      button.addEventListener('click', () => {
+        const next = new Set(currentProgress.trophicAbsent || []);
+        if (next.has(species.id)) next.delete(species.id); else next.add(species.id);
+        currentProgress.trophicAbsent = [...next];
+        renderTrophicNetwork();
+        saveProgress();
+      });
+      nodes.appendChild(button);
     });
-    const text = document.createElement('span');
-    text.textContent = `${species.icon} ${species.name} · ${species.role}`;
-    item.append(checkbox, text); container.appendChild(item);
+    row.appendChild(nodes); diagram.appendChild(row);
   });
-  const links = document.createElement('div');
-  links.className = 'trophic-links';
-  TROPHIC_SPECIES.filter(species => species.eats.length).forEach(consumer => {
-    consumer.eats.forEach(foodId => {
-      const food = TROPHIC_SPECIES.find(item => item.id === foodId);
-      if (!food) return;
-      const link = document.createElement('span');
-      link.className = `trophic-link ${absent.has(consumer.id) || absent.has(foodId) ? 'is-absent' : ''}`;
-      link.textContent = `${food.icon} ${food.name} → ${consumer.icon} ${consumer.name}`;
-      links.appendChild(link);
-    });
-  });
-  container.appendChild(links);
+  container.appendChild(diagram);
+  const legend = document.createElement('div');
+  legend.className = 'trophic-legend';
+  legend.textContent = 'Las flechas muestran el flujo de alimento y energía; las flechas punteadas señalan relaciones afectadas.';
+  container.appendChild(legend);
+  drawTrophicConnections(diagram, svg, absent);
   renderTrophicImpact();
 }
+
+function drawTrophicConnections(diagram, svg, absent) {
+  const bounds = diagram.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  svg.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`);
+  svg.setAttribute('width', String(bounds.width));
+  svg.setAttribute('height', String(bounds.height));
+  svg.querySelectorAll('path.trophic-edge').forEach(path => path.remove());
+  const byId = new Map([...diagram.querySelectorAll('.trophic-node')].map(node => [node.dataset.speciesId, node]));
+  const decomposerId = 'descomponedores';
+  const edges = [];
+  TROPHIC_SPECIES.forEach(consumer => {
+    consumer.eats.forEach(foodId => edges.push([foodId, consumer.id]));
+  });
+  TROPHIC_SPECIES.filter(species => species.id !== decomposerId).forEach(species => edges.push([species.id, decomposerId]));
+  edges.forEach(([foodId, consumerId]) => {
+    const food = byId.get(foodId), consumer = byId.get(consumerId);
+    if (!food || !consumer) return;
+    const source = food.getBoundingClientRect(), target = consumer.getBoundingClientRect();
+    const centerX1 = source.left + source.width / 2 - bounds.left;
+    const centerY1 = source.top + source.height / 2 - bounds.top;
+    const centerX2 = target.left + target.width / 2 - bounds.left;
+    const centerY2 = target.top + target.height / 2 - bounds.top;
+    const length = Math.max(1, Math.hypot(centerX2 - centerX1, centerY2 - centerY1));
+    const sourceOffset = Math.min(30, length * .22);
+    const targetOffset = Math.min(32, length * .24);
+    const x1 = centerX1 + (centerX2 - centerX1) / length * sourceOffset;
+    const y1 = centerY1 + (centerY2 - centerY1) / length * sourceOffset;
+    const x2 = centerX2 - (centerX2 - centerX1) / length * targetOffset;
+    const y2 = centerY2 - (centerY2 - centerY1) / length * targetOffset;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const bend = Math.max(22, Math.abs(y2 - y1) * .45);
+    const direction = y2 < y1 ? -1 : 1;
+    path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${y1 + bend * direction}, ${x2} ${y2 - bend * direction}, ${x2} ${y2}`);
+    path.setAttribute('class', `trophic-edge ${absent.has(foodId) || absent.has(consumerId) ? 'is-disrupted' : ''}`);
+    path.setAttribute('marker-end', 'url(#trophic-arrowhead)');
+    svg.appendChild(path);
+  });
+}
+function refreshTrophicConnections() {
+  const diagram = document.querySelector('#trophic-network .trophic-diagram');
+  const svg = diagram?.querySelector('.trophic-connections');
+  if (diagram && svg) drawTrophicConnections(diagram, svg, new Set(currentProgress.trophicAbsent || []));
+}
+window.addEventListener('resize', () => requestAnimationFrame(refreshTrophicConnections));
 function renderTrophicImpact() {
   const output = document.getElementById('trophic-impact');
   if (!output) return;
@@ -859,6 +927,7 @@ function navigateTo(screenId) {
     target.classList.add('active');
     AppState.currentScreen = screenId;
   }
+  if (screenId === 'info_red_trofica') requestAnimationFrame(refreshTrophicConnections);
 
   setActiveMusic(screenId === 'battle_arena' ? 'battle' : 'home', screenId === 'battle_arena');
   if (screenId === 'mapa') initializeReserveMap();
