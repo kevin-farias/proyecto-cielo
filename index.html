@@ -139,10 +139,10 @@
 
                   <div class="translate-status-box mt-3">
                     <div class="translate-badge">
-                      <span class="g-icon">🌐</span> Google Translate Activo
+                      <span class="g-icon">🌐</span> Idiomas del juego
                     </div>
                     <p class="translate-hint" id="translate-hint-text">
-                      Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.
+                      Cambia el idioma de los menús y textos desde este ajuste.
                     </p>
                   </div>
                 </div>
@@ -1083,23 +1083,6 @@
       </div>
     </div>
   </div>
-
-  <!-- GOOGLE TRANSLATE INTEGRATION -->
-  <div id="google_translate_element" style="display:none;"></div>
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      try {
-        new google.translate.TranslateElement({
-          pageLanguage: 'es',
-          includedLanguages: 'es,en,pt',
-          autoDisplay: false
-        }, 'google_translate_element');
-      } catch(e) {
-        console.log('Google Translate Init notice:', e);
-      }
-    }
-  </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <script src="script.js?v=park-registry-3"></script>
 </body>

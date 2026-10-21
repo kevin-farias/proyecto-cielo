@@ -507,6 +507,39 @@ class SoundEngine {
 
 const SFX = new SoundEngine();
 
+function showAppPopup(message, options = {}) {
+  const { variant = 'alert', title = 'Proyecto Cielo', placeholder = 'Escribe aquí' } = options;
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'app-popup-backdrop';
+    const dialog = document.createElement('section');
+    dialog.className = 'app-popup';
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    const heading = document.createElement('h3'); heading.textContent = title;
+    const content = document.createElement('p'); content.textContent = String(message ?? '');
+    dialog.append(heading, content);
+    let field = null;
+    if (variant === 'input') {
+      field = document.createElement('input');
+      field.type = 'password'; field.placeholder = placeholder; field.autocomplete = 'current-password';
+      dialog.appendChild(field);
+    }
+    const actions = document.createElement('div'); actions.className = 'app-popup-actions';
+    const finish = value => { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(value); };
+    const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'app-popup-cancel'; cancel.textContent = variant === 'alert' ? 'Cerrar' : 'Cancelar';
+    cancel.addEventListener('click', () => finish(variant === 'input' ? null : false));
+    if (variant !== 'alert') actions.appendChild(cancel);
+    const accept = document.createElement('button'); accept.type = 'button'; accept.className = 'app-popup-accept'; accept.textContent = variant === 'alert' ? 'Aceptar' : 'Continuar';
+    accept.addEventListener('click', () => finish(variant === 'input' ? field.value : true));
+    actions.appendChild(accept); dialog.appendChild(actions); overlay.appendChild(dialog); document.body.appendChild(overlay);
+    const onKey = event => { if (event.key === 'Escape') finish(variant === 'input' ? null : false); if (event.key === 'Enter' && variant === 'input') finish(field.value); };
+    document.addEventListener('keydown', onKey);
+    (field || accept).focus();
+  });
+}
+window.alert = message => { void showAppPopup(message); };
+
 // INITIALIZATION & CLOCK
 let currentAccount = 'explorador';
 let currentProgress = {};
@@ -756,7 +789,7 @@ function renderTrophicImpact() {
 }
 
 async function openAdminPanel() {
-  const pin = window.prompt('PIN de administrador:');
+  const pin = await showAppPopup('Escribe el PIN de administrador.', { variant: 'input', title: 'Acceso administrador', placeholder: 'PIN' });
   if (pin === null) return;
   const panel = document.getElementById('admin-panel');
   panel.hidden = false;
@@ -781,7 +814,7 @@ function renderAdminSaves(saves, pin) {
     const label = document.createElement('span'); label.textContent = `Respaldo ${index + 1} · ${new Date(save.createdAt).toLocaleString('es-AR')}`;
     const button = document.createElement('button'); button.className = 'btn-figma btn-secondary'; button.textContent = 'Restaurar';
     button.addEventListener('click', async () => {
-      if (!confirm('¿Restaurar todas las cuentas a este respaldo?')) return;
+      if (!await showAppPopup('¿Restaurar todas las cuentas a este respaldo?', { variant: 'confirm', title: 'Restaurar respaldo' })) return;
       try { await adminRequest({ pin, action: 'restore', index }); location.reload(); }
       catch (error) { document.getElementById('admin-status').textContent = error.message; }
     });
@@ -1503,14 +1536,9 @@ function updateVolume(type, val) {
 }
 
 // ==========================================
-// GOOGLE TRANSLATE & MULTI-LANGUAGE SYSTEM
+// BUILT-IN MULTI-LANGUAGE SYSTEM
 // ==========================================
 const languages = ['español', 'english', 'português'];
-const langCodes = {
-  'español': 'es',
-  'english': 'en',
-  'português': 'pt'
-};
 
 const TRANSLATIONS = {
   español: {
@@ -1522,8 +1550,8 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Música Ambiental',
     soundEffects: '🔊 Efectos de Sonido',
     language: '🌐 Idioma',
-    googleActive: 'Google Translate Activo',
-    googleHint: 'Conectado a Google Translate API. El juego se adapta en tiempo real a español, english o português.',
+    googleActive: 'Idiomas del juego',
+    googleHint: 'Cambia el idioma de los menús y textos desde este ajuste.',
     homeTitle: 'Inicio',
     scanQrTitle: 'Escanear criaturas de la naturaleza',
     btnCollection: 'COLECCIÓN',
@@ -1577,8 +1605,8 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Ambient Music',
     soundEffects: '🔊 Sound Effects',
     language: '🌐 Language',
-    googleActive: 'Google Translate Active',
-    googleHint: 'Connected to Google Translate API. The game adapts in real time to Spanish, English or Portuguese.',
+    googleActive: 'Game languages',
+    googleHint: 'Change the language of menus and text here.',
     homeTitle: 'Home',
     scanQrTitle: 'Scan wild nature creatures',
     btnCollection: 'COLLECTION',
@@ -1632,8 +1660,8 @@ const TRANSLATIONS = {
     ambientMusic: '🎵 Música Ambiente',
     soundEffects: '🔊 Efeitos Sonoros',
     language: '🌐 Idioma',
-    googleActive: 'Google Tradutor Ativo',
-    googleHint: 'Conectado à API do Google Tradutor. O jogo se adapta em tempo real para espanhol, inglês ou português.',
+    googleActive: 'Idiomas do jogo',
+    googleHint: 'Altere o idioma dos menus e textos neste ajuste.',
     homeTitle: 'Início',
     scanQrTitle: 'Escanear criaturas da natureza',
     btnCollection: 'COLEÇÃO',
@@ -1695,12 +1723,7 @@ function setLanguage(lang) {
   const currentLangEl = document.getElementById('current-lang');
   if (currentLangEl) currentLangEl.textContent = lang;
 
-  const code = langCodes[lang] || 'es';
-
-  // 1. Synchronize Google Translate Widget & Cookies
-  triggerGoogleTranslate(code);
-
-  // 2. Direct instant DOM UI translation
+  // Translate the app directly; no external translation widget is used.
   applyTranslationsToDOM(lang);
 
   // 3. Refresh dynamic views
@@ -1713,33 +1736,6 @@ function setLanguage(lang) {
   try {
     localStorage.setItem('game_language', lang);
   } catch(e) {}
-}
-
-function triggerGoogleTranslate(langCode) {
-  try {
-    const host = window.location.hostname;
-    // Set cookies recognized by Google Translate script
-    if (langCode === 'es') {
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      document.cookie = `googtrans=/es/es; path=/;`;
-    } else {
-      document.cookie = `googtrans=/es/${langCode}; path=/;`;
-      document.cookie = `googtrans=/auto/${langCode}; path=/;`;
-      if (host) {
-        document.cookie = `googtrans=/es/${langCode}; domain=${host}; path=/;`;
-        document.cookie = `googtrans=/auto/${langCode}; domain=${host}; path=/;`;
-      }
-    }
-
-    // Trigger select change in Google Translate element if mounted
-    const combo = document.querySelector('.goog-te-combo');
-    if (combo) {
-      combo.value = langCode;
-      combo.dispatchEvent(new Event('change'));
-    }
-  } catch (e) {
-    console.log('Google Translate trigger error:', e);
-  }
 }
 
 function applyTranslationsToDOM(lang) {
@@ -1899,7 +1895,7 @@ function applyTranslationsToDOM(lang) {
 
 function triggerExitApp() {
   SFX.playClick();
-  alert('Gracias por probar WAR IN HEAVEN (Proyecto Cielo). Presiona OK para reiniciar la experiencia.');
+  void showAppPopup('Gracias por probar WAR IN HEAVEN (Proyecto Cielo). Tu experiencia se reiniciará.');
   navigateTo('splash');
 }
 
@@ -3113,9 +3109,9 @@ function useItem(itemType) {
   setTimeout(executeEnemyTurn, 1300);
 }
 
-function confirmExitBattle() {
+async function confirmExitBattle() {
   SFX.playClick();
-  if (confirm('¿Deseas rendirte y salir de la arena de batalla?')) {
+  if (await showAppPopup('¿Deseas rendirte y salir de la arena de batalla?', { variant: 'confirm', title: 'Salir de batalla' })) {
     AppState.battle.isSecretEncounter = false;
     AppState.battle.secretIntroFinished = true;
     navigateTo('pelea');
