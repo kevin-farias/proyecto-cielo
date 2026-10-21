@@ -1276,6 +1276,7 @@ input[type="range"] {
 .regional-fauna-gallery { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 12px; margin: 10px 0 22px; }
 .regional-fauna-card { min-width: 0; overflow: hidden; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); box-shadow: 0 4px 14px rgba(0,0,0,.12); }
 .regional-fauna-photo { position: relative; height: 170px; margin: 0; overflow: hidden; background: linear-gradient(145deg,#477f6a,#9ebd8b 54%,#d6c67c); }
+.regional-flora-visual { height: 110px; display: grid; place-items: center; background: radial-gradient(circle at 50% 70%,#b7d7a0 0 13%,transparent 14%),linear-gradient(155deg,#174d3c,#4f8765 55%,#bbd39a); font-size: 58px; }
 .regional-fauna-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .regional-fauna-photo a { position: absolute; right: 7px; bottom: 7px; padding: 5px 8px; border-radius: 7px; background: rgba(10,18,14,.78); color: #fff; font-size: 10px; text-decoration: none; }
 .regional-fauna-photo a:hover { background: rgba(10,18,14,.95); }
@@ -1289,6 +1290,7 @@ input[type="range"] {
 @media (max-width: 520px) {
   .regional-fauna-gallery { grid-template-columns: 1fr; gap: 10px; }
   .regional-fauna-photo { height: 190px; }
+  .regional-flora-visual { height: 120px; }
   .regional-fauna-body { padding: 12px; }
   .regional-fauna-body p { font-size: 12px; }
 }
