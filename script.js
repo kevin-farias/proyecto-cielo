@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   restoreExplorerProgress();
   renderCollectionGrid();
   renderFloraFaunaInfo();
+  renderRegionalFauna();
   initializeProfile();
   renderTrophicNetwork();
   await saveProgress();
@@ -599,6 +600,67 @@ function renderFloraFaunaInfo() {
     `;
 
     container.appendChild(card);
+  });
+}
+
+// Fichas regionales complementarias. Los nombres locales se conservan; cuando no
+// corresponden a una sola especie, la ficha lo indica para evitar falsas precisiones.
+const REGIONAL_FAUNA = [
+  { category:'Peces', icon:'🐟', name:'Mojarras, percas y costeritos', taxa:'Mojarras y mojarrones (varias especies); percas (Percichthys spp.); “costerito” (nombre local por confirmar según la cuenca).', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20160822101945_sib_9_4_07.JPG&size=700', source:'https://sib.gob.ar/especies/odontostilbe-paraguayensis', habitat:'Arroyos, ríos, lagunas y embalses; cada especie ocupa ambientes y cuencas distintas.', diet:'Invertebrados acuáticos, algas, semillas y pequeños organismos; algunas percas también cazan peces.', role:'Conectan la producción acuática con aves, anfibios y peces mayores.', loss:'Bajarían las presas disponibles para martines pescadores, garzas y peces depredadores; algunas presas pequeñas podrían aumentar y cambiar la comunidad del agua.' },
+  { category:'Anfibios', icon:'🐸', name:'Sapos, ranitas y escuerzos', taxa:'Sapo común (Rhinella arenarum); ranita del zarzal (Boana pulchella); escuerzos (Ceratophrys spp., según la localidad).', image:'https://sib.gob.ar/api/2.0.0/thumb?filename=20091207092535_Hypsiboas_pulchella.jpg&size=400', source:'https://sib.gob.ar/especies/boana-pulchella', habitat:'Humedales, charcas temporarias, pastizales húmedos y bordes de monte.', diet:'Principalmente insectos y otros invertebrados; los escuerzos grandes pueden capturar vertebrados pequeños.', role:'Regulan insectos y sirven de alimento a serpientes, aves y mamíferos.', loss:'Podrían aumentar algunos insectos; a la vez, serpientes, aves y otros depredadores perderían alimento. La disminución también advertiría sobre deterioro del agua y del hábitat.' },
+  { category:'Reptiles', icon:'🐍', name:'Lampalagua y víbora de la cruz', taxa:'Lampalagua o boa de las vizcacheras (Boa constrictor occidentalis); yarará grande o víbora de la cruz (Bothrops alternatus).', image:'https://www.ecoregistros.org/site/images/dataimages/2014/08/06/58173/yarara.jpg', source:'https://sib.gob.ar/especies/bothrops-alternatus', habitat:'La lampalagua usa montes secos, pastizales y refugios; la yarará aparece en ambientes variados, incluidos pastizales y humedales.', diet:'La boa consume mamíferos y aves; la yarará caza sobre todo pequeños vertebrados.', role:'Son depredadores que ayudan a regular roedores y otras presas.', loss:'Sin ellas podrían crecer ciertas poblaciones de roedores y alterarse la competencia entre depredadores. La boa, amenazada por pérdida de hábitat y persecución, también es parte del patrimonio nativo.' },
+  { category:'Reptiles', icon:'🦎', name:'Iguana overa y lagartos serranos', taxa:'Iguana overa o teyú (Salvator merianae); lagartijas serranas, incluida la lagartija serrana cordobesa (Contomastix serrana).', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181109145600_Tupinambis_merianae_de_Martin_Lepez.jpg&size=700', source:'https://sib.gob.ar/especies/salvator-merianae', habitat:'Bosques, matorrales, roquedales, claros soleados y bordes de ambientes rurales.', diet:'La iguana es omnívora; los lagartos serranos comen sobre todo insectos y otros invertebrados.', role:'Controlan invertebrados; la iguana también consume frutos y puede dispersar semillas.', loss:'Podrían aumentar algunos insectos y reducirse la dispersión de semillas. Aves y serpientes perderían presas, y se empobrecerían los ensambles de reptiles.' },
+  { category:'Mamíferos', icon:'🦇', name:'Murciélago cola de ratón', taxa:'Murciélago cola de ratón o cola libre (Tadarida brasiliensis).', image:'https://www.ecoregistros.org/site/images/dataimages/2021/03/23/438033/20210323_064258.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=438033', habitat:'Refugios en cuevas, grietas y construcciones; sale a cazar al anochecer.', diet:'Insectos voladores, incluidos numerosos insectos nocturnos.', role:'Consume grandes cantidades de insectos y aporta nutrientes en sus refugios.', loss:'Aumentarían algunos insectos nocturnos y se perdería un controlador natural de plagas; también disminuiría el guano que nutre comunidades de cuevas.' },
+  { category:'Mamíferos', icon:'🐹', name:'Cuis moro', taxa:'“Cuis moro” es un nombre común cuyo uso varía; la identificación debe confirmarse con la localidad (en Córdoba hay cuises del género Galea).', image:'https://2.bp.blogspot.com/-lXb3chmr5xU/ULzg_FPVOqI/AAAAAAAAJxk/jsg-mVq-GQQ/s1600/Galea%2Bmusteloides.jpg', source:'https://faunayfloradelargentinanativa.blogspot.com/2011/03/cuis-moro-galea-musteloides.html', habitat:'Pastizales, matorrales y bordes de monte, con refugio entre la vegetación.', diet:'Hierbas, brotes, hojas y semillas.', role:'Es presa de serpientes, aves rapaces y carnívoros; sus recorridos y excrementos mueven semillas y nutrientes.', loss:'Predadores pequeños perderían una presa frecuente y cambiaría el consumo de vegetación. El efecto dependería de qué especie local se llame “cuis moro”.' },
+  { category:'Mamíferos', icon:'🦔', name:'Mulita', taxa:'Mulita pampeana (Dasypus hybridus); en registros locales el nombre “mulita” puede referirse a otros armadillos.', image:'https://www.ecoregistros.org/site/images/albumes/32/1450/mulita.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=1450', habitat:'Pastizales y pampas; también bordes de bosques y zonas rurales.', diet:'Hormigas, termitas y otros invertebrados del suelo.', role:'Remueve y airea el suelo al buscar alimento; también forma parte de la dieta de grandes carnívoros.', loss:'Podrían cambiar las poblaciones de insectos y disminuir la remoción del suelo. Puma y otros carnívoros perderían una presa potencial.' },
+  { category:'Mamíferos', icon:'🐾', name:'Comadrejas', taxa:'Comadreja overa (Didelphis albiventris); comadrejita enana (nombre regional para pequeños marsupiales del género Thylamys; especie por confirmar).', image:'https://www.ecoregistros.org/site/images/dataimages/2023/07/08/540887/DSCN5621.JPG', source:'https://www.ecoregistros.org/site/imagen.php?id=540887', habitat:'Bosques, matorrales, quebradas y ambientes periurbanos; las especies pequeñas usan pastizales y arbustos.', diet:'La overa es oportunista: frutos, insectos y pequeños animales; las comadrejitas consumen sobre todo insectos.', role:'Dispersan semillas y consumen insectos; son alimento para búhos, zorros y serpientes.', loss:'Podrían aumentar algunos insectos y reducirse la dispersión de semillas. Sus depredadores perderían alimento y se alteraría la red entre arbustos, frutos e insectos.' },
+  { category:'Mamíferos', icon:'🐈', name:'Gato montés, puma y corzuela parda', taxa:'Gato montés (Leopardus geoffroyi); puma (Puma concolor); corzuela parda (Subulo gouazoubira).', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181108143926_Leopardus_de_Joaquin_Ghiorzo.jpg&size=700', source:'https://sib.gob.ar/especies/leopardus-geoffroyi', habitat:'Montes, bosques, matorrales y sierras; la corzuela usa cobertura vegetal y el puma grandes territorios.', diet:'Felinos cazan roedores, aves y otros mamíferos; el puma también puede cazar corzuelas. La corzuela come hojas, brotes y frutos.', role:'Los felinos regulan presas; la corzuela ramonea y dispersa semillas.', loss:'Sin felinos podrían aumentar algunas presas y cambiar el ramoneo; sin corzuelas, los depredadores perderían alimento y se modificaría el consumo de brotes y frutos.' },
+  { category:'Aves', icon:'🐦', name:'Martín pescador y caburé', taxa:'Martín pescador chico (Chloroceryle americana; otras especies locales también se llaman martín pescador); caburé chico (Glaucidium brasilianum).', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20110617130509_Glaucidium_brasilianum_Cabure_Chico.jpg&size=700', source:'https://sib.gob.ar/especies/glaucidium-brasilianum', habitat:'El martín pescador vive junto a cursos de agua; el caburé habita montes y arboledas.', diet:'Peces pequeños para el martín pescador; insectos, reptiles, aves y roedores pequeños para el caburé.', role:'Regulan presas acuáticas y terrestres y conectan la cadena del agua con la del monte.', loss:'La desaparición del martín pescador puede señalar o causar cambios en las comunidades de peces; sin caburé podrían aumentar algunos roedores e insectos y sus presas perderían un controlador.' },
+  { category:'Aves', icon:'🪶', name:'Perdiz serrana y martineta', taxa:'Perdiz serrana (nombre usado para tinámidos serranos; identificación local variable); martineta copetona (Eudromia elegans).', image:'https://sib.gob.ar/api/2.0.0/resized?filename=20181102143553_Eudromia_elegans_de_Martin_Lepez.JPG&size=700', source:'https://sib.gob.ar/especies/eudromia-elegans', habitat:'Pastizales, estepas arbustivas y ambientes abiertos serranos.', diet:'Semillas, brotes, frutos e insectos.', role:'Remueven semillas y consumen invertebrados; son presas de zorros y aves rapaces.', loss:'Se reduciría el movimiento de semillas y el consumo de insectos; depredadores perderían presas, y cambiaría la composición de pastizales y matorrales.' },
+  { category:'Aves', icon:'🦜', name:'Catitas verdes y cotorras serranas', taxa:'Catitas y cotorras serranas (nombres comunes aplicados a distintos loros pequeños según la zona; confirmar especie con observaciones locales).', image:'https://1.bp.blogspot.com/-sLq8ShqAWgk/ThrdRZheeYI/AAAAAAAAAoE/dfhK0biXI_g/s1600/RB01%2BJul.%2B10%2B15.29.jpg', source:'https://www.sib.gob.ar/especies', habitat:'Sierras, quebradas y montes; usan árboles para alimentarse, refugiarse y nidificar.', diet:'Semillas, frutos, brotes y flores.', role:'Pueden dispersar semillas y son parte de las cadenas de alimento del bosque serrano.', loss:'Bajaría la dispersión de algunas semillas y se perderían interacciones de nidificación y alimentación; sus depredadores tendrían menos presas.' },
+  { category:'Aves', icon:'🎶', name:'Calandrias, jilgueros serranos y tordos', taxa:'Calandrias (Mimus spp.); jilgueros serranos (nombre regional aplicado a especies de Sicalis); tordos (varias especies).', image:'https://www.ecoregistros.org/site/images/dataimages/2015/04/05/92867/Calandria-Grande-Mimus-saturninus-_MG_4728-1200.jpg', source:'https://www.ecoregistros.org/site/imagen.php?id=92867', habitat:'Pastizales, matorrales, arboledas abiertas y áreas rurales.', diet:'Combinan insectos, frutos y semillas; la dieta cambia entre especies y estaciones.', role:'Dispersan semillas, consumen insectos y sostienen a rapaces y otros depredadores.', loss:'Podrían aumentar ciertos insectos o semillas, según qué especie falte; disminuirían la dispersión y una fuente de alimento para depredadores.' },
+  { category:'Aves', icon:'🪶', name:'Jotes cabeza negra y colorada', taxa:'Jote cabeza negra (Coragyps atratus); jote cabeza colorada (Cathartes aura).', image:'https://sib.gob.ar/api/2.0.0/thumb?filename=coraatra03.jpg&size=400', source:'https://sib.gob.ar/especies/coragyps-atratus', habitat:'Ambientes abiertos y serranos; planean sobre grandes áreas en busca de carroña.', diet:'Carroña.', role:'Eliminan restos animales y contribuyen al reciclaje de nutrientes.', loss:'La carroña tardaría más en desaparecer y cambiarían las comunidades de organismos que la consumen; se perdería un servicio clave de limpieza natural.' }
+];
+
+function renderRegionalFauna() {
+  const gallery = document.getElementById('regional-fauna-gallery');
+  if (!gallery) return;
+  gallery.innerHTML = '';
+  REGIONAL_FAUNA.forEach((entry) => {
+    const card = document.createElement('article');
+    card.className = 'regional-fauna-card';
+    const figure = document.createElement('figure');
+    figure.className = 'regional-fauna-photo';
+    const image = document.createElement('img');
+    image.src = entry.image;
+    image.alt = `Foto representativa: ${entry.name}`;
+    image.loading = 'lazy';
+    image.referrerPolicy = 'no-referrer';
+    image.onerror = () => { image.hidden = true; figure.classList.add('photo-unavailable'); figure.dataset.icon = entry.icon; };
+    figure.appendChild(image);
+    const credit = document.createElement('a');
+    credit.href = entry.source;
+    credit.target = '_blank';
+    credit.rel = 'noopener noreferrer';
+    credit.textContent = 'Ver fuente de la foto ↗';
+    figure.appendChild(credit);
+    const body = document.createElement('div');
+    body.className = 'regional-fauna-body';
+    const label = document.createElement('span');
+    label.className = 'regional-fauna-category';
+    label.textContent = entry.category;
+    const heading = document.createElement('h5');
+    heading.textContent = `${entry.icon} ${entry.name}`;
+    body.append(label, heading);
+    [['Nombres e identificación', entry.taxa], ['Hábitat', entry.habitat], ['Alimentación', entry.diet], ['Función en la red', entry.role], ['Si desaparece', entry.loss]].forEach(([title, content]) => {
+      const paragraph = document.createElement('p');
+      const strong = document.createElement('strong');
+      strong.textContent = `${title}: `;
+      paragraph.append(strong, document.createTextNode(content));
+      body.appendChild(paragraph);
+    });
+    card.append(figure, body);
+    gallery.appendChild(card);
   });
 }
 
