@@ -3036,14 +3036,9 @@ function confirmTeamAndLaunchBattle() {
 
 function createBattleCreature(key) {
   const data = CREATURE_DATABASE[key];
-  const moves = JSON.parse(JSON.stringify(data.moves)).map((move, index) => ({
-    ...move,
-    cooldownTurns: index === data.moves.length - 1 ? 2 : 1,
-    cooldownUntilTurn: 0
-  }));
   return { key, name: data.name, icon: data.icon, lvl: data.lvl, hp: data.hp,
     maxHp: data.maxHp, spd: data.spd, atk: data.atk,
-    moves, isFainted: false };
+    moves: JSON.parse(JSON.stringify(data.moves)), isFainted: false };
 }
 
 function populateAttackControls() {
@@ -3057,15 +3052,12 @@ function populateAttackControls() {
 
   attackControls.innerHTML = '';
   p.moves.forEach(m => {
-    const cooldownLeft = Math.max(0, (m.cooldownUntilTurn || 0) - AppState.battle.turn);
     const btn = document.createElement('button');
     btn.className = 'btn-battle btn-sub';
     btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text, m);
-    btn.disabled = m.uses <= 0 || cooldownLeft > 0 || AppState.battle.actionLocked;
-    if (m.uses <= 0 || cooldownLeft > 0) btn.classList.add('exhausted');
-    const cooldownTurnsLeft = Math.ceil(cooldownLeft / 2);
-    const cooldownText = cooldownLeft > 0 ? ` · Recarga ${cooldownTurnsLeft} ${cooldownTurnsLeft === 1 ? 'turno' : 'turnos'}` : '';
-    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})${cooldownText}`;
+    btn.disabled = m.uses <= 0 || AppState.battle.actionLocked;
+    if (btn.disabled && m.uses <= 0) btn.classList.add('exhausted');
+    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})`;
     attackControls.appendChild(btn);
   });
 
@@ -3318,10 +3310,9 @@ function executePlayerAttack(moveName, damage, msgText) {
     const actor = actorTeam[actorIndex];
     const target = targetTeam[targetIndex];
     const move = actor.moves.find(m => m.name === moveName);
-    if (!move || move.uses <= 0 || (move.cooldownUntilTurn || 0) > AppState.battle.turn) return;
+    if (!move || move.uses <= 0) return;
     AppState.battle.actionLocked = true;
     move.uses -= 1;
-    move.cooldownUntilTurn = AppState.battle.turn + (move.cooldownTurns || 1) * 2;
     SFX.playAttack();
     hideSubMenu();
     playBattleAnimation(AppState.battle.localTurn === 1 ? 'player-sprite' : 'enemy-sprite');
@@ -3364,10 +3355,9 @@ function executePlayerAttack(moveName, damage, msgText) {
   const p = AppState.battle.player;
   const e = AppState.battle.enemy;
   const currentMove = p.moves?.find(move => move.name === moveName);
-  if (!currentMove || currentMove.uses <= 0 || (currentMove.cooldownUntilTurn || 0) > AppState.battle.turn) return;
+  if (!currentMove || currentMove.uses <= 0) return;
   AppState.battle.actionLocked = true;
   currentMove.uses -= 1;
-  currentMove.cooldownUntilTurn = AppState.battle.turn + (currentMove.cooldownTurns || 1) * 2;
 
   playBattleAnimation('player-sprite');
 
