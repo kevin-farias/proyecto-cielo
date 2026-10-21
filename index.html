@@ -106,6 +106,16 @@
 
               <div class="screen-content scrollable">
                 <div class="settings-card">
+                  <div class="admin-card">
+                    <h4>🛡️ Administración y respaldos</h4>
+                    <p>Guarda una copia de los progresos de todas las cuentas o restaura una copia anterior.</p>
+                    <button class="btn-figma btn-secondary" type="button" onclick="openAdminPanel()">Abrir panel de administrador</button>
+                    <div id="admin-panel" class="admin-panel" hidden>
+                      <button class="btn-figma btn-accent" type="button" onclick="adminSaveAll()">Crear guardado administrador</button>
+                      <div id="admin-save-list" class="admin-save-list"></div>
+                      <p id="admin-status" role="status"></p>
+                    </div>
+                  </div>
                   <label class="setting-label">
                     <span>🎵 Música Ambiental</span>
                     <span id="val-music">80%</span>
@@ -157,6 +167,10 @@
                 <div class="profile-card">
                   <div class="profile-avatar" aria-hidden="true">🌿</div>
                   <div class="profile-fields">
+                    <label for="account-name">Cuenta de progreso</label>
+                    <div class="profile-edit-row">
+                      <input id="account-name" maxlength="32" autocomplete="username" placeholder="Nombre de cuenta">
+                    </div>
                     <label for="profile-name">Tu perfil de explorador</label>
                     <div class="profile-edit-row">
                       <input id="profile-name" maxlength="24" autocomplete="nickname" placeholder="¿Cómo te llamas?">
@@ -419,6 +433,12 @@
                       <span class="lvl-title">🍄 Descomponedores</span>
                       <p>Hongos y bacterias que reciclan nutrientes al degradar la materia orgánica.</p>
                     </div>
+                  </div>
+                  <div class="trophic-editor mt-4">
+                    <h4>🌱 Explora cambios en la red</h4>
+                    <p>Desactiva una especie para simular su desaparición y ver qué relaciones y efectos ecológicos podrían cambiar.</p>
+                    <div id="trophic-network" class="trophic-network"></div>
+                    <div id="trophic-impact" class="trophic-impact" aria-live="polite">Selecciona una especie para analizar su ausencia.</div>
                   </div>
                 </div>
               </div>
