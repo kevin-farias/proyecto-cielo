@@ -545,9 +545,16 @@ function showAppPopup(message, options = {}) {
     dialog.className = 'app-popup';
     dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-modal', 'true');
+    const headingRow = document.createElement('div');
+    headingRow.className = 'app-popup-heading-row';
+    const icon = document.createElement('span');
+    icon.className = 'app-popup-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = variant === 'input' ? '🔐' : '🌿';
     const heading = document.createElement('h3'); heading.textContent = title;
+    headingRow.append(icon, heading);
     const content = document.createElement('p'); content.textContent = String(message ?? '');
-    dialog.append(heading, content);
+    dialog.append(headingRow, content);
     let field = null;
     if (variant === 'input') {
       field = document.createElement('input');
