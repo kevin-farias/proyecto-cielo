@@ -234,25 +234,38 @@
                 <audio id="home-music" src="assets/musica_inicio.mp3" loop preload="metadata"></audio>
                 <audio id="battle-music" src="assets/musica_pelea.mp3" loop preload="metadata"></audio>
                 <audio id="secret-encounter-music" src="assets/musica_encuentro_secreto.mp3" preload="metadata"></audio>
-                <!-- QR Box Simulation -->
-                <div class="qr-card mt-2" onclick="openQRScanner()">
-                  <div class="qr-frame">
-                    <div class="qr-corners"></div>
-                    <div class="qr-graphic">
-                      <div class="qr-square sq1"></div>
-                      <div class="qr-square sq2"></div>
-                      <div class="qr-square sq3"></div>
-                    </div>
-                    <div class="qr-scanner-line"></div>
+                <section class="explore-intro" aria-labelledby="explore-intro-title">
+                  <div class="explore-intro-copy">
+                    <span class="explore-eyebrow"><span aria-hidden="true">✦</span> RESERVA VILLA CIELO</span>
+                    <h2 id="explore-intro-title">La naturaleza te espera</h2>
+                    <p>Explora, aprende y encuentra nuevas especies en tu próxima aventura.</p>
                   </div>
-                  <div class="qr-label">
-                    <strong>QR</strong>
-                    <span>Escanear criaturas de la naturaleza</span>
-                  </div>
-                </div>
+                  <span class="explore-intro-art" aria-hidden="true">🌄</span>
+                </section>
 
-                <!-- Main Menu Buttons -->
-                <div class="dashboard-menu mt-3">
+                <button class="qr-card" type="button" aria-label="Escanear una criatura de la naturaleza" onclick="openQRScanner()">
+                  <span class="qr-frame" aria-hidden="true">
+                    <span class="qr-corners"></span>
+                    <span class="qr-graphic">
+                      <span class="qr-square sq1"></span>
+                      <span class="qr-square sq2"></span>
+                      <span class="qr-square sq3"></span>
+                    </span>
+                    <span class="qr-scanner-line"></span>
+                  </span>
+                  <span class="qr-label">
+                    <span class="qr-label-kicker">DESCUBRIMIENTO RÁPIDO</span>
+                    <strong>Escanear especie</strong>
+                    <span>Acerca el código y suma un nuevo hallazgo.</span>
+                  </span>
+                  <span class="qr-action-arrow" aria-hidden="true">→</span>
+                </button>
+
+                <div class="explore-section-heading">
+                  <div><span>Tu recorrido</span><h4>Elige una aventura</h4></div>
+                  <span class="explore-route-count">4 RUTAS</span>
+                </div>
+                <div class="dashboard-menu">
                   <button class="btn-figma btn-menu" onclick="navigateTo('coleccion')">
                     <span class="btn-icon">🎴</span><span class="btn-menu-copy"><strong>Colección</strong><small>Descubre los animales que encontraste</small></span><span class="btn-menu-arrow" aria-hidden="true">›</span>
                   </button>
@@ -269,8 +282,10 @@
                   </button>
                 </div>
 
-                <!-- Acciones generales -->
-                <div class="dashboard-secondary-grid mt-3">
+                <div class="explore-section-heading explore-options-heading">
+                  <div><span>Un poco más</span><h4>Opciones</h4></div>
+                </div>
+                <div class="dashboard-secondary-grid">
                   <button class="btn-figma btn-secondary" onclick="navigateTo('ajustes')">
                     <span class="btn-icon">⚙</span> AJUSTES
                   </button>
@@ -283,7 +298,7 @@
                 </button>
 
                 <div class="footer-note">
-                  <p>Conecta con la naturaleza y conserva las especies.</p>
+                  <span aria-hidden="true">🌱</span><p>Conecta con la naturaleza y ayuda a conservar las especies.</p>
                 </div>
               </div>
             </section>
