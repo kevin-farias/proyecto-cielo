@@ -633,13 +633,16 @@ async function loadAccountProgress() {
   AppState.creatureCopies = { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 };
   AppState.profileXP = 0;
   AppState.parkCheckedIn = false;
-  const savedName = localStorage.getItem('explorer_profile_name') || 'Mateo';
+  const savedName = localStorage.getItem('explorer_profile_name') || 'Explorador';
   const oldAccount = localStorage.getItem('explorer_account_id') || '';
   const accountName = oldAccount || savedName;
-  currentAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
+  const normalizedAccount = (accountName.trim().toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]/g, '-') || 'explorador').slice(0, 48);
+  const migratingMateoAccount = normalizedAccount === 'mateo';
+  currentAccount = migratingMateoAccount ? 'explorador' : normalizedAccount;
   localStorage.setItem('explorer_account_id', currentAccount);
   const accounts = readLocalAccountStore();
-  let saved = accounts[currentAccount] || {};
+  let saved = accounts[currentAccount] || (migratingMateoAccount ? accounts.mateo : {}) || {};
+  if (migratingMateoAccount) saved = { ...readLocalPersistentProgress(), ...saved };
   if (!accounts[currentAccount] && oldAccount === currentAccount && localStorage.getItem('proyecto_cielo_accounts_migrated') !== 'true') {
     saved = { ...saved, ...readLocalPersistentProgress() };
   }
@@ -1334,7 +1337,7 @@ function initializeProfile() {
   const name = currentProgress.profileName || localStorage.getItem('explorer_profile_name') || 'Explorador';
   localStorage.setItem('explorer_profile_name', name);
   const accountInput = document.getElementById('account-name');
-  if (accountInput) accountInput.value = currentAccount;
+  if (accountInput) accountInput.value = currentAccount === 'explorador' ? 'Explorador' : currentAccount;
   input.value = name;
   renderProfileGreeting(name);
   renderExplorerProgress();
@@ -1651,6 +1654,7 @@ function openReservePlayerProfile(profileId) {
   });
   if (!profile.animals.length) animals.textContent = 'Todavía no tiene animales.';
   content.append(summary, animalsTitle, animals);
+  closeModal('modal-park-players');
   openModal('modal-park-player-profile');
 }
 

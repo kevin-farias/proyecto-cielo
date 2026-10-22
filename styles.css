@@ -1883,16 +1883,18 @@ input[type="range"] {
 .park-players-modal { max-height: 88vh; overflow-y: auto; }
 .park-player-count, .park-player-note { color: var(--text-muted); font-size: 9px; }
 .park-player-note { margin: 0 0 12px; }
-.park-players-list { display: grid; gap: 8px; max-height: 52vh; overflow-y: auto; }
+.park-players-list { display: grid; gap: 8px; max-height: 52vh; min-width: 0; overflow-x: hidden; overflow-y: auto; }
 .park-player-card {
-  display: flex; align-items: center; gap: 9px; padding: 9px;
+  display: grid; grid-template-columns: 36px minmax(0, 1fr) 82px; align-items: center; gap: 9px; min-width: 0; padding: 9px;
   border: 1px solid var(--card-border); border-radius: 12px; background: rgba(0,0,0,.18);
 }
 .park-player-avatar { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 50%; background: rgba(118,200,147,.16); font-size: 20px; }
 .park-player-details { display: grid; gap: 3px; min-width: 0; flex: 1; }
-.park-player-details strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; }
-.park-player-details small { color: var(--text-muted); font-size: 8px; }
-.park-player-card .btn-figma { flex: 0 0 auto; padding: 7px 9px; font-size: 8px; }
+.park-player-details strong { min-width: 0; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.park-player-details small { color: var(--text-muted); font-size: 8px; line-height: 1.35; }
+.park-player-card .btn-figma { width: 100%; min-width: 0; min-height: 34px; padding: 7px 5px; font-size: 8px; white-space: nowrap; }
+.park-players-modal .modal-header > div { min-width: 0; flex: 1; }
+.park-players-modal .modal-header h4 { overflow-wrap: anywhere; }
 .reserve-profile-summary { display: flex; align-items: center; gap: 12px; margin: 8px 0 16px; padding: 12px; border-radius: 12px; background: var(--card-bg); }
 .reserve-profile-summary > span { font-size: 32px; }
 .reserve-profile-summary > div { display: grid; gap: 4px; }
