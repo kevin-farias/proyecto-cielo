@@ -154,6 +154,7 @@ const AppState = {
   recentlyUnlocked: [], // Tracks newly captured creatures in this session!
   profileXP: 0,
   creatureCopies: { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 },
+  creatureXP: {},
   inventory: { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3, insects: 3, fish: 3, browse: 3, carrion: 3 },
   
   // Battle state
@@ -208,9 +209,11 @@ function readLocalPersistentProgress() {
   const speciesCodes = readJson('species_qr_codes', {});
   const unlockedCreatures = readJson('explorer_unlocked_creatures', AppState.unlockedCreatures);
   const creatureCopies = readJson('explorer_creature_copies', AppState.creatureCopies);
+  const creatureXP = readJson('explorer_creature_xp', {});
   return {
     unlockedCreatures: Array.isArray(unlockedCreatures) ? unlockedCreatures : AppState.unlockedCreatures,
     creatureCopies: creatureCopies && typeof creatureCopies === 'object' ? creatureCopies : AppState.creatureCopies,
+    creatureXP: creatureXP && typeof creatureXP === 'object' ? creatureXP : {},
     profileXP: Number(readValue('explorer_profile_xp')) || AppState.profileXP,
     secretBattleWins: Number(readValue('secret_battle_bot_wins')) || 0,
     secretRewardClaimed: readValue('secret_battle_reward_claimed') === 'true',
@@ -225,6 +228,7 @@ function writeLocalPersistentProgress(progress) {
   try {
     localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(progress.unlockedCreatures));
     localStorage.setItem('explorer_creature_copies', JSON.stringify(progress.creatureCopies));
+    localStorage.setItem('explorer_creature_xp', JSON.stringify(progress.creatureXP || {}));
     localStorage.setItem('explorer_profile_xp', String(progress.profileXP));
     localStorage.setItem('secret_battle_bot_wins', String(progress.secretBattleWins));
     localStorage.setItem('secret_battle_reward_claimed', String(progress.secretRewardClaimed));
@@ -239,6 +243,10 @@ function savePersistentProgress() {
   const progress = readLocalPersistentProgress();
   progress.unlockedCreatures = [...new Set([...progress.unlockedCreatures, ...AppState.unlockedCreatures])];
   progress.creatureCopies = { ...AppState.creatureCopies, ...progress.creatureCopies };
+  progress.creatureXP = { ...(progress.creatureXP || {}) };
+  Object.entries(AppState.creatureXP).forEach(([id, xp]) => {
+    progress.creatureXP[id] = Math.max(Number(progress.creatureXP[id]) || 0, Number(xp) || 0);
+  });
   progress.profileXP = Math.max(progress.profileXP, AppState.profileXP);
   progress.secretBattleWins = Math.max(progress.secretBattleWins, getSecretBattleWins());
   progress.secretRewardClaimed = progress.secretRewardClaimed || hasClaimedSecretReward();
@@ -264,9 +272,14 @@ async function syncPersistentProgress() {
     Object.entries(AppState.creatureCopies).forEach(([id, count]) => {
       copies[id] = Math.max(Number(copies[id]) || 0, Number(count) || 0);
     });
+    const creatureXP = { ...(remote.creatureXP || {}), ...(local.creatureXP || {}) };
+    Object.entries(AppState.creatureXP).forEach(([id, xp]) => {
+      creatureXP[id] = Math.max(Number(creatureXP[id]) || 0, Number(xp) || 0);
+    });
     const progress = {
       unlockedCreatures,
       creatureCopies: copies,
+      creatureXP,
       profileXP: Math.max(0, Number(remote.profileXP) || 0, Number(local.profileXP) || 0, AppState.profileXP),
       secretBattleWins: Math.max(0, Number(remote.secretBattleWins) || 0, Number(local.secretBattleWins) || 0),
       secretRewardClaimed: Boolean(remote.secretRewardClaimed || local.secretRewardClaimed),
@@ -276,6 +289,7 @@ async function syncPersistentProgress() {
       parkEntryCode: local.parkEntryCode || remote.parkEntryCode || ''
     };
     writeLocalPersistentProgress(progress);
+    AppState.creatureXP = progress.creatureXP;
     AppState.parkCheckedIn = progress.parkCheckedIn;
     restoreExplorerProgress();
     renderCollectionGrid();
@@ -632,6 +646,7 @@ async function loadAccountProgress() {
   AppState.unlockedCreatures = ['picaflor', 'yaguarete', 'pecari', 'quebracho'];
   AppState.creatureCopies = { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 };
   AppState.profileXP = 0;
+  AppState.creatureXP = {};
   AppState.parkCheckedIn = false;
   const savedName = localStorage.getItem('explorer_profile_name') || 'Explorador';
   const oldAccount = localStorage.getItem('explorer_account_id') || '';
@@ -655,11 +670,13 @@ async function loadAccountProgress() {
   }
   if (Array.isArray(currentProgress.unlockedCreatures)) AppState.unlockedCreatures = currentProgress.unlockedCreatures.filter(id => CREATURE_DATABASE[id]);
   if (currentProgress.creatureCopies && typeof currentProgress.creatureCopies === 'object') AppState.creatureCopies = { ...AppState.creatureCopies, ...currentProgress.creatureCopies };
+  if (currentProgress.creatureXP && typeof currentProgress.creatureXP === 'object') AppState.creatureXP = { ...currentProgress.creatureXP };
   if (Number.isFinite(Number(currentProgress.profileXP))) AppState.profileXP = Number(currentProgress.profileXP);
   AppState.parkCheckedIn = Boolean(currentProgress.parkCheckedIn);
   writeLocalPersistentProgress({
     unlockedCreatures: AppState.unlockedCreatures,
     creatureCopies: AppState.creatureCopies,
+    creatureXP: AppState.creatureXP,
     profileXP: AppState.profileXP,
     secretBattleWins: Number(currentProgress.secretBattleWins) || 0,
     secretRewardClaimed: Boolean(currentProgress.secretRewardClaimed),
@@ -726,7 +743,7 @@ function renderCollectionGrid() {
         <div class="card-img-placeholder species-thumb"><img src="${data.image || `assets/species/${key}.png`}" alt="${data.name}" hidden><span>${data.icon}</span></div>
         <div class="card-info">
           <h4>${data.name}</h4>
-          <p>Nivel ${data.lvl} • Serrano</p>
+          <p>Nivel ${getCreatureProgress(key).level} • Serrano</p>
         </div>
       `;
       const thumb = card.querySelector('.species-thumb img');
@@ -1394,12 +1411,37 @@ function getExplorerLevel() {
   };
 }
 
+const CREATURE_XP_BASE_PER_LEVEL = 100;
+const CREATURE_XP_LEVEL_INCREMENT = 50;
+const PROFILE_ANIMAL_PREVIEW_COUNT = 6;
+
+function getCreatureProgress(id) {
+  const creature = CREATURE_DATABASE[id];
+  const xp = Math.max(0, Number(AppState.creatureXP[id]) || 0);
+  let remainingXP = xp;
+  let levelsGained = 0;
+  let xpPerLevel = CREATURE_XP_BASE_PER_LEVEL;
+  while (remainingXP >= xpPerLevel) {
+    remainingXP -= xpPerLevel;
+    levelsGained += 1;
+    xpPerLevel = CREATURE_XP_BASE_PER_LEVEL + levelsGained * CREATURE_XP_LEVEL_INCREMENT;
+  }
+  return {
+    xp,
+    levelsGained,
+    level: (creature?.lvl || 1) + levelsGained,
+    currentXP: remainingXP,
+    xpPerLevel
+  };
+}
+
 function renderExplorerProgress() {
   const levelLabel = document.getElementById('profile-level-label');
   const xpFill = document.getElementById('profile-xp-fill');
   const xpLabel = document.getElementById('profile-xp-label');
   const xpTrack = document.querySelector('.profile-xp-track');
   const animalList = document.getElementById('profile-animal-list');
+  const animalToggle = document.getElementById('profile-animals-toggle');
   const level = getExplorerLevel();
   if (levelLabel) levelLabel.textContent = `Nivel ${level.level} · ${level.totalXP} EXP`;
   if (xpFill) xpFill.style.width = `${(level.currentXP / level.xpPerLevel) * 100}%`;
@@ -1409,18 +1451,63 @@ function renderExplorerProgress() {
     animalList.replaceChildren();
     if (!AppState.unlockedCreatures.length) {
       animalList.textContent = 'Aún no descubriste animales.';
+      if (animalToggle) {
+        animalToggle.classList.add('hidden');
+        animalToggle.setAttribute('aria-expanded', 'false');
+        animalToggle.textContent = 'Mostrar más';
+      }
     } else {
-      AppState.unlockedCreatures.forEach(id => {
-        const creature = CREATURE_DATABASE[id];
-        if (!creature) return;
+      const animals = AppState.unlockedCreatures.map(id => ({ id, creature: CREATURE_DATABASE[id] })).filter(item => item.creature);
+      const expanded = animalToggle?.getAttribute('aria-expanded') === 'true';
+      animals.forEach(({ id, creature }, index) => {
         const chip = document.createElement('span');
         chip.className = 'profile-animal-chip';
+        const creatureProgress = getCreatureProgress(id);
         const copies = AppState.creatureCopies[id] || 1;
-        chip.textContent = `${creature.icon} ${creature.name}${copies > 1 ? ` ×${copies}` : ''}`;
+        chip.textContent = `${creature.icon} ${creature.name} · Niv. ${creatureProgress.level}${copies > 1 ? ` ×${copies}` : ''}`;
+        chip.title = `${creature.name} · Nivel ${creatureProgress.level} · ${creatureProgress.xp} EXP (${creatureProgress.currentXP}/${creatureProgress.xpPerLevel} para el próximo nivel)`;
+        if (index >= PROFILE_ANIMAL_PREVIEW_COUNT) {
+          chip.dataset.extraAnimal = 'true';
+          chip.hidden = !expanded;
+        }
         animalList.append(chip);
       });
+      const hiddenCount = Math.max(0, animals.length - PROFILE_ANIMAL_PREVIEW_COUNT);
+      if (animalToggle) {
+        animalToggle.classList.toggle('hidden', hiddenCount === 0);
+        animalToggle.setAttribute('aria-expanded', String(expanded));
+        animalToggle.textContent = expanded ? 'Mostrar menos' : `Mostrar ${hiddenCount} más`;
+      }
     }
   }
+}
+
+function toggleProfileAnimals() {
+  const button = document.getElementById('profile-animals-toggle');
+  const animalList = document.getElementById('profile-animal-list');
+  if (!button || !animalList) return;
+  const expanded = button.getAttribute('aria-expanded') !== 'true';
+  button.setAttribute('aria-expanded', String(expanded));
+  animalList.querySelectorAll('[data-extra-animal="true"]').forEach(chip => { chip.hidden = !expanded; });
+  const hiddenCount = animalList.querySelectorAll('[data-extra-animal="true"]').length;
+  button.textContent = expanded ? 'Mostrar menos' : `Mostrar ${hiddenCount} más`;
+}
+
+function awardCreatureXPForBattle(amount) {
+  if (isLocalDuel() || !Array.isArray(AppState.battle.playerTeam)) return [];
+  const levelUps = [];
+  AppState.battle.playerTeam.forEach(creature => {
+    const id = creature.key;
+    if (!id || !CREATURE_DATABASE[id]) return;
+    const previousLevel = getCreatureProgress(id).level;
+    AppState.creatureXP[id] = (Number(AppState.creatureXP[id]) || 0) + amount;
+    const nextLevel = getCreatureProgress(id).level;
+    if (nextLevel > previousLevel) levelUps.push(`${creature.icon} ${creature.name}: nivel ${previousLevel} → ${nextLevel}`);
+  });
+  savePersistentProgress();
+  renderExplorerProgress();
+  renderCollectionGrid();
+  return levelUps;
 }
 
 function awardProfileXP(amount) {
@@ -2776,12 +2863,14 @@ function renderTeamSelectionView() {
     card.className = `select-card ${isSelected ? 'selected-in-team' : ''}`;
     card.id = `select-card-${key}`;
     card.onclick = () => toggleCreatureInTeam(key);
+    const creatureProgress = getCreatureProgress(key);
+    const levelsGained = creatureProgress.levelsGained;
 
     card.innerHTML = `
       <div class="select-card-avatar">${data.icon}</div>
       <div class="select-card-info">
         <h4>${data.name}</h4>
-        <div class="select-card-stats">Nivel ${data.lvl} • ${data.badge} • HP: ${data.hp} | ATK: ${data.atk}</div>
+        <div class="select-card-stats">Nivel ${creatureProgress.level} • ${data.badge} • HP: ${data.hp + levelsGained * 6} | ATK: ${data.atk + levelsGained * 2}</div>
       </div>
       <button class="btn-select-creature ${isSelected ? 'selected' : ''}">
         ${isSelected ? '✓ EN EQUIPO' : '+ ELEGIR'}
@@ -3060,9 +3149,12 @@ function confirmTeamAndLaunchBattle() {
 
 function createBattleCreature(key) {
   const data = CREATURE_DATABASE[key];
-  return { key, name: data.name, icon: data.icon, lvl: data.lvl, hp: data.hp,
-    maxHp: data.maxHp, spd: data.spd, atk: data.atk,
-    moves: JSON.parse(JSON.stringify(data.moves)), isFainted: false };
+  const progress = getCreatureProgress(key);
+  const moves = JSON.parse(JSON.stringify(data.moves)).map(move => ({ ...move, dmg: move.dmg + progress.levelsGained * 2 }));
+  const maxHp = data.maxHp + progress.levelsGained * 6;
+  return { key, name: data.name, icon: data.icon, lvl: progress.level, hp: maxHp,
+    maxHp, spd: data.spd + progress.levelsGained, atk: data.atk + progress.levelsGained * 2,
+    moves, isFainted: false };
 }
 
 function populateAttackControls() {
@@ -3077,11 +3169,11 @@ function populateAttackControls() {
   attackControls.innerHTML = '';
   p.moves.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = 'btn-battle btn-sub';
+    btn.className = 'btn-battle btn-sub attack-item-button';
     btn.onclick = () => executePlayerAttack(m.name, m.dmg, m.text, m);
     btn.disabled = m.uses <= 0 || AppState.battle.actionLocked;
     if (btn.disabled && m.uses <= 0) btn.classList.add('exhausted');
-    btn.innerHTML = `⚡ ${m.name} (${m.uses}/${m.maxUses})`;
+    btn.innerHTML = `<span>⚡ ${m.name}</span><small>Potencia ${m.dmg} · ${m.uses}/${m.maxUses} usos</small>`;
     attackControls.appendChild(btn);
   });
 
@@ -3418,15 +3510,17 @@ function executePlayerAttack(moveName, damage, msgText) {
       setTimeout(() => {
         if (AppState.battle.isSecretEncounter) {
           const reward = grantSecretBattleReward();
+          const levelUps = awardCreatureXPForBattle(150);
           AppState.battle.isSecretEncounter = false;
           AppState.battle.secretIntroFinished = true;
-          alert(`🌟 ¡EL GUARDIÁN TE RECONOCE!\n\nVenciste a los tres animales más poderosos y ganaste +700 EXP.\n\n🎁 ${reward.creature.icon} ${reward.creature.name} ${reward.isNew ? 'se unió a tu colección' : `se sumó a tus compañeros (ahora tienes ${reward.copies})`}.`);
+          alert(`🌟 ¡EL GUARDIÁN TE RECONOCE!\n\nVenciste a los tres animales más poderosos y ganaste +700 EXP. Tus criaturas ganaron +150 EXP cada una.${levelUps.length ? `\n\n¡Subieron de nivel!\n${levelUps.join('\n')}` : ''}\n\n🎁 ${reward.creature.icon} ${reward.creature.name} ${reward.isNew ? 'se unió a tu colección' : `se sumó a tus compañeros (ahora tienes ${reward.copies})`}.`);
         } else {
           const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
           const wins = AppState.battle.mode === 'bot' ? recordStandardBotVictory() : getSecretBattleWins();
           const xpReward = AppState.battle.mode === 'bot' ? getBotVictoryXP() : 350;
           awardProfileXP(xpReward);
-          alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Ganaste +${xpReward} EXP y protegiste la Reserva Natural Serrana!${wins === 2 ? '\n\n🌑 Algo extraño responde desde las sierras… Quizás debas volver donde comenzaron tus desafíos.' : ''}`);
+          const levelUps = awardCreatureXPForBattle(100);
+          alert(`🏆 ¡VICTORIA DE BATALLA!\n\n¡Has derrotado a todo el equipo rival (${diffText}) con tus 3 criaturas!\n¡Ganaste +${xpReward} EXP para tu perfil y +100 EXP para cada criatura!${levelUps.length ? `\n\n¡Subieron de nivel!\n${levelUps.join('\n')}` : ''}${wins === 2 ? '\n\n🌑 Algo extraño responde desde las sierras… Quizás debas volver donde comenzaron tus desafíos.' : ''}`);
         }
         navigateTo('pelea');
       }, 600);
@@ -3495,6 +3589,7 @@ function executeEnemyTurn() {
       setTimeout(() => {
         const wasSecretEncounter = AppState.battle.isSecretEncounter;
         const diffText = (AppState.battle.botDifficulty || 'facil').toUpperCase();
+        awardCreatureXPForBattle(25);
         AppState.battle.isSecretEncounter = false;
         AppState.battle.secretIntroFinished = true;
         alert(wasSecretEncounter
@@ -3610,6 +3705,7 @@ function useItem(itemType) {
     try { localStorage.setItem('explorer_unlocked_creatures', JSON.stringify(AppState.unlockedCreatures)); } catch (error) {}
     try { localStorage.setItem('explorer_creature_copies', JSON.stringify(AppState.creatureCopies)); } catch (error) {}
     awardProfileXP(isNew ? 100 : 50);
+    awardCreatureXPForBattle(25);
     AppState.battle.finished = true;
     document.getElementById('battle-controls-main').classList.add('hidden');
     document.getElementById('battle-log').textContent = `¡${species.name} se acercó a ${food.name} y fue capturado!`;
