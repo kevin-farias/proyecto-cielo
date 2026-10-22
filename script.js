@@ -154,7 +154,7 @@ const AppState = {
   recentlyUnlocked: [], // Tracks newly captured creatures in this session!
   profileXP: 0,
   creatureCopies: { picaflor: 1, yaguarete: 1, pecari: 1, quebracho: 1 },
-  inventory: { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3 },
+  inventory: { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3, insects: 3, fish: 3, browse: 3, carrion: 3 },
   
   // Battle state
   battle: {
@@ -911,18 +911,19 @@ const REGIONAL_SPECIES_PHOTOS = {
   'Mojarras y mojarrones (varias especies)': ['Odontostilbe paraguayensis 60517895.jpg', 'https://commons.wikimedia.org/wiki/Category:Odontostilbe'],
   'Percas (Percichthys spp.)': ['Perca trucha (Percichthys trucha).JPG', 'https://commons.wikimedia.org/wiki/Category:Percichthys_trucha'],
   'Costeritos (peces pequeños de agua dulce)': ['Odontostilbe pequira 244685933.jpg', 'https://commons.wikimedia.org/wiki/Category:Odontostilbe'],
-  'Lagartos serranos (incluye la lagartija serrana cordobesa)': ['https://www.ecoregistros.org/site/images/dataimages/2024/07/27/593461/20240726_144052.jpg', 'https://www.ecoregistros.org/site/imagen.php?id=593461'],
+  'Lagartos serranos (incluye la lagartija serrana cordobesa)': ['https://static.inaturalist.org/photos/32826063/large.jpeg', 'https://www.inaturalist.org/photos/32826063'],
   'Cuis moro (cuises del género Galea)': ['Galea musteloides.jpg', 'https://commons.wikimedia.org/wiki/Category:Galea_musteloides'],
-  'Mulita pampeana (Dasypus hybridus)': ['Dasypus hybridus.jpg', 'https://commons.wikimedia.org/wiki/Category:Dasypus_hybridus'],
-  'Comadreja overa (Didelphis albiventris)': ['Didelphis albiventris.jpg', 'https://commons.wikimedia.org/wiki/Category:Didelphis_albiventris'],
+  'Mulita pampeana (Dasypus hybridus)': ['Dasypus hybridus (mulita).jpg', 'https://commons.wikimedia.org/wiki/File:Dasypus_hybridus_(mulita).jpg'],
+  'Comadreja overa (Didelphis albiventris)': ['Comadreja (Didelphis albiventris).jpg', 'https://commons.wikimedia.org/wiki/File:Comadreja_(Didelphis_albiventris).jpg'],
   'Comadrejita enana (Thylamys spp.)': ['Thylamys pallidior.jpg', 'https://commons.wikimedia.org/wiki/Category:Thylamys'],
   'Gato montés (Leopardus geoffroyi)': ['Leopardus geoffroyi.jpg', 'https://commons.wikimedia.org/wiki/Category:Leopardus_geoffroyi'],
   'Puma (Puma concolor)': ['Puma concolor.jpg', 'https://commons.wikimedia.org/wiki/Category:Puma_concolor'],
-  'Corzuela parda (Subulo gouazoubira)': ['Subulo gouazoubira.jpg', 'https://commons.wikimedia.org/wiki/Category:Subulo_gouazoubira'],
+  'Corzuela parda (Subulo gouazoubira)': ['Subulo gouazoubira (Guazubirá) en el Paisaje Protegido Valle del Lunarejo, Rivera, Uruguay.jpg', 'https://commons.wikimedia.org/wiki/File:Subulo_gouazoubira_(Guazubirá)_en_el_Paisaje_Protegido_Valle_del_Lunarejo,_Rivera,_Uruguay.jpg'],
+  'Perdiz serrana (tinámido de ambientes serranos)': ['Nothoprocta pentlandii 27164537.jpg', 'https://commons.wikimedia.org/wiki/File:Nothoprocta_pentlandii_27164537.jpg'],
   'Martín pescador chico (Chloroceryle americana; nombre compartido por otras especies)': ['Chloroceryle americana.jpg', 'https://commons.wikimedia.org/wiki/Category:Chloroceryle_americana'],
   'Caburé chico (Glaucidium brasilianum)': ['Glaucidium brasilianum.jpg', 'https://commons.wikimedia.org/wiki/Category:Glaucidium_brasilianum'],
   'Martineta copetona (Eudromia elegans)': ['Eudromia elegans.jpg', 'https://commons.wikimedia.org/wiki/Category:Eudromia_elegans'],
-  'Calandrias (Mimus spp.)': ['Mimus saturninus.jpg', 'https://commons.wikimedia.org/wiki/Category:Mimus_saturninus'],
+  'Calandrias (Mimus spp.)': ['CALANDRIA Mimus saturninus.jpg', 'https://commons.wikimedia.org/wiki/File:CALANDRIA_Mimus_saturninus.jpg'],
   'Jilgueros serranos (Sicalis spp.; nombre regional)': ['Sicalis luteola.jpg', 'https://commons.wikimedia.org/wiki/Category:Sicalis_luteola'],
   'Catitas verdes (loros pequeños serranos)': ['Periquitos - Psilopsiagon aymara.jpg', 'https://commons.wikimedia.org/wiki/Category:Psilopsiagon_aymara'],
   'Cotorras serranas (loros de monte y sierras)': ['Cotorra argentina (Myiopsitta monachus) (I).jpg', 'https://commons.wikimedia.org/wiki/Category:Myiopsitta_monachus'],
@@ -934,6 +935,25 @@ const REGIONAL_SPECIES_PHOTOS = {
 function regionalCreatureId(member) {
   const slug = member.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
   return `regional_${slug}`;
+}
+
+const REGIONAL_CAPTURE_FOODS = {
+  insects: { id: 'insects', name: 'Insectos serranos', icon: '🐛' },
+  fish: { id: 'fish', name: 'Peces de arroyo', icon: '🐟' },
+  browse: { id: 'browse', name: 'Brotes y hojas', icon: '🍃' },
+  carrion: { id: 'carrion', name: 'Carroña', icon: '🦴' }
+};
+
+function getRegionalFavoriteFood(entry) {
+  const diet = `${entry.diet} ${entry.taxa}`.toLocaleLowerCase('es');
+  if (/carroñ/.test(diet)) return REGIONAL_CAPTURE_FOODS.carrion;
+  if (/pez|pescad|acuátic|algas|plancton/.test(diet)) return REGIONAL_CAPTURE_FOODS.fish;
+  if (/insect|invertebr|hormiga|termita/.test(diet)) return REGIONAL_CAPTURE_FOODS.insects;
+  if (/semill|granív/.test(diet)) return { id: 'seeds', name: 'Semillas serranas', icon: '🌻' };
+  if (/frut|bayas/.test(diet)) return { id: 'berries', name: 'Frutos silvestres', icon: '🫐' };
+  if (/mamífer|aves|vertebr|presa|roedor|lagarto|cazan|depred|carne/.test(diet)) return CREATURE_DATABASE.yaguarete.favoriteFood;
+  if (/hierba|hoja|brote|herbív|vegetal/.test(diet)) return REGIONAL_CAPTURE_FOODS.browse;
+  return REGIONAL_CAPTURE_FOODS.insects;
 }
 
 REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) => {
@@ -948,7 +968,7 @@ REGIONAL_FAUNA.forEach((entry) => entry.members.forEach((member, memberIndex) =>
     imageSource: photos?.[1] || entry.source, badge: `${entry.category} • ${entry.name}`, isRegional: true,
     hp: 105 + (memberIndex % 4) * 10, maxHp: 105 + (memberIndex % 4) * 10,
     spd: 58 + (memberIndex % 5) * 6, atk: 42 + (memberIndex % 4) * 4, lvl: 10 + (memberIndex % 5),
-    favoriteFood: { id: 'berries', name: 'Frutos silvestres', icon: '🫐' },
+    favoriteFood: getRegionalFavoriteFood(entry),
     habitat: entry.habitat, desc: entry.memberImpacts?.[memberIndex] || REGIONAL_FAUNA_IMPACTS[member] || entry.loss,
     moves: moves.map((name, moveIndex) => ({ name, dmg: [32, 44, 58][moveIndex], uses: [5, 4, 2][moveIndex], maxUses: [5, 4, 2][moveIndex], text: `¡${name}!` }))
   };
@@ -2339,7 +2359,7 @@ function resetBattleSessionState() {
     isPlayerTurn: true, actionLocked: false, player: null, enemy: null, networkMatch: false, finished: false,
     isSecretEncounter: false, secretIntroFinished: false
   });
-  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3 };
+  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3, insects: 3, fish: 3, browse: 3, carrion: 3 };
   LanMatch.code = null;
   LanMatch.side = 0;
   LanMatch.version = 0;
@@ -2875,7 +2895,7 @@ function confirmTeamAndLaunchBattle() {
   SFX.playClick();
 
   AppState.battle.mode = AppState.battle.networkMatch ? 'network' : AppState.battle.pendingMode;
-  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3 };
+  AppState.inventory = { nectar: 3, meat: 3, carob: 3, compost: 3, mouse: 3, berries: 3, seeds: 3, insects: 3, fish: 3, browse: 3, carrion: 3 };
   const diff = AppState.battle.botDifficulty || 'facil';
 
   // Build Player Team (3 chosen creatures)
@@ -3135,8 +3155,8 @@ function populateBackpackControls() {
   hint.textContent = `Elige un cebo para ${species.name}. Su favorito es ${species.favoriteFood.icon} ${species.favoriteFood.name}. Menos HP aumenta la probabilidad.`;
   controls.appendChild(hint);
 
-  Object.values(CREATURE_DATABASE).forEach(creature => {
-    const food = creature.favoriteFood;
+  const foods = new Map(Object.values(CREATURE_DATABASE).map(creature => [creature.favoriteFood.id, creature.favoriteFood]));
+  foods.forEach(food => {
     const quantity = AppState.inventory[food.id] || 0;
     const chance = Math.round(getCaptureChance(enemy, food.id) * 100);
     const button = document.createElement('button');
